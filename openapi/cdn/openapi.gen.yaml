@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.1.0
+  version: 0.2.0
   title: Content Delivery Network (CDN)
   description: Публичная спецификация сервиса Content Delivery Network (CDN)
 
@@ -422,6 +422,9 @@ components:
         http3:
           type: boolean
           description: Включить HTTP/3
+        shielding:
+          type: boolean
+          description: Включить shielding
         options:
           $ref: '#/components/schemas/OptionsResponse'
           description: Дополнительные опции доставки контента для ресурса CDN. Распространяются на весь контент, если не определены location-специфичные опции
@@ -1103,6 +1106,9 @@ components:
             Включить HTTP/3
           
             Обязательно для заполнения при создании ресурса
+        shielding:
+          type: boolean
+          description: Включить shielding
         options:
           $ref: '#/components/schemas/OptionsRequest'
           description: |-

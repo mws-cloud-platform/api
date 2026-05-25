@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.1.0
+  version: 0.2.0
   title: Identity and Access Management (IAM)
   description: Публичная спецификация сервиса Identity and Access Management (IAM)
 
@@ -348,6 +348,69 @@ paths:
                 $ref: '#/components/schemas/AuthorizedKeyListResponse'
         default:
           description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /iam/v2/projects/{project}/serviceAccounts/{serviceAccount}/authorizedKeys/{authorizedKey}:
+    post:
+      tags:
+        - authorizedKey
+      summary: Создать или обновить авторизованный ключ
+      description: |-
+        Самостоятельно сгенерированную пару ключей можно передать в поле spec.publicKey. Если оставить поле spec.publicKey пустым, то будет сгенерирована пару ключей для указанного алгоритма; в этом случае публичный ключ будет возвращен в поле spec.publicKey, а приватный — в поле status.privateKey
+      
+        Метод создает новый ресурс или обновляет существующий.
+        Поддерживается частичное обновление ресурса
+      
+        Поля, переданные в запросе, объединяются с уже существующими полями по следующим правилам:
+          - текущие значения заменяются на новые, переданные в запросе;
+          - если для поля в запросе передается значение `null`, его текущее значение удаляется. Актуально только для опциональных полей, которые могут иметь значение `null`;
+          - простые коллекции полностью перезаписывают существующие;
+          - сложные коллекции объединяются рекурсивно:
+            - элементы идентифицируются по обязательному уникальному атрибуту `name`;
+            - если элементу соответствует элемент в запросе, он обновляется по тем же правилам, что и весь ресурс;
+            - если элемент присутствует в текущем описании ресурса, но отсутствует в запросе, он удаляется;
+            - если элемент присутствует в запросе, но отсутствует в текущем описании ресурса, он создается;
+            - порядок элементов становится таким же, как в запросе.
+      
+        Тип коллекции указывается в описании соответствующего поля
+      
+        Чтобы предотвратить конфликты при конкурентном обновлении ресурса, в запросе нужно передать поле `metadata.etag`.
+        Значение `ETag` вычисляется и возвращается сервисом при каждом обновлении состояния ресурса.
+        Если в момент отправки запроса `ETag` изменился на стороне сервиса, в ответе возвращается ошибка `INVALID_ETAG_KEY`.
+      operationId: UpsertAuthorizedKeyV2
+      parameters:
+        - $ref: "#/components/parameters/path_serviceAccount"
+        - $ref: "#/components/parameters/path_authorizedKey"
+        - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/header_Idempotency-Key"
+        - $ref: "#/components/parameters/query_createOnly"
+        - $ref: "#/components/parameters/query_updateOnly"
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorizedKeyV2Request'
+      responses:
+        "200":
+          description: Успешное обновление
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorizedKeyV2Response'
+        "201":
+          description: Успешное создание
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorizedKeyV2Response'
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 409, 500
           content:
             application/json:
               schema:
@@ -864,6 +927,7 @@ components:
 
     HmacKeyResponse:
       type: object
+      description: HMAC-ключ (англ. Hash-based Message Authentication Code) — это статический ключ, необходимый для аутентификации сервисного аккаунта в AWS-совместимом API
       properties:
         kind:
           type: string
@@ -928,6 +992,7 @@ components:
 
     HmacKeyRequest:
       type: object
+      description: HMAC-ключ (англ. Hash-based Message Authentication Code) — это статический ключ, необходимый для аутентификации сервисного аккаунта в AWS-совместимом API
       properties:
         metadata:
           type: object
@@ -1041,12 +1106,15 @@ components:
                 Поле содержит чувствительные данные. Ограничьте доступ к ним
               
                 Значение поля будет доступно только один раз в ответе при создании ресурса
+            publicKey:
+              type: string
+              description: Открытый ключ, сгенерированный на стороне сервиса
             lastAuthTime:
               type: string
               description: Время последней аутентификации
               format: date-time
 
-    AuthorizedKeyRequest:
+    AuthorizedKeyV2Request:
       type: object
       properties:
         metadata:
@@ -1087,6 +1155,52 @@ components:
           description: Флаг активности ключа
           default: true
 
+    AuthorizedKeyV2Response:
+      type: object
+      properties:
+        kind:
+          type: string
+          default: iam/v2/authorizedKey
+        metadata:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/TypedResourceMetadataResponse'
+            - type: object
+              properties:
+                id:
+                  type: string
+                  description: |-
+                    ID свойства
+                  
+                    Строка в формате: "servicename/foos/{foo}/bars/{bar}"
+                  
+                    Пример: "servicename/foos/myFoo/bars/myBar"
+          nullable: true
+        spec:
+          $ref: '#/components/schemas/AuthorizedKeySpecResponse'
+          description: Описание спецификация для авторизированных ключей
+        status:
+          allOf:
+            - $ref: '#/components/schemas/AuthorizedKeyStatusResponse'
+          nullable: true
+      required:
+        - spec
+
+    AuthorizedKeyRequest:
+      type: object
+      properties:
+        metadata:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/TypedResourceMetadataRequest'
+          nullable: true
+        spec:
+          $ref: '#/components/schemas/AuthorizedKeySpecRequest'
+          description: |-
+            Описание спецификация для авторизированных ключей
+          
+            Обязательно для заполнения при создании ресурса
+
     ApiKeyListResponse:
       type: object
       properties:
@@ -1102,6 +1216,10 @@ components:
 
     ApiKeyResponse:
       type: object
+      description: |-
+        API-ключ — это уникальная строка длиной 128 символов, предназначенная для
+        упрощенной аутентификации сервисных аккаунтов в тех облачных сервисах, которые
+        не поддерживают авторизованные ключи
       properties:
         kind:
           type: string
@@ -1165,6 +1283,10 @@ components:
 
     ApiKeyRequest:
       type: object
+      description: |-
+        API-ключ — это уникальная строка длиной 128 символов, предназначенная для
+        упрощенной аутентификации сервисных аккаунтов в тех облачных сервисах, которые
+        не поддерживают авторизованные ключи
       properties:
         metadata:
           type: object

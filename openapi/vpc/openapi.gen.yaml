@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.1.0
+  version: 0.2.0
   title: Virtual Private Cloud (VPC)
   description: Публичная спецификация сервиса Virtual Private Cloud (VPC)
 

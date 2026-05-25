@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.1.0
+  version: 0.2.0
   title: Compute
   description: Публичная спецификация сервиса Compute
 
@@ -298,7 +298,7 @@ paths:
     get:
       tags:
         - image
-      summary: Получить latest образ
+      summary: Получить последний созданный образ в рамках проекта и семейства
       operationId: LatestImage
       parameters:
         - $ref: "#/components/parameters/path_project_3c749d5b"
@@ -919,6 +919,11 @@ components:
             - $ref: '#/components/schemas/VmTypeDisksSpecResponse'
           description: Спецификация сетевых дисков, которые доступны для ВМ указанного типа
           nullable: true
+        localDisks:
+          allOf:
+            - $ref: '#/components/schemas/VmTypeLocalDisksSpecResponse'
+          description: Спецификация локальных дисков, которые доступны для ВМ указанного типа
+          nullable: true
         network:
           type: object
           description: Спецификация сети, которая доступна для ВМ указанного типа
@@ -962,6 +967,141 @@ components:
           type: string
           description: Максимальное количество операций ввода-вывода в секунду (IOPS) на ВМ. Зависит от количества виртуальных процессорных ядер (vCPU) у ВМ
           format: int32
+
+    VmTypeLocalDisksSpecResponse:
+      type: object
+      description: Спецификация локальных дисков, которые доступны для ВМ указанного типа
+      properties:
+        limits:
+          allOf:
+            - $ref: '#/components/schemas/VmTypeLocalDiskLimitsSpecResponse'
+          description: Спецификация лимитов локальных дисков для ВМ указанного типа
+          nullable: true
+
+    VmTypeLocalDiskLimitsSpecResponse:
+      type: object
+      description: Спецификация лимитов локальных дисков для ВМ указанного типа
+      properties:
+        disk:
+          allOf:
+            - $ref: '#/components/schemas/SingleLocalDiskLimitsSpecResponse'
+          description: Спецификация лимитов одного локального диска доступного для ВМ указанного типа
+          nullable: true
+        total:
+          allOf:
+            - $ref: '#/components/schemas/TotalLocalDiskLimitsSpecResponse'
+          description: Спецификация общих лимитов локальных дисков для ВМ указанного типа
+          nullable: true
+
+    SingleLocalDiskLimitsSpecResponse:
+      type: object
+      description: Спецификация лимитов одного локального диска доступного для ВМ указанного типа
+      properties:
+        size:
+          allOf:
+            - $ref: '#/components/schemas/SingleLocalDiskSizeLimitsSpecResponse'
+          description: Спецификация лимитов на размер одного локального диска для ВМ указанного типа
+          nullable: true
+
+    SingleLocalDiskSizeLimitsSpecResponse:
+      type: object
+      description: Спецификация лимитов на размер одного локального диска для ВМ указанного типа
+      properties:
+        min:
+          type: string
+          description: |-
+            Минимальный размер локального диска
+          
+            Размер в байтах. Формат: <число> [единица измерения].
+            Допустимые единицы измерения: `B`, `KB`, `MB`, `GB`, `TB`, `PB`, `EB`, `ZB`, `YB`, `RB`, `QB`. По умолчанию: `B`.
+            Допустимые значения — положительные целые числа и дробные числа с ненулевой целой частью.
+            Значение базовой единицы измерения (в байтах) должно оставаться целым.
+            Регистр и лишние пробелы перед строкой, после строки и между ее частями игнорируются
+          
+            Примеры:
+              - "1"
+              - "1 B"
+              - "1024 kb"
+              - "1.5 TB"
+        max:
+          type: string
+          description: |-
+            Максимальный размер локального диска
+          
+            Размер в байтах. Формат: <число> [единица измерения].
+            Допустимые единицы измерения: `B`, `KB`, `MB`, `GB`, `TB`, `PB`, `EB`, `ZB`, `YB`, `RB`, `QB`. По умолчанию: `B`.
+            Допустимые значения — положительные целые числа и дробные числа с ненулевой целой частью.
+            Значение базовой единицы измерения (в байтах) должно оставаться целым.
+            Регистр и лишние пробелы перед строкой, после строки и между ее частями игнорируются
+          
+            Примеры:
+              - "1"
+              - "1 B"
+              - "1024 kb"
+              - "1.5 TB"
+        step:
+          type: string
+          description: |-
+            Шаг изменения размера локального диска
+          
+            Размер в байтах. Формат: <число> [единица измерения].
+            Допустимые единицы измерения: `B`, `KB`, `MB`, `GB`, `TB`, `PB`, `EB`, `ZB`, `YB`, `RB`, `QB`. По умолчанию: `B`.
+            Допустимые значения — положительные целые числа и дробные числа с ненулевой целой частью.
+            Значение базовой единицы измерения (в байтах) должно оставаться целым.
+            Регистр и лишние пробелы перед строкой, после строки и между ее частями игнорируются
+          
+            Примеры:
+              - "1"
+              - "1 B"
+              - "1024 kb"
+              - "1.5 TB"
+
+    TotalLocalDiskLimitsSpecResponse:
+      type: object
+      description: Спецификация общих лимитов локальных дисков для ВМ указанного типа
+      properties:
+        size:
+          allOf:
+            - $ref: '#/components/schemas/TotalLocalDiskSizeLimitsSpecResponse'
+          description: Спецификация лимитов на общий объем локальных дисков для ВМ указанного типа
+          nullable: true
+
+    TotalLocalDiskSizeLimitsSpecResponse:
+      type: object
+      description: Спецификация лимитов на общий объем локальных дисков для ВМ указанного типа
+      properties:
+        min:
+          type: string
+          description: |-
+            Минимальный суммарный объем локальных дисков
+          
+            Размер в байтах. Формат: <число> [единица измерения].
+            Допустимые единицы измерения: `B`, `KB`, `MB`, `GB`, `TB`, `PB`, `EB`, `ZB`, `YB`, `RB`, `QB`. По умолчанию: `B`.
+            Допустимые значения — положительные целые числа и дробные числа с ненулевой целой частью.
+            Значение базовой единицы измерения (в байтах) должно оставаться целым.
+            Регистр и лишние пробелы перед строкой, после строки и между ее частями игнорируются
+          
+            Примеры:
+              - "1"
+              - "1 B"
+              - "1024 kb"
+              - "1.5 TB"
+        max:
+          type: string
+          description: |-
+            Максимальный суммарный объем локальных дисков
+          
+            Размер в байтах. Формат: <число> [единица измерения].
+            Допустимые единицы измерения: `B`, `KB`, `MB`, `GB`, `TB`, `PB`, `EB`, `ZB`, `YB`, `RB`, `QB`. По умолчанию: `B`.
+            Допустимые значения — положительные целые числа и дробные числа с ненулевой целой частью.
+            Значение базовой единицы измерения (в байтах) должно оставаться целым.
+            Регистр и лишние пробелы перед строкой, после строки и между ее частями игнорируются
+          
+            Примеры:
+              - "1"
+              - "1 B"
+              - "1024 kb"
+              - "1.5 TB"
 
     VmTypeStatusResponse:
       description: Статус типа ВМ
@@ -1378,6 +1518,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/StorageDiskSpecOrRefWithAttachmentsResponse'
+        localDisks:
+          type: array
+          items:
+            $ref: '#/components/schemas/StorageLocalDiskSpecResponse'
       required:
         - disks
 
@@ -1515,6 +1659,45 @@ components:
         iops:
           $ref: '#/components/schemas/Iops'
           description: Запрашиваемая пользователем IOPS
+
+    StorageLocalDiskSpecResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          description: |-
+            Уникальное имя диска в рамках виртуальной машины
+          
+            Обязательно для заполнения при создании ресурса
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+        deviceName:
+          type: string
+          description: |-
+            Уникальное имя устройства, которое отображается в дереве /dev/disk/by-id/mws-* Linux. Если не указано - "mws-{name}", если указано - "mws-{deviceName}"
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+        size:
+          type: string
+          description: |-
+            Размер диска. Должен быть кратен 248GB
+          
+            Размер в байтах. Формат: <число> [единица измерения].
+            Допустимые единицы измерения: `B`, `KB`, `MB`, `GB`, `TB`, `PB`, `EB`, `ZB`, `YB`, `RB`, `QB`. По умолчанию: `B`.
+            Допустимые значения — положительные целые числа и дробные числа с ненулевой целой частью.
+            Значение базовой единицы измерения (в байтах) должно оставаться целым.
+            Регистр и лишние пробелы перед строкой, после строки и между ее частями игнорируются
+          
+            Примеры:
+              - "1"
+              - "1 B"
+              - "1024 kb"
+              - "1.5 TB"
+      required:
+        - name
+        - size
 
     NetworkSpecResponse:
       type: object
@@ -2328,6 +2511,11 @@ components:
             Обязательно для заполнения при создании ресурса
           items:
             $ref: '#/components/schemas/StorageDiskSpecOrRefWithAttachmentsRequest'
+        localDisks:
+          type: array
+          description: Сложная коллекция. При обновлении ресурса сложная коллекция, переданная в запросе, объединяется с существующей по определенным правилам. Подробнее см. в описании метода `Upsert`
+          items:
+            $ref: '#/components/schemas/StorageLocalDiskSpecRequest'
 
     StorageDiskSpecOrRefWithAttachmentsRequest:
       type: object
@@ -2458,6 +2646,44 @@ components:
         iops:
           $ref: '#/components/schemas/Iops'
           description: Запрашиваемая пользователем IOPS
+
+    StorageLocalDiskSpecRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: |-
+            Уникальное имя диска в рамках виртуальной машины
+          
+            Обязательно для заполнения при создании ресурса
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+        deviceName:
+          type: string
+          description: |-
+            Уникальное имя устройства, которое отображается в дереве /dev/disk/by-id/mws-* Linux. Если не указано - "mws-{name}", если указано - "mws-{deviceName}"
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+        size:
+          type: string
+          description: |-
+            Размер диска. Должен быть кратен 248GB
+          
+            Размер в байтах. Формат: <число> [единица измерения].
+            Допустимые единицы измерения: `B`, `KB`, `MB`, `GB`, `TB`, `PB`, `EB`, `ZB`, `YB`, `RB`, `QB`. По умолчанию: `B`.
+            Допустимые значения — положительные целые числа и дробные числа с ненулевой целой частью.
+            Значение базовой единицы измерения (в байтах) должно оставаться целым.
+            Регистр и лишние пробелы перед строкой, после строки и между ее частями игнорируются
+          
+            Обязательно для заполнения при создании ресурса
+          
+            Примеры:
+              - "1"
+              - "1 B"
+              - "1024 kb"
+              - "1.5 TB"
 
     NetworkSpecRequest:
       type: object
