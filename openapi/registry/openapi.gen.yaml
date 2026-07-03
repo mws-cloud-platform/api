@@ -3,21 +3,24 @@
 openapi: 3.0.3
 
 info:
-  version: 0.2.0
+  version: 0.3.0
   title: Artifact Registry
   description: Публичная спецификация сервиса Artifact Registry
 
 servers:
   - url: https://registry.mwsapis.ru
 
+security:
+  - BearerAuth: []
+
 paths:
   /registry/v1/projects/{project}/registries:
     get:
       tags:
         - registry
-      summary: List of the registries
+      summary: Получить список реестров
       description: |-
-        Получение списка реестров
+        Операция позволяет получить список ресурсов
       
         Поддерживается фильтрация и сортировка с помощью query-параметров `filter` и `orderBy`.
         Информация по использованию этих параметров находится в их описании
@@ -50,7 +53,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Возвращается список реестров
+          description: Список реестров
           content:
             application/json:
               schema:
@@ -66,10 +69,8 @@ paths:
     post:
       tags:
         - registry
-      summary: Create or update a registry
+      summary: Создать или изменить реестр
       description: |-
-        Создание и изменение реестра
-      
         Метод создает новый ресурс или обновляет существующий.
         Поддерживается частичное обновление ресурса
       
@@ -98,7 +99,7 @@ paths:
       security:
         - BearerAuth: []
       requestBody:
-        description: Registry request body
+        description: Данные для создания или изменения реестра
         required: true
         content:
           application/json:
@@ -106,13 +107,13 @@ paths:
               $ref: '#/components/schemas/RegistryRequest'
       responses:
         "200":
-          description: Success
+          description: Успешный ответ
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/RegistryResponse'
         "201":
-          description: Success
+          description: Успешный ответ
           content:
             application/json:
               schema:
@@ -128,8 +129,7 @@ paths:
     get:
       tags:
         - registry
-      summary: Get a registry
-      description: Получение реестра
+      summary: Получить информацию о реестре
       operationId: RegistryGet
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -138,7 +138,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Возвращается реестр
+          description: Успешный ответ
           content:
             application/json:
               schema:
@@ -152,8 +152,7 @@ paths:
     delete:
       tags:
         - registry
-      summary: Delete a registry
-      description: Удаление реестра
+      summary: Удалить реестр
       operationId: RegistryDelete
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -162,7 +161,7 @@ paths:
         - BearerAuth: []
       responses:
         "204":
-          description: The resource was deleted successfully
+          description: Реестр удален
         default:
           description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
           content:
@@ -174,9 +173,9 @@ paths:
     get:
       tags:
         - repository
-      summary: List of the repositories
+      summary: Получить список репозиториев
       description: |-
-        Получение списка репозиториев
+        Операция позволяет получить список ресурсов
       
         Поддерживается фильтрация и сортировка с помощью query-параметров `filter` и `orderBy`.
         Информация по использованию этих параметров находится в их описании
@@ -207,7 +206,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Возвращается список репозиториев
+          description: Список репозиториев
           content:
             application/json:
               schema:
@@ -223,10 +222,8 @@ paths:
     post:
       tags:
         - repository
-      summary: Create or update a repository
+      summary: Создать или изменить репозиторий
       description: |-
-        Создание и изменение репозитория
-      
         Метод создает новый ресурс или обновляет существующий.
         Поддерживается частичное обновление ресурса
       
@@ -256,7 +253,7 @@ paths:
       security:
         - BearerAuth: []
       requestBody:
-        description: Repository request body
+        description: Данные для создания или изменения репозитория
         required: true
         content:
           application/json:
@@ -264,13 +261,13 @@ paths:
               $ref: '#/components/schemas/RepositoryRequest'
       responses:
         "200":
-          description: Репозиторий был обновлен
+          description: Репозиторий обновлен
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/RepositoryResponse'
         "201":
-          description: Репозиторий был создан
+          description: Репозиторий создан
           content:
             application/json:
               schema:
@@ -286,8 +283,7 @@ paths:
     get:
       tags:
         - repository
-      summary: Get a repository
-      description: Получение репозитория
+      summary: Получить информацию о репозитории
       operationId: RepositoryGet
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -297,7 +293,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Возвращается репозиторий
+          description: Успешный ответ
           content:
             application/json:
               schema:
@@ -311,8 +307,7 @@ paths:
     delete:
       tags:
         - repository
-      summary: Delete a repository
-      description: Удаление репозитория
+      summary: Удалить репозиторий
       operationId: RepositoryDelete
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -322,7 +317,7 @@ paths:
         - BearerAuth: []
       responses:
         "204":
-          description: The resource was deleted successfully
+          description: Репозиторий удален
         default:
           description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
           content:
@@ -334,9 +329,9 @@ paths:
     get:
       tags:
         - lifecycle
-      summary: List of the registry lifecycle policies
+      summary: Получить список политик жизненного цикла реестра
       description: |-
-        Получение списка политик жизненного цикла реестра
+        Операция позволяет получить список ресурсов
       
         Поддерживается фильтрация и сортировка с помощью query-параметров `filter` и `orderBy`.
         Информация по использованию этих параметров находится в их описании
@@ -368,7 +363,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Возвращается список политик жизненного цикла образов реестра
+          description: Список политик жизненного цикла реестра
           content:
             application/json:
               schema:
@@ -384,10 +379,8 @@ paths:
     post:
       tags:
         - lifecycle
-      summary: Create or update a registry lifecycle policy
+      summary: Создать или изменить политику жизненного цикла реестра
       description: |-
-        Создание и изменение политики жизненного цикла образов в реестре
-      
         Метод создает новый ресурс или обновляет существующий.
         Поддерживается частичное обновление ресурса
       
@@ -417,7 +410,7 @@ paths:
       security:
         - BearerAuth: []
       requestBody:
-        description: Lifecycle policy request body
+        description: Данные для создания или изменения политики жизненного цикла реестра
         required: true
         content:
           application/json:
@@ -425,13 +418,13 @@ paths:
               $ref: '#/components/schemas/LifecyclePolicyRequest'
       responses:
         "200":
-          description: Success
+          description: Успешный ответ
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LifecyclePolicyResponse'
         "201":
-          description: Success
+          description: Успешный ответ
           content:
             application/json:
               schema:
@@ -445,8 +438,7 @@ paths:
     get:
       tags:
         - lifecycle
-      summary: Get registry lifecycle policy
-      description: Получение политики жизненного цикла образов в реестре
+      summary: Получить информацию о политике жизненного цикла реестра
       operationId: RegistryLifecyclePolicyGet
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -456,7 +448,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Success
+          description: Успешный ответ
           content:
             application/json:
               schema:
@@ -470,8 +462,7 @@ paths:
     delete:
       tags:
         - lifecycle
-      summary: Delete registry lifecycle policy
-      description: Удаление политики жизненного цикла образов в реестре
+      summary: Удалить политику жизненного цикла образов в реестре
       operationId: RegistryLifecyclePolicyDelete
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -481,7 +472,7 @@ paths:
         - BearerAuth: []
       responses:
         "204":
-          description: The resource was deleted successfully
+          description: Политика жизненного цикла образов в реестре удалена
         default:
           description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
           content:
@@ -493,9 +484,9 @@ paths:
     get:
       tags:
         - artifact
-      summary: Artifact list
+      summary: Получить список артефактов
       description: |-
-        Список артефактов
+        Операция позволяет получить список ресурсов
       
         Поддерживается фильтрация и сортировка с помощью query-параметров `filter` и `orderBy`.
         Информация по использованию этих параметров находится в их описании
@@ -527,7 +518,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Возвращается список артефактов
+          description: Список артефактов
           content:
             application/json:
               schema:
@@ -543,8 +534,7 @@ paths:
     get:
       tags:
         - artifact
-      summary: Get artifact
-      description: Получить информацию об артефакте
+      summary: Получить информацию об артефакте
       operationId: ArtifactGet
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -555,7 +545,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Success
+          description: Успешный ответ
           content:
             application/json:
               schema:
@@ -571,8 +561,7 @@ paths:
     post:
       tags:
         - scanArtifact
-      summary: Send request to scan artifact
-      description: Отправить запрос на сканирование артефакта
+      summary: Отправить запрос на сканирование артефакта
       operationId: ScanArtifact
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -599,8 +588,7 @@ paths:
     get:
       tags:
         - scanArtifact
-      summary: Request artifact scan report
-      description: Получить отчёт сканирования артефакта
+      summary: Получить отчёт сканирования артефакта
       operationId: DownloadScanReport
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -618,9 +606,16 @@ paths:
             application/json:
               schema:
                 type: object
-                additionalProperties: true
+                additionalProperties:
+                  description: Значение не может равняться `null`
         "307":
           description: Редирект на скачивание отчёта сканирования
+          headers:
+            Location:
+              description: Адрес по которому можно скачать отчет
+              schema:
+                type: string
+                example: https://storage.mwsapis.ru/path-to-report
         default:
           description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
           content:
@@ -1054,6 +1049,7 @@ components:
               type: integer
               description: Количество тэгов, которые нужно оставить, если тэгов меньше чем это количество, то проверка на дату не повлияет на удаление, даже если она проходит. Должно быть задано retain или expireDuration
               format: uint32
+              nullable: true
             duration:
               type: string
               description: |-
@@ -1076,6 +1072,7 @@ components:
                   - "1h10m42s"
                   - "-(1d 2h 3m 4s 5ms 6us 7ns)"
                   - "42"
+              nullable: true
           nullable: true
         filter:
           type: object
@@ -1085,6 +1082,7 @@ components:
               description: Фильтр по которому будет произведен поиск образов подлежащих удалению. Значение может быть задано с использованием символа *, что будет значить любое количество любых символов. Должен быть задан tagFilter или untagged установлен в true
               items:
                 type: string
+              nullable: true
             untagged:
               type: boolean
               description: Если установлен в true, будут найдены только образы на которые не ссылается ни один тэг. Должен быть задан tagFilter или untagged установлен в true
@@ -1143,6 +1141,7 @@ components:
               type: integer
               description: Количество тэгов, которые нужно оставить, если тэгов меньше чем это количество, то проверка на дату не повлияет на удаление, даже если она проходит. Должно быть задано retain или expireDuration
               format: uint32
+              nullable: true
             duration:
               type: string
               description: |-
@@ -1165,6 +1164,7 @@ components:
                   - "1h10m42s"
                   - "-(1d 2h 3m 4s 5ms 6us 7ns)"
                   - "42"
+              nullable: true
           nullable: true
         filter:
           type: object
@@ -1177,6 +1177,7 @@ components:
                 Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
               items:
                 type: string
+              nullable: true
             untagged:
               type: boolean
               description: Если установлен в true, будут найдены только образы на которые не ссылается ни один тэг. Должен быть задан tagFilter или untagged установлен в true

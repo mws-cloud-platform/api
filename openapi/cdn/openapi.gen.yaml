@@ -3,12 +3,15 @@
 openapi: 3.0.3
 
 info:
-  version: 0.2.0
+  version: 0.3.0
   title: Content Delivery Network (CDN)
   description: Публичная спецификация сервиса Content Delivery Network (CDN)
 
 servers:
   - url: https://cdn.mwsapis.ru
+
+security:
+  - BearerAuth: []
 
 paths:
   /cdn/v1/projects/{project}/cdnResources:
@@ -87,6 +90,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/path_cdnResource"
@@ -142,6 +146,9 @@ paths:
       parameters:
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/header_Idempotency-Key"
+        - $ref: "#/components/parameters/query_ifExist"
+        - $ref: "#/components/parameters/query_validateOnly"
+        - $ref: "#/components/parameters/query_cascade"
         - $ref: "#/components/parameters/path_cdnResource"
       security:
         - BearerAuth: []
@@ -210,6 +217,7 @@ paths:
       summary: Создать задачу на управление кешем CDN
       operationId: CreateCacheTask
       parameters:
+        - $ref: "#/components/parameters/query_validateOnly"
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/path_cacheTask"
@@ -266,6 +274,9 @@ paths:
       parameters:
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/header_Idempotency-Key"
+        - $ref: "#/components/parameters/query_ifExist"
+        - $ref: "#/components/parameters/query_validateOnly"
+        - $ref: "#/components/parameters/query_cascade"
         - $ref: "#/components/parameters/path_cacheTask"
       security:
         - BearerAuth: []
@@ -481,7 +492,7 @@ components:
           nullable: true
         cdnCaching:
           $ref: '#/components/schemas/CdnCachingOptionResponse'
-          description: Кэширование контента на стороне CDN
+          description: Кеширование контента на стороне CDN
         rewrite:
           allOf:
             - $ref: '#/components/schemas/RewriteOptionResponse'
@@ -634,8 +645,34 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+        queryCaching:
+          allOf:
+            - $ref: '#/components/schemas/QueryCachingResponse'
+          description: Кеширование контента по query-параметрам
+          nullable: true
       required:
         - ttl
+
+    QueryCachingResponse:
+      type: object
+      description: Кеширование контента по query-параметрам
+      properties:
+        useAll:
+          type: boolean
+          description: Использовать все параметры
+        ignoreAll:
+          type: boolean
+          description: Игнорировать все параметры
+        whitelist:
+          type: array
+          description: Использовать белый список параметров
+          items:
+            type: string
+        blacklist:
+          type: array
+          description: Использовать черный список параметров
+          items:
+            type: string
 
     CdnCachingOptionCustomResponse:
       type: object
@@ -667,6 +704,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CacheIntervalResponse'
+        queryCaching:
+          allOf:
+            - $ref: '#/components/schemas/QueryCachingResponse'
+          description: Кеширование контента по query-параметрам
+          nullable: true
       required:
         - ttl
 
@@ -980,6 +1022,9 @@ components:
             fqdn:
               type: string
               description: Сгенерированное доменное имя ресурса CDN
+            customBlocksAreUsed:
+              type: boolean
+              description: Используются ли кастомные блоки в конфигурации CDN ресурса
 
     ResourceStatusResponse:
       type: object
@@ -1168,7 +1213,7 @@ components:
         cdnCaching:
           $ref: '#/components/schemas/CdnCachingOptionRequest'
           description: |-
-            Кэширование контента на стороне CDN
+            Кеширование контента на стороне CDN
           
             Обязательно для заполнения при создании ресурса
         rewrite:
@@ -1333,6 +1378,38 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+        queryCaching:
+          allOf:
+            - $ref: '#/components/schemas/QueryCachingRequest'
+          description: Кеширование контента по query-параметрам
+          nullable: true
+
+    QueryCachingRequest:
+      type: object
+      description: Кеширование контента по query-параметрам
+      properties:
+        useAll:
+          type: boolean
+          description: Использовать все параметры
+        ignoreAll:
+          type: boolean
+          description: Игнорировать все параметры
+        whitelist:
+          type: array
+          description: |-
+            Использовать белый список параметров
+          
+            Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
+          items:
+            type: string
+        blacklist:
+          type: array
+          description: |-
+            Использовать черный список параметров
+          
+            Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
+          items:
+            type: string
 
     CdnCachingOptionCustomRequest:
       type: object
@@ -1367,6 +1444,11 @@ components:
           description: Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             $ref: '#/components/schemas/CacheIntervalRequest'
+        queryCaching:
+          allOf:
+            - $ref: '#/components/schemas/QueryCachingRequest'
+          description: Кеширование контента по query-параметрам
+          nullable: true
 
     CacheIntervalRequest:
       type: object
@@ -2057,6 +2139,15 @@ components:
       schema:
         type: string
 
+    query_cascade:
+      name: cascade
+      in: query
+      description: Удалить зависимые ресурсы, в противном случае при их наличии, будет возвращен ответ `Aborted`
+      style: form
+      explode: true
+      schema:
+        type: boolean
+
     query_createOnly:
       name: createOnly
       in: query
@@ -2077,6 +2168,17 @@ components:
       explode: true
       schema:
         type: string
+
+    query_ifExist:
+      name: ifExist
+      in: query
+      description: |-
+        Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
+        Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+      style: form
+      explode: true
+      schema:
+        type: boolean
 
     query_orderBy:
       name: orderBy
@@ -2124,6 +2226,15 @@ components:
       description: |-
         Обновить ресурс, если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
         Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+      style: form
+      explode: true
+      schema:
+        type: boolean
+
+    query_validateOnly:
+      name: validateOnly
+      in: query
+      description: Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
       style: form
       explode: true
       schema:

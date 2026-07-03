@@ -3,12 +3,15 @@
 openapi: 3.0.3
 
 info:
-  version: 0.2.0
+  version: 0.3.0
   title: Compute
   description: Публичная спецификация сервиса Compute
 
 servers:
   - url: https://compute.mwsapis.ru
+
+security:
+  - BearerAuth: []
 
 paths:
   /compute/v1/vmTypes:
@@ -162,6 +165,9 @@ paths:
         Поля, по которым можно фильтровать (`filter`):
           - `metadata.id.name`
           - `metadata.displayName`
+          - `status.network.networkInterfaces.addresses.ipAddress`
+          - `status.network.networkInterfaces.addresses.oneToOneNat.external.ipAddress`
+          - `status.region`
       
         Поля, по которым можно сортировать (`orderBy`):
           - `metadata.createTime`
@@ -791,6 +797,32 @@ paths:
           description: Успешный ответ (пустое тело ответа)
         default:
           description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /compute/v1/projects/{project}/virtualMachines/{virtualMachine}:getSerialPortOutput:
+    get:
+      tags:
+        - serialPort
+      summary: Get serial console output from virtual machine
+      operationId: GetComputeSerialPortOutput
+      parameters:
+        - $ref: "#/components/parameters/path_project_3c749d5b"
+        - $ref: "#/components/parameters/path_virtualMachine_fee3aaeb"
+        - $ref: "#/components/parameters/query_serialPort"
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SerialPortOutputResponse'
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
           content:
             application/json:
               schema:
@@ -1452,7 +1484,7 @@ components:
           enum:
             - "ON"
             - "OFF"
-          default: "ON"
+          default: 'ON'
         gracefulShutdownTimeout:
           type: string
           description: |-
@@ -1532,8 +1564,6 @@ components:
           type: string
           description: |-
             Уникальное имя диска в рамках виртуальной машины
-          
-            Обязательно для заполнения при создании ресурса
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
@@ -1668,8 +1698,6 @@ components:
           description: |-
             Уникальное имя диска в рамках виртуальной машины
           
-            Обязательно для заполнения при создании ресурса
-          
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
         deviceName:
@@ -1715,7 +1743,7 @@ components:
         name:
           type: string
           description: |-
-            Обязательно для заполнения при создании ресурса
+            Имя сетевого интерфейса
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
@@ -1729,12 +1757,7 @@ components:
           type: boolean
         addresses:
           type: array
-          description: |-
-            К одному сетевому интерфейсу можно подключить одновременно 4 разных сетевых адреса
-            - IPv4 internal
-            - IPv4 external
-            - IPv6 internal
-            - IPv6 external
+          description: IP-адреса сетевого интерфейса
           items:
             $ref: '#/components/schemas/AddressSpecOrRefWithAttachmentsResponse'
       required:
@@ -2377,6 +2400,8 @@ components:
         zone:
           type: string
           description: |-
+            Обязательно для заполнения при создании ресурса
+          
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
         vmType:
@@ -2442,7 +2467,7 @@ components:
           enum:
             - "ON"
             - "OFF"
-          default: "ON"
+          default: 'ON'
         gracefulShutdownTimeout:
           type: string
           description: |-
@@ -2703,6 +2728,8 @@ components:
         name:
           type: string
           description: |-
+            Имя сетевого интерфейса
+          
             Обязательно для заполнения при создании ресурса
           
             Неизменяемое поле. Задается только при создании ресурса.
@@ -2718,11 +2745,7 @@ components:
         addresses:
           type: array
           description: |-
-            К одному сетевому интерфейсу можно подключить одновременно 4 разных сетевых адреса
-            - IPv4 internal
-            - IPv4 external
-            - IPv6 internal
-            - IPv6 external
+            IP-адреса сетевого интерфейса
           
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           
@@ -3142,6 +3165,8 @@ components:
           type: object
           description: |-
             Источник для создания образа
+          
+            Обязательно для заполнения при создании ресурса
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
@@ -3588,6 +3613,8 @@ components:
           description: |-
             Зона доступности (ЦОД)
           
+            Обязательно для заполнения при создании ресурса
+          
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
         size:
@@ -3885,6 +3912,8 @@ components:
           description: |-
             Источник для создания резервной копии диска (На текущий момент поддерживается только диск, но в будущем будут и другие источники)
           
+            Обязательно для заполнения при создании ресурса
+          
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
         osType:
@@ -3915,14 +3944,46 @@ components:
                 Полный формат всегда корректен.
                 Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
               
+                Обязательно для заполнения при создании ресурса
+              
                 Примеры:
                   - "compute/projects/myProject/disks/myDisk"
                   - "projects/myProject/disks/myDisk"
                   - "disks/myDisk"
                   - "myDisk"
-          required:
-            - id
           nullable: true
+
+    SerialPortOutputResponse:
+      type: object
+      description: Описание протокола обмена для console proxy
+      properties:
+        type:
+          type: string
+          description: Тип сообщения
+          enum:
+            - "OUTPUT"
+            - "ERROR"
+            - "BINARY"
+        project:
+          type: string
+          description: Проект для валидации на стороне console-proxy
+        virtualMachine:
+          type: string
+          description: ВМ для валидации на стороне console-proxy
+        serialPort:
+          type: integer
+          description: Номер серийного порта для валидации на стороне console-proxy
+        length:
+          type: integer
+          description: Размер лога в байтах для бинарного ответа, для валидации на стороне console-proxy; в остальных случаях - значение null
+        output:
+          type: string
+          description: |-
+            Вывод лога серийной консоли. При бинарном ответе закодированный в base64
+          
+            Поле содержит чувствительные данные. Ограничьте доступ к ним
+      required:
+        - type
 
     ApiError:
       type: object
@@ -4121,6 +4182,14 @@ components:
         type: string
         pattern: ^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$
 
+    path_virtualMachine_fee3aaeb:
+      name: virtualMachine
+      in: path
+      required: true
+      style: simple
+      schema:
+        type: string
+
     path_vmType:
       name: vmType
       in: path
@@ -4201,6 +4270,15 @@ components:
       explode: true
       schema:
         type: boolean
+
+    query_serialPort:
+      name: serialPort
+      in: query
+      required: true
+      style: form
+      explode: true
+      schema:
+        type: integer
 
     query_updateOnly:
       name: updateOnly

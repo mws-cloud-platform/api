@@ -3,12 +3,15 @@
 openapi: 3.0.3
 
 info:
-  version: 0.2.0
+  version: 0.3.0
   title: Identity and Access Management (IAM)
   description: Публичная спецификация сервиса Identity and Access Management (IAM)
 
 servers:
   - url: https://iam.mwsapis.ru
+
+security:
+  - BearerAuth: []
 
 paths:
   /iam/v2/tokens/:issueServiceAccountToken:
@@ -59,6 +62,28 @@ paths:
                 $ref: '#/components/schemas/RevokeTokenResponse'
         default:
           description: Допустимые HTTP-коды ошибок — 400, 403, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /iam/v1/tokens/:issueSessionToken:
+    get:
+      tags:
+        - issueSessionToken
+      summary: Генерирует сессионный токен для использования в storage. Субъект в сессионном токене тот же самый, что в токене доступа (Authorization заголовок)
+      operationId: IssueSessionToken
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessSessionTokenResponse'
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 500
           content:
             application/json:
               schema:
@@ -692,6 +717,29 @@ components:
       required:
         - subject
 
+    SuccessSessionTokenResponse:
+      type: object
+      properties:
+        SessionToken:
+          type: string
+          description: Поле содержит чувствительные данные. Ограничьте доступ к ним
+        Expiration:
+          type: string
+          description: Момент времени, после которого токен и ключ перестанут считаться действительными
+          format: date-time
+        AccessKeyId:
+          type: string
+          description: Идентификатор HMAC-ключа, используемого для подписания запросов
+        SecretAccessKey:
+          type: string
+          description: |-
+            Ключ, которым клиент будет подписывать запросы
+          
+            Поле содержит чувствительные данные. Ограничьте доступ к ним
+        Version:
+          type: integer
+          description: Версия ключа
+
     ServiceAccountListResponse:
       type: object
       properties:
@@ -1065,10 +1113,18 @@ components:
       properties:
         publicKey:
           type: string
-          description: Открытый ключ. Если данный параметр в запросе отсутствует, то сервис сам сгенерирует ключ для указанного алгоритма и вернет приватный ключ в поле статуса в ответе
+          description: |-
+            Открытый ключ. Если данный параметр в запросе отсутствует, то сервис сам сгенерирует ключ для указанного алгоритма и вернет приватный ключ в поле статуса в ответе
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
         keyAlgorithm:
           type: string
-          description: Алгоритм шифрования
+          description: |-
+            Алгоритм шифрования
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
         expirationTime:
           type: string
           description: |-
@@ -1135,13 +1191,20 @@ components:
       properties:
         publicKey:
           type: string
-          description: Открытый ключ. Если данный параметр в запросе отсутствует, то сервис сам сгенерирует ключ для указанного алгоритма и вернет приватный ключ в поле статуса в ответе
+          description: |-
+            Открытый ключ. Если данный параметр в запросе отсутствует, то сервис сам сгенерирует ключ для указанного алгоритма и вернет приватный ключ в поле статуса в ответе
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
         keyAlgorithm:
           type: string
           description: |-
             Алгоритм шифрования
           
             Обязательно для заполнения при создании ресурса
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
         expirationTime:
           type: string
           description: |-
