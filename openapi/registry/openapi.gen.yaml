@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.3.0
+  version: 0.4.0
   title: Artifact Registry
   description: Публичная спецификация сервиса Artifact Registry
 
@@ -694,7 +694,7 @@ components:
           format: date-time
         usages:
           type: array
-          description: Связи с другими ресурсами. В зависимости от типа связи, операции над ресурсом могут быть ограничены
+          description: Связи с другими ресурсами. В зависимости от типа связи операции над ресурсом могут быть ограничены
           items:
             $ref: '#/components/schemas/UsageResponse'
         etag:
@@ -706,13 +706,14 @@ components:
 
     UsageResponse:
       type: object
+      description: Связь ресурса с другим ресурсом. В зависимости от типа связи операции над ресурсом могут быть ограничены
       properties:
         usageType:
           type: string
-          description: Тип связи. Помимо стандартных own и use могут быть добавлены специализированные типы для конкретных сервисов
+          description: Тип связи. Помимо стандартных `own` и `use` могут быть добавлены специализированные типы для конкретных сервисов
         name:
           type: string
-          description: Имя связи, требуется для модификации коллекции
+          description: Имя связи. Требуется для модификации коллекции
         resource:
           type: string
           description: Ссылка на ресурс
@@ -803,6 +804,7 @@ components:
 
     ResourceStatusResponse:
       type: object
+      description: Текущее состояние ресурса, вычисляемое системой
       properties:
         ready:
           $ref: '#/components/schemas/ResourceStatusReadyResponse'
@@ -1508,7 +1510,7 @@ components:
       name: project
       in: path
       required: true
-      description: Путь к проекту
+      description: Путь к проекту.
       style: simple
       schema:
         type: string

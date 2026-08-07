@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.3.0
+  version: 0.4.0
   title: Compute
   description: Публичная спецификация сервиса Compute
 
@@ -27,6 +27,8 @@ paths:
       
         Поля, по которым можно фильтровать (`filter`):
           - `metadata.id.name`
+          - `status.zones.name`
+          - `status.zones.region`
       
         Поля, по которым можно сортировать (`orderBy`):
           - `metadata.id.name`
@@ -307,7 +309,7 @@ paths:
       summary: Получить последний созданный образ в рамках проекта и семейства
       operationId: LatestImage
       parameters:
-        - $ref: "#/components/parameters/path_project_3c749d5b"
+        - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/query_family"
       security:
         - BearerAuth: []
@@ -350,7 +352,7 @@ paths:
           - `status.storageSize`
       operationId: ListImages
       parameters:
-        - $ref: "#/components/parameters/path_project_3c749d5b"
+        - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/query_pageSize"
         - $ref: "#/components/parameters/query_pageToken"
         - $ref: "#/components/parameters/query_filter"
@@ -408,7 +410,7 @@ paths:
         Если в момент отправки запроса `ETag` изменился на стороне сервиса, в ответе возвращается ошибка `INVALID_ETAG_KEY`.
       operationId: UpsertImage
       parameters:
-        - $ref: "#/components/parameters/path_project_3c749d5b"
+        - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/path_image"
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
@@ -441,7 +443,7 @@ paths:
       summary: Получить информацию об образе
       operationId: GetImage
       parameters:
-        - $ref: "#/components/parameters/path_project_3c749d5b"
+        - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/path_image"
         - $ref: "#/components/parameters/query_waitNew"
       security:
@@ -465,7 +467,7 @@ paths:
       summary: Удалить образ
       operationId: DeleteImage
       parameters:
-        - $ref: "#/components/parameters/path_project_3c749d5b"
+        - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/path_image"
         - $ref: "#/components/parameters/query_purge"
         - $ref: "#/components/parameters/header_Idempotency-Key"
@@ -515,7 +517,7 @@ paths:
           - `status.iops.total`
       operationId: ListDisks
       parameters:
-        - $ref: "#/components/parameters/path_project_3c749d5b"
+        - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/query_pageSize"
         - $ref: "#/components/parameters/query_pageToken"
         - $ref: "#/components/parameters/query_filter"
@@ -573,7 +575,7 @@ paths:
         Если в момент отправки запроса `ETag` изменился на стороне сервиса, в ответе возвращается ошибка `INVALID_ETAG_KEY`.
       operationId: UpsertDisk
       parameters:
-        - $ref: "#/components/parameters/path_project_3c749d5b"
+        - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/path_disk"
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
@@ -606,7 +608,7 @@ paths:
       summary: Получить информацию о диске
       operationId: GetDisk
       parameters:
-        - $ref: "#/components/parameters/path_project_3c749d5b"
+        - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/path_disk"
         - $ref: "#/components/parameters/query_waitNew"
       security:
@@ -630,7 +632,7 @@ paths:
       summary: Удалить диск
       operationId: DeleteDisk
       parameters:
-        - $ref: "#/components/parameters/path_project_3c749d5b"
+        - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/path_disk"
         - $ref: "#/components/parameters/query_purge"
         - $ref: "#/components/parameters/header_Idempotency-Key"
@@ -671,7 +673,7 @@ paths:
           - `status.storageSize`
       operationId: ListDiskBackups
       parameters:
-        - $ref: "#/components/parameters/path_project_3c749d5b"
+        - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/query_pageSize"
         - $ref: "#/components/parameters/query_pageToken"
         - $ref: "#/components/parameters/query_filter"
@@ -729,7 +731,7 @@ paths:
         Если в момент отправки запроса `ETag` изменился на стороне сервиса, в ответе возвращается ошибка `INVALID_ETAG_KEY`.
       operationId: UpsertDiskBackup
       parameters:
-        - $ref: "#/components/parameters/path_project_3c749d5b"
+        - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/path_diskBackup"
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
@@ -762,7 +764,7 @@ paths:
       summary: Получить информацию о резервной копии диска
       operationId: GetDiskBackup
       parameters:
-        - $ref: "#/components/parameters/path_project_3c749d5b"
+        - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/path_diskBackup"
         - $ref: "#/components/parameters/query_waitNew"
       security:
@@ -786,7 +788,7 @@ paths:
       summary: Удалить резервную копию диска
       operationId: DeleteDiskBackup
       parameters:
-        - $ref: "#/components/parameters/path_project_3c749d5b"
+        - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/path_diskBackup"
         - $ref: "#/components/parameters/query_purge"
         - $ref: "#/components/parameters/header_Idempotency-Key"
@@ -809,7 +811,7 @@ paths:
       summary: Get serial console output from virtual machine
       operationId: GetComputeSerialPortOutput
       parameters:
-        - $ref: "#/components/parameters/path_project_3c749d5b"
+        - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/path_virtualMachine_fee3aaeb"
         - $ref: "#/components/parameters/query_serialPort"
       security:
@@ -904,7 +906,7 @@ components:
           format: date-time
         usages:
           type: array
-          description: Связи с другими ресурсами. В зависимости от типа связи, операции над ресурсом могут быть ограничены
+          description: Связи с другими ресурсами. В зависимости от типа связи операции над ресурсом могут быть ограничены
           items:
             $ref: '#/components/schemas/TypedUsageResponse'
         etag:
@@ -919,7 +921,7 @@ components:
       properties:
         usageType:
           type: string
-          description: Тип связи. Помимо стандартных own и use могут быть добавлены специализированные типы для конкретных сервисов
+          description: Тип связи. Помимо стандартных `own` и `use` могут быть добавлены специализированные типы для конкретных сервисов
         resource:
           type: string
           description: |-
@@ -1141,6 +1143,7 @@ components:
 
     ResourceStatusResponse:
       type: object
+      description: Текущее состояние ресурса, вычисляемое системой
       properties:
         ready:
           $ref: '#/components/schemas/ResourceStatusReadyResponse'
@@ -1225,7 +1228,7 @@ components:
           format: date-time
         usages:
           type: array
-          description: Связи с другими ресурсами. В зависимости от типа связи, операции над ресурсом могут быть ограничены
+          description: Связи с другими ресурсами. В зависимости от типа связи операции над ресурсом могут быть ограничены
           items:
             $ref: '#/components/schemas/UsageResponse'
         etag:
@@ -1237,13 +1240,14 @@ components:
 
     UsageResponse:
       type: object
+      description: Связь ресурса с другим ресурсом. В зависимости от типа связи операции над ресурсом могут быть ограничены
       properties:
         usageType:
           type: string
-          description: Тип связи. Помимо стандартных own и use могут быть добавлены специализированные типы для конкретных сервисов
+          description: Тип связи. Помимо стандартных `own` и `use` могут быть добавлены специализированные типы для конкретных сервисов
         name:
           type: string
-          description: Имя связи, требуется для модификации коллекции
+          description: Имя связи. Требуется для модификации коллекции
         resource:
           type: string
           description: Ссылка на ресурс
@@ -1663,6 +1667,30 @@ components:
                   - "projects/myProject/images/myImage"
                   - "images/myImage"
                   - "myImage"
+            diskBackup:
+              type: string
+              description: |-
+                Ссылка на резервную копию диска
+              
+                Строка в форматах:
+                  Полный формат:
+                    - "compute/projects/{project}/diskBackups/{diskBackup}"
+                  Сокращенные форматы:
+                    - "projects/{project}/diskBackups/{diskBackup}"
+                    - "diskBackups/{diskBackup}"
+                    - "{diskBackup}"
+              
+                Полный формат всегда корректен.
+                Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+              
+                Неизменяемое поле. Задается только при создании ресурса.
+                При обновлении ресурса можно передать только текущее значение
+              
+                Примеры:
+                  - "compute/projects/myProject/diskBackups/myDiskBackup"
+                  - "projects/myProject/diskBackups/myDiskBackup"
+                  - "diskBackups/myDiskBackup"
+                  - "myDiskBackup"
           nullable: true
         diskType:
           type: string
@@ -1688,7 +1716,7 @@ components:
               - "myDiskType"
         iops:
           $ref: '#/components/schemas/Iops'
-          description: Запрашиваемая пользователем IOPS
+          description: Запрашиваемое пользователем значение IOPS
 
     StorageLocalDiskSpecResponse:
       type: object
@@ -1772,7 +1800,7 @@ components:
         oneToOneNat:
           allOf:
             - $ref: '#/components/schemas/ComputeOneToOneNatSpecResponse'
-          description: NAT правило для связи внутреннего адреса с внешним адресом
+          description: NAT-правило для связи внутреннего адреса с внешним адресом
           nullable: true
       required:
         - address
@@ -1900,7 +1928,7 @@ components:
 
     ComputeOneToOneNatSpecResponse:
       type: object
-      description: NAT правило для связи внутреннего адреса с внешним адресом
+      description: NAT-правило для связи внутреннего адреса с внешним адресом
       properties:
         external:
           type: object
@@ -2646,6 +2674,30 @@ components:
                   - "projects/myProject/images/myImage"
                   - "images/myImage"
                   - "myImage"
+            diskBackup:
+              type: string
+              description: |-
+                Ссылка на резервную копию диска
+              
+                Строка в форматах:
+                  Полный формат:
+                    - "compute/projects/{project}/diskBackups/{diskBackup}"
+                  Сокращенные форматы:
+                    - "projects/{project}/diskBackups/{diskBackup}"
+                    - "diskBackups/{diskBackup}"
+                    - "{diskBackup}"
+              
+                Полный формат всегда корректен.
+                Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+              
+                Неизменяемое поле. Задается только при создании ресурса.
+                При обновлении ресурса можно передать только текущее значение
+              
+                Примеры:
+                  - "compute/projects/myProject/diskBackups/myDiskBackup"
+                  - "projects/myProject/diskBackups/myDiskBackup"
+                  - "diskBackups/myDiskBackup"
+                  - "myDiskBackup"
         diskType:
           type: string
           description: |-
@@ -2670,7 +2722,7 @@ components:
               - "myDiskType"
         iops:
           $ref: '#/components/schemas/Iops'
-          description: Запрашиваемая пользователем IOPS
+          description: Запрашиваемое пользователем значение IOPS
 
     StorageLocalDiskSpecRequest:
       type: object
@@ -2761,7 +2813,7 @@ components:
           description: Обязательно для заполнения при создании ресурса
         oneToOneNat:
           $ref: '#/components/schemas/ComputeOneToOneNatSpecRequest'
-          description: NAT правило для связи внутреннего адреса с внешним адресом
+          description: NAT-правило для связи внутреннего адреса с внешним адресом
 
     AddressSpecOrRefRequest:
       type: object
@@ -2891,7 +2943,7 @@ components:
 
     ComputeOneToOneNatSpecRequest:
       type: object
-      description: NAT правило для связи внутреннего адреса с внешним адресом
+      description: NAT-правило для связи внутреннего адреса с внешним адресом
       properties:
         external:
           type: object
@@ -3041,6 +3093,15 @@ components:
         osType:
           $ref: '#/components/schemas/OsType'
           description: Тип операционной системы
+        encryption:
+          allOf:
+            - $ref: '#/components/schemas/EncryptionSpecResponse'
+          description: |-
+            Способ шифрования ресурса
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+          nullable: true
       required:
         - source
 
@@ -3059,6 +3120,35 @@ components:
         - "LINUX"
         - "WINDOWS"
       default: LINUX
+
+    EncryptionSpecResponse:
+      type: object
+      description: Способ шифрования ресурса
+      properties:
+        cryptoKeyId:
+          type: string
+          description: |-
+            Идентификатор пользовательского ключа
+          
+            Строка в форматах:
+              Полный формат:
+                - "kms/projects/{project}/cryptoKeys/{key}"
+              Сокращенные форматы:
+                - "projects/{project}/cryptoKeys/{key}"
+                - "cryptoKeys/{key}"
+                - "{key}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+          
+            Примеры:
+              - "kms/projects/myProject/cryptoKeys/myKey"
+              - "projects/myProject/cryptoKeys/myKey"
+              - "cryptoKeys/myKey"
+              - "myKey"
 
     ImageStatusResponse:
       type: object
@@ -3116,6 +3206,11 @@ components:
             osType:
               $ref: '#/components/schemas/OsType2'
               description: Тип операционной системы
+            encryption:
+              allOf:
+                - $ref: '#/components/schemas/EncryptionStatusResponse'
+              description: Способ шифрования ресурса
+              nullable: true
 
     OsType2:
       type: string
@@ -3123,6 +3218,51 @@ components:
       enum:
         - "LINUX"
         - "WINDOWS"
+
+    EncryptionStatusResponse:
+      type: object
+      description: Способ шифрования ресурса
+      properties:
+        cryptoKeyId:
+          type: string
+          description: |-
+            Идентификатор пользовательского ключа
+          
+            Строка в форматах:
+              Полный формат:
+                - "kms/projects/{project}/cryptoKeys/{key}"
+              Сокращенные форматы:
+                - "projects/{project}/cryptoKeys/{key}"
+                - "cryptoKeys/{key}"
+                - "{key}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+          
+            Примеры:
+              - "kms/projects/myProject/cryptoKeys/myKey"
+              - "projects/myProject/cryptoKeys/myKey"
+              - "cryptoKeys/myKey"
+              - "myKey"
+        version:
+          type: integer
+          description: |-
+            Версия пользовательского ключа
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+          format: int32
+        keyActivity:
+          type: string
+          description: Состояние ключа
+          enum:
+            - "DISABLED"
+            - "DESTROYED"
+            - "ACTIVE"
+          default: ACTIVE
 
     ImageRequest:
       type: object
@@ -3241,6 +3381,44 @@ components:
         osType:
           $ref: '#/components/schemas/OsType'
           description: Тип операционной системы
+        encryption:
+          allOf:
+            - $ref: '#/components/schemas/EncryptionSpecRequest'
+          description: |-
+            Способ шифрования ресурса
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+          nullable: true
+
+    EncryptionSpecRequest:
+      type: object
+      description: Способ шифрования ресурса
+      properties:
+        cryptoKeyId:
+          type: string
+          description: |-
+            Идентификатор пользовательского ключа
+          
+            Строка в форматах:
+              Полный формат:
+                - "kms/projects/{project}/cryptoKeys/{key}"
+              Сокращенные форматы:
+                - "projects/{project}/cryptoKeys/{key}"
+                - "cryptoKeys/{key}"
+                - "{key}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+          
+            Примеры:
+              - "kms/projects/myProject/cryptoKeys/myKey"
+              - "projects/myProject/cryptoKeys/myKey"
+              - "cryptoKeys/myKey"
+              - "myKey"
 
     DiskResponse:
       type: object
@@ -3415,6 +3593,15 @@ components:
         osType:
           $ref: '#/components/schemas/OsType'
           description: Тип операционной системы
+        encryption:
+          allOf:
+            - $ref: '#/components/schemas/EncryptionSpecResponse'
+          description: |-
+            Способ шифрования ресурса
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+          nullable: true
       required:
         - zone
 
@@ -3507,6 +3694,11 @@ components:
             osType:
               $ref: '#/components/schemas/OsType2'
               description: Тип операционной системы
+            encryption:
+              allOf:
+                - $ref: '#/components/schemas/EncryptionStatusResponse'
+              description: Способ шифрования ресурса
+              nullable: true
           required:
             - linkedVms
 
@@ -3755,6 +3947,15 @@ components:
         osType:
           $ref: '#/components/schemas/OsType'
           description: Тип операционной системы
+        encryption:
+          allOf:
+            - $ref: '#/components/schemas/EncryptionSpecRequest'
+          description: |-
+            Способ шифрования ресурса
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+          nullable: true
 
     DiskBackupResponse:
       type: object
@@ -3886,6 +4087,11 @@ components:
             osType:
               $ref: '#/components/schemas/OsType2'
               description: Тип операционной системы
+            encryption:
+              allOf:
+                - $ref: '#/components/schemas/EncryptionStatusResponse'
+              description: Способ шифрования ресурса
+              nullable: true
 
     DiskBackupRequest:
       type: object
@@ -4148,17 +4354,17 @@ components:
       name: project
       in: path
       required: true
-      description: Путь к проекту
+      description: Путь к проекту.
       style: simple
       schema:
         type: string
         pattern: ^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$
 
-    path_project_3c749d5b:
+    path_project_1758db71:
       name: project
       in: path
       required: true
-      description: Путь к проекту
+      description: Путь к проекту.
       style: simple
       schema:
         type: string

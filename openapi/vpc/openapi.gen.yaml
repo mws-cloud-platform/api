@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.3.0
+  version: 0.4.0
   title: Virtual Private Cloud (VPC)
   description: Публичная спецификация сервиса Virtual Private Cloud (VPC)
 
@@ -94,6 +94,7 @@ paths:
         - $ref: "#/components/parameters/path_network"
         - $ref: "#/components/parameters/query_updateOnly"
         - $ref: "#/components/parameters/query_createOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -148,6 +149,7 @@ paths:
         - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_network"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       responses:
@@ -221,6 +223,7 @@ paths:
           - `spec.version`
           - `status.ipAddress`
           - `status.ready.state`
+          - `status.region.id.region`
       
         Поля, по которым можно сортировать (`orderBy`):
           - `metadata.id.name`
@@ -228,6 +231,7 @@ paths:
           - `metadata.createTime`
           - `status.ready.state`
           - `status.ipAddress`
+          - `status.region.id.region`
       operationId: ListExternalAddresses
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -283,6 +287,7 @@ paths:
         - $ref: "#/components/parameters/path_externalAddress"
         - $ref: "#/components/parameters/query_updateOnly"
         - $ref: "#/components/parameters/query_createOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -336,6 +341,7 @@ paths:
         - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_externalAddress"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       responses:
@@ -470,6 +476,7 @@ paths:
         - $ref: "#/components/parameters/path_nlb"
         - $ref: "#/components/parameters/query_updateOnly"
         - $ref: "#/components/parameters/query_createOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -526,6 +533,7 @@ paths:
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_network"
         - $ref: "#/components/parameters/path_nlb"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       responses:
@@ -555,6 +563,7 @@ paths:
           - `spec.dhcpOptions.domainName`
           - `status.dhcpOptions.domainName`
           - `status.ready.state`
+          - `status.region.id.region`
       
         Поля, по которым можно сортировать (`orderBy`):
           - `metadata.id.name`
@@ -563,6 +572,7 @@ paths:
           - `spec.dhcpOptions.domainName`
           - `status.ready.state`
           - `status.dhcpOptions.domainName`
+          - `status.region.id.region`
       operationId: ListSubnets
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -620,6 +630,7 @@ paths:
         - $ref: "#/components/parameters/path_subnet"
         - $ref: "#/components/parameters/query_updateOnly"
         - $ref: "#/components/parameters/query_createOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -676,6 +687,7 @@ paths:
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_network"
         - $ref: "#/components/parameters/path_subnet"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       responses:
@@ -766,6 +778,7 @@ paths:
         - $ref: "#/components/parameters/path_route"
         - $ref: "#/components/parameters/query_updateOnly"
         - $ref: "#/components/parameters/query_createOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -822,6 +835,7 @@ paths:
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_network"
         - $ref: "#/components/parameters/path_route"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       responses:
@@ -912,6 +926,7 @@ paths:
         - $ref: "#/components/parameters/path_oneToOneNat"
         - $ref: "#/components/parameters/query_updateOnly"
         - $ref: "#/components/parameters/query_createOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -968,6 +983,7 @@ paths:
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_network"
         - $ref: "#/components/parameters/path_oneToOneNat"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       responses:
@@ -1064,6 +1080,7 @@ paths:
         - $ref: "#/components/parameters/path_firewallRule"
         - $ref: "#/components/parameters/query_updateOnly"
         - $ref: "#/components/parameters/query_createOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -1120,6 +1137,7 @@ paths:
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_network"
         - $ref: "#/components/parameters/path_firewallRule"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       responses:
@@ -1210,6 +1228,7 @@ paths:
         - $ref: "#/components/parameters/path_egressNat"
         - $ref: "#/components/parameters/query_updateOnly"
         - $ref: "#/components/parameters/query_createOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -1266,6 +1285,7 @@ paths:
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_network"
         - $ref: "#/components/parameters/path_egressNat"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       responses:
@@ -1297,6 +1317,7 @@ paths:
           - `spec.subnet.name`
           - `status.ipAddress`
           - `status.ready.state`
+          - `status.region.id.region`
       
         Поля, по которым можно сортировать (`orderBy`):
           - `metadata.id.name`
@@ -1305,6 +1326,7 @@ paths:
           - `spec.ipAddress`
           - `status.ready.state`
           - `status.ipAddress`
+          - `status.region.id.region`
       operationId: ListAddresses
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -1362,6 +1384,7 @@ paths:
         - $ref: "#/components/parameters/path_address"
         - $ref: "#/components/parameters/query_updateOnly"
         - $ref: "#/components/parameters/query_createOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -1417,6 +1440,7 @@ paths:
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_network"
         - $ref: "#/components/parameters/path_address"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       responses:
@@ -1444,12 +1468,14 @@ paths:
           - `metadata.id.name`
           - `metadata.displayName`
           - `status.ready.state`
+          - `status.region.id.region`
       
         Поля, по которым можно сортировать (`orderBy`):
           - `metadata.id.name`
           - `metadata.displayName`
           - `metadata.createTime`
           - `status.ready.state`
+          - `status.region.id.region`
       operationId: ListAddressGroups
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -1507,6 +1533,7 @@ paths:
         - $ref: "#/components/parameters/path_addressGroup"
         - $ref: "#/components/parameters/query_updateOnly"
         - $ref: "#/components/parameters/query_createOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -1562,6 +1589,7 @@ paths:
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_network"
         - $ref: "#/components/parameters/path_addressGroup"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       responses:
@@ -1643,7 +1671,7 @@ components:
           format: date-time
         usages:
           type: array
-          description: Связи с другими ресурсами. В зависимости от типа связи, операции над ресурсом могут быть ограничены
+          description: Связи с другими ресурсами. В зависимости от типа связи операции над ресурсом могут быть ограничены
           items:
             $ref: '#/components/schemas/UsageResponse'
         etag:
@@ -1655,13 +1683,14 @@ components:
 
     UsageResponse:
       type: object
+      description: Связь ресурса с другим ресурсом. В зависимости от типа связи операции над ресурсом могут быть ограничены
       properties:
         usageType:
           type: string
-          description: Тип связи. Помимо стандартных own и use могут быть добавлены специализированные типы для конкретных сервисов
+          description: Тип связи. Помимо стандартных `own` и `use` могут быть добавлены специализированные типы для конкретных сервисов
         name:
           type: string
-          description: Имя связи, требуется для модификации коллекции
+          description: Имя связи. Требуется для модификации коллекции
         resource:
           type: string
           description: Ссылка на ресурс
@@ -1700,6 +1729,7 @@ components:
 
     ResourceStatusResponse:
       type: object
+      description: Текущее состояние ресурса, вычисляемое системой
       properties:
         ready:
           $ref: '#/components/schemas/ResourceStatusReadyResponse'
@@ -1897,7 +1927,26 @@ components:
                   - "2001:db8:130F::9C0:876A:130B"
             active:
               type: boolean
-              description: Состояние внешнего адреса активен или не активен
+              description: 'Состояние внешнего адреса: активен или не активен'
+            region:
+              type: string
+              description: |-
+                Регион, которому принадлежит адрес
+              
+                Строка в форматах:
+                  Полный формат:
+                    - "rm/regions/{region}"
+                  Сокращенные форматы:
+                    - "regions/{region}"
+                    - "{region}"
+              
+                Полный формат всегда корректен.
+                Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+              
+                Примеры:
+                  - "rm/regions/myRegion"
+                  - "regions/myRegion"
+                  - "myRegion"
 
     ExternalAddressRequest:
       type: object
@@ -2051,6 +2100,7 @@ components:
               - "networks/myNetwork/addresses/myAddress"
               - "addresses/myAddress"
               - "myAddress"
+          nullable: true
         spec:
           allOf:
             - $ref: '#/components/schemas/ResourceAddressSpecResponse'
@@ -2059,7 +2109,7 @@ components:
 
     ResourceAddressSpecResponse:
       type: object
-      description: Спецификация внутреннего адреса
+      description: Описывает спецификацию внутреннего адреса как дополнительный ресурс
       properties:
         subnet:
           type: string
@@ -2096,8 +2146,10 @@ components:
               - "2001:db8:130F::9C0:876A:130B"
         dns:
           type: array
+          description: Спецификация DNS для IP-адреса
           items:
             $ref: '#/components/schemas/VpcAddressDnsSpecResponse'
+          nullable: true
       required:
         - subnet
 
@@ -2154,7 +2206,7 @@ components:
         ref:
           type: string
           description: |-
-            Относительная ссылка на статический внешний адрес
+            Относительная ссылка на статический внешний IP-адрес
           
             Строка в форматах:
               Полный формат:
@@ -2172,15 +2224,16 @@ components:
               - "projects/myProject/externalAddresses/myExternalAddress"
               - "externalAddresses/myExternalAddress"
               - "myExternalAddress"
+          nullable: true
         spec:
           allOf:
             - $ref: '#/components/schemas/ResourceExternalAddressSpecResponse'
-          description: Спецификация внешнего адреса
+          description: Спецификация внешнего IP-адреса
           nullable: true
 
     ResourceExternalAddressSpecResponse:
       type: object
-      description: Спецификация внешнего адреса
+      description: Описывает спецификацию внешнего адреса как дополнительный ресурс
       properties:
         natGateway:
           type: string
@@ -2218,6 +2271,7 @@ components:
           type: integer
           description: Целевой порт бэкенд-серверов, на которые балансировщик перенаправляет запросы. Если не указан, то считается равным порту балансировщика
           format: int32
+          nullable: true
         targetAddressGroups:
           type: array
           description: Адреса бэкенд-серверов, на которые балансировщик направляет запросы
@@ -2259,6 +2313,7 @@ components:
               - "networks/myNetwork/addressGroups/myAddressGroup"
               - "addressGroups/myAddressGroup"
               - "myAddressGroup"
+          nullable: true
         spec:
           allOf:
             - $ref: '#/components/schemas/VpcAddressGroupSpecResponse'
@@ -2279,7 +2334,7 @@ components:
 
     NlbHealthCheckResponse:
       type: object
-      description: Настройка проверки работоспособности виртуальных машин
+      description: Конфигурация проверки работоспособности виртуальных машин
       properties:
         protocol:
           $ref: '#/components/schemas/NlbHealthCheckProtocolResponse'
@@ -2884,6 +2939,7 @@ components:
               - "networks/myNetwork/addresses/myAddress"
               - "addresses/myAddress"
               - "myAddress"
+          nullable: true
         spec:
           allOf:
             - $ref: '#/components/schemas/ResourceAddressSpecRequest'
@@ -2892,7 +2948,7 @@ components:
 
     ResourceAddressSpecRequest:
       type: object
-      description: Спецификация внутреннего адреса
+      description: Описывает спецификацию внутреннего адреса как дополнительный ресурс
       properties:
         subnet:
           type: string
@@ -2931,9 +2987,13 @@ components:
               - "2001:db8:130F::9C0:876A:130B"
         dns:
           type: array
-          description: Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
+          description: |-
+            Спецификация DNS для IP-адреса
+          
+            Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             $ref: '#/components/schemas/VpcAddressDnsSpecRequest'
+          nullable: true
 
     VpcAddressDnsSpecRequest:
       type: object
@@ -2993,7 +3053,7 @@ components:
         ref:
           type: string
           description: |-
-            Относительная ссылка на статический внешний адрес
+            Относительная ссылка на статический внешний IP-адрес
           
             Строка в форматах:
               Полный формат:
@@ -3011,15 +3071,16 @@ components:
               - "projects/myProject/externalAddresses/myExternalAddress"
               - "externalAddresses/myExternalAddress"
               - "myExternalAddress"
+          nullable: true
         spec:
           allOf:
             - $ref: '#/components/schemas/ResourceExternalAddressSpecRequest'
-          description: Спецификация внешнего адреса
+          description: Спецификация внешнего IP-адреса
           nullable: true
 
     ResourceExternalAddressSpecRequest:
       type: object
-      description: Спецификация внешнего адреса
+      description: Описывает спецификацию внешнего адреса как дополнительный ресурс
       properties:
         natGateway:
           type: string
@@ -3060,6 +3121,7 @@ components:
           type: integer
           description: Целевой порт бэкенд-серверов, на которые балансировщик перенаправляет запросы. Если не указан, то считается равным порту балансировщика
           format: int32
+          nullable: true
         targetAddressGroups:
           type: array
           description: |-
@@ -3103,6 +3165,7 @@ components:
               - "networks/myNetwork/addressGroups/myAddressGroup"
               - "addressGroups/myAddressGroup"
               - "myAddressGroup"
+          nullable: true
         spec:
           allOf:
             - $ref: '#/components/schemas/VpcAddressGroupSpecRequest'
@@ -3126,7 +3189,7 @@ components:
 
     NlbHealthCheckRequest:
       type: object
-      description: Настройка проверки работоспособности виртуальных машин
+      description: Конфигурация проверки работоспособности виртуальных машин
       properties:
         protocol:
           $ref: '#/components/schemas/NlbHealthCheckProtocolRequest'
@@ -3323,15 +3386,17 @@ components:
         domainName:
           type: string
           description: Базовое доменное имя для разрешения имен
+          nullable: true
         domainNameServers:
           type: array
-          description: Список адресов DNS серверов
+          description: Список адресов DNS-серверов
           items:
             type: string
             description: |-
               IPv4-адрес
             
               Пример: "192.168.1.1"
+          nullable: true
         ntpServers:
           type: array
           description: Список адресов NTP серверов
@@ -3341,6 +3406,7 @@ components:
               IPv4-адрес
             
               Пример: "192.168.1.1"
+          nullable: true
 
     SubnetStatusResponse:
       type: object
@@ -3352,6 +3418,25 @@ components:
               allOf:
                 - $ref: '#/components/schemas/SubnetDhcpOptionsResponse'
               nullable: true
+            region:
+              type: string
+              description: |-
+                Регион, которому принадлежит подсеть
+              
+                Строка в форматах:
+                  Полный формат:
+                    - "rm/regions/{region}"
+                  Сокращенные форматы:
+                    - "regions/{region}"
+                    - "{region}"
+              
+                Полный формат всегда корректен.
+                Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+              
+                Примеры:
+                  - "rm/regions/myRegion"
+                  - "regions/myRegion"
+                  - "myRegion"
 
     SubnetRequest:
       type: object
@@ -3391,10 +3476,11 @@ components:
         domainName:
           type: string
           description: Базовое доменное имя для разрешения имен
+          nullable: true
         domainNameServers:
           type: array
           description: |-
-            Список адресов DNS серверов
+            Список адресов DNS-серверов
           
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
@@ -3403,6 +3489,7 @@ components:
               IPv4-адрес
             
               Пример: "192.168.1.1"
+          nullable: true
         ntpServers:
           type: array
           description: |-
@@ -3415,6 +3502,7 @@ components:
               IPv4-адрес
             
               Пример: "192.168.1.1"
+          nullable: true
 
     ListRoutesResponseResponse:
       type: object
@@ -3513,6 +3601,7 @@ components:
               - "projects/myProject/natGateways/myNatGateway"
               - "natGateways/myNatGateway"
               - "myNatGateway"
+          nullable: true
         address:
           type: object
           description: Адрес
@@ -3685,6 +3774,7 @@ components:
               - "projects/myProject/natGateways/myNatGateway"
               - "natGateways/myNatGateway"
               - "myNatGateway"
+          nullable: true
         address:
           type: object
           description: Адрес
@@ -3909,22 +3999,22 @@ components:
         metadata:
           allOf:
             - $ref: '#/components/schemas/CommonTypedResourceMetadataResponse'
-          description: Метаданные правила Firewall'а
+          description: Метаданные правила файрвола
           nullable: true
         spec:
           $ref: '#/components/schemas/FirewallRuleSpecResponse'
-          description: Спецификация правила Firewall'а
+          description: Спецификация правила файрвола
         status:
           allOf:
             - $ref: '#/components/schemas/FirewallRuleStatusResponse'
-          description: Статус правила Firewall'а
+          description: Статус правила файрвола
           nullable: true
       required:
         - spec
 
     FirewallRuleSpecResponse:
       type: object
-      description: Спецификация правила Firewall'а
+      description: Спецификация правила файрвола
       properties:
         direction:
           type: string
@@ -3957,6 +4047,7 @@ components:
           description: Критерий применимости правила. Определяет список протоколов и соответствующих портов (если применимо) назначения пакета. Значение по умолчанию - пустое значение. Означает любой протокол и порт
           items:
             type: string
+          nullable: true
       required:
         - direction
         - action
@@ -4017,7 +4108,7 @@ components:
 
     FirewallRuleStatusResponse:
       type: object
-      description: Статус правила Firewall'а
+      description: Статус правила файрвола
       allOf:
         - $ref: '#/components/schemas/ResourceStatusResponse'
         - type: object
@@ -4037,18 +4128,18 @@ components:
         metadata:
           allOf:
             - $ref: '#/components/schemas/CommonTypedResourceMetadataRequest'
-          description: Метаданные правила Firewall'а
+          description: Метаданные правила файрвола
           nullable: true
         spec:
           $ref: '#/components/schemas/FirewallRuleSpecRequest'
           description: |-
-            Спецификация правила Firewall'а
+            Спецификация правила файрвола
           
             Обязательно для заполнения при создании ресурса
 
     FirewallRuleSpecRequest:
       type: object
-      description: Спецификация правила Firewall'а
+      description: Спецификация правила файрвола
       properties:
         direction:
           type: string
@@ -4096,6 +4187,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             type: string
+          nullable: true
 
     FirewallRuleSourceRequest:
       type: object
@@ -4575,6 +4667,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/VpcAddressDnsSpecResponse'
+          nullable: true
       required:
         - subnet
 
@@ -4585,6 +4678,25 @@ components:
         - $ref: '#/components/schemas/ResourceStatusResponse'
         - type: object
           properties:
+            region:
+              type: string
+              description: |-
+                Регион, которому принадлежит адрес; берется из подсети
+              
+                Строка в форматах:
+                  Полный формат:
+                    - "rm/regions/{region}"
+                  Сокращенные форматы:
+                    - "regions/{region}"
+                    - "{region}"
+              
+                Полный формат всегда корректен.
+                Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+              
+                Примеры:
+                  - "rm/regions/myRegion"
+                  - "regions/myRegion"
+                  - "myRegion"
             ipAddress:
               type: string
               description: |-
@@ -4662,6 +4774,7 @@ components:
           description: Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             $ref: '#/components/schemas/VpcAddressDnsSpecRequest'
+          nullable: true
 
     ListVpcAddressGroupsResponseResponse:
       type: object
@@ -4737,6 +4850,25 @@ components:
                     - "networks/myNetwork/addresses/myAddress"
                     - "addresses/myAddress"
                     - "myAddress"
+            region:
+              type: string
+              description: |-
+                Регион, которому принадлежит группа IP-адресов
+              
+                Строка в форматах:
+                  Полный формат:
+                    - "rm/regions/{region}"
+                  Сокращенные форматы:
+                    - "regions/{region}"
+                    - "{region}"
+              
+                Полный формат всегда корректен.
+                Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+              
+                Примеры:
+                  - "rm/regions/myRegion"
+                  - "regions/myRegion"
+                  - "myRegion"
 
     VpcAddressGroupRequest:
       type: object
@@ -4967,7 +5099,7 @@ components:
       name: project
       in: path
       required: true
-      description: Путь к проекту
+      description: Путь к проекту.
       style: simple
       schema:
         type: string
@@ -5050,6 +5182,15 @@ components:
       description: |-
         Обновить ресурс, если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
         Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+      style: form
+      explode: true
+      schema:
+        type: boolean
+
+    query_validateOnly:
+      name: validateOnly
+      in: query
+      description: Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
       style: form
       explode: true
       schema:

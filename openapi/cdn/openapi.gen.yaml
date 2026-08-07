@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.3.0
+  version: 0.4.0
   title: Content Delivery Network (CDN)
   description: Публичная спецификация сервиса Content Delivery Network (CDN)
 
@@ -266,23 +266,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-    delete:
+
+  /cdn/v1/egressIps:
+    get:
       tags:
-        - cacheTask
-      summary: Удалить задачу на управление кешем CDN
-      operationId: DeleteCacheTask
-      parameters:
-        - $ref: "#/components/parameters/path_project"
-        - $ref: "#/components/parameters/header_Idempotency-Key"
-        - $ref: "#/components/parameters/query_ifExist"
-        - $ref: "#/components/parameters/query_validateOnly"
-        - $ref: "#/components/parameters/query_cascade"
-        - $ref: "#/components/parameters/path_cacheTask"
+        - egressIp
+      summary: Получение полного списка IP-префиксов CDN-серверов
+      description: Получение полного списка IP-префиксов CDN-серверов
+      operationId: GetEgressIps
       security:
-        - BearerAuth: []
+        - {}
       responses:
-        "204":
-          description: Ресурс удалён
+        "200":
+          description: Cписок IP префиксов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EgressIpsResponse'
         default:
           description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
           content:
@@ -359,7 +359,7 @@ components:
           format: date-time
         usages:
           type: array
-          description: Связи с другими ресурсами. В зависимости от типа связи, операции над ресурсом могут быть ограничены
+          description: Связи с другими ресурсами. В зависимости от типа связи операции над ресурсом могут быть ограничены
           items:
             $ref: '#/components/schemas/UsageResponse'
         etag:
@@ -371,13 +371,14 @@ components:
 
     UsageResponse:
       type: object
+      description: Связь ресурса с другим ресурсом. В зависимости от типа связи операции над ресурсом могут быть ограничены
       properties:
         usageType:
           type: string
-          description: Тип связи. Помимо стандартных own и use могут быть добавлены специализированные типы для конкретных сервисов
+          description: Тип связи. Помимо стандартных `own` и `use` могут быть добавлены специализированные типы для конкретных сервисов
         name:
           type: string
-          description: Имя связи, требуется для модификации коллекции
+          description: Имя связи. Требуется для модификации коллекции
         resource:
           type: string
           description: Ссылка на ресурс
@@ -447,7 +448,7 @@ components:
         accessLogs:
           allOf:
             - $ref: '#/components/schemas/AccessLogsResponse'
-          description: Конфигурация доставки access logs
+          description: Конфигурация доставки логов доступа (access logs)
           nullable: true
       required:
         - origins
@@ -981,11 +982,11 @@ components:
 
     AccessLogsResponse:
       type: object
-      description: Конфигурация доставки access logs
+      description: Конфигурация доставки логов доступа (access logs)
       properties:
         enabled:
           type: boolean
-          description: Доставка access logs выключена
+          description: Доставка логов доступа (access logs) выключена
         bucket:
           type: string
           description: |-
@@ -1022,12 +1023,10 @@ components:
             fqdn:
               type: string
               description: Сгенерированное доменное имя ресурса CDN
-            customBlocksAreUsed:
-              type: boolean
-              description: Используются ли кастомные блоки в конфигурации CDN ресурса
 
     ResourceStatusResponse:
       type: object
+      description: Текущее состояние ресурса, вычисляемое системой
       properties:
         ready:
           $ref: '#/components/schemas/ResourceStatusReadyResponse'
@@ -1171,7 +1170,7 @@ components:
         accessLogs:
           allOf:
             - $ref: '#/components/schemas/AccessLogsRequest'
-          description: Конфигурация доставки access logs
+          description: Конфигурация доставки логов доступа (access logs)
           nullable: true
 
     CdnResourceOriginRequest:
@@ -1761,11 +1760,11 @@ components:
 
     AccessLogsRequest:
       type: object
-      description: Конфигурация доставки access logs
+      description: Конфигурация доставки логов доступа (access logs)
       properties:
         enabled:
           type: boolean
-          description: Доставка access logs выключена
+          description: Доставка логов доступа (access logs) выключена
         bucket:
           type: string
           description: |-
@@ -1822,6 +1821,7 @@ components:
         status:
           allOf:
             - $ref: '#/components/schemas/ResourceStatusResponse'
+          description: Текущее состояние ресурса, вычисляемое системой
           nullable: true
       required:
         - metadata
@@ -1981,6 +1981,38 @@ components:
       required:
         - paths
 
+    EgressIpsResponse:
+      type: object
+      description: Список IPv4 и IPv6 префиксов CDN-серверов
+      properties:
+        updatedAt:
+          type: string
+          description: Дата и время последнего обновления списков
+          format: date-time
+        ipv4Prefixes:
+          type: array
+          description: Список IPv4-префиксов
+          items:
+            $ref: '#/components/schemas/EgressIpResponse'
+        ipv6Prefixes:
+          type: array
+          description: Список IPv6-префиксов
+          items:
+            $ref: '#/components/schemas/EgressIpResponse'
+      required:
+        - updatedAt
+        - ipv4Prefixes
+        - ipv6Prefixes
+
+    EgressIpResponse:
+      type: object
+      description: IP-префикс CDN сервера
+      properties:
+        ipPrefix:
+          type: string
+      required:
+        - ipPrefix
+
     ApiError:
       type: object
       description: Описание ошибки (если HTTP-статус отличен от 2xx)
@@ -2134,7 +2166,7 @@ components:
       name: project
       in: path
       required: true
-      description: Путь к проекту
+      description: Путь к проекту.
       style: simple
       schema:
         type: string
