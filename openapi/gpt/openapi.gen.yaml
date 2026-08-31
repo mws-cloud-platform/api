@@ -31,10 +31,12 @@ paths:
           - `spec.inputModalities.text`
           - `spec.inputModalities.image`
           - `spec.inputModalities.file`
+          - `spec.inputModalities.audio`
           - `spec.outputModalities.text`
           - `spec.outputModalities.embedding`
           - `spec.outputModalities.audio`
           - `spec.outputModalities.reranking`
+          - `spec.outputModalities.transcription`
       
         Поля, по которым можно сортировать (`orderBy`):
           - `metadata.id.name`
@@ -118,12 +120,14 @@ paths:
           - `spec.isActive`
           - `spec.model`
           - `status.inputModalities.text`
+          - `status.inputModalities.audio`
           - `status.inputModalities.image`
           - `status.inputModalities.file`
           - `status.outputModalities.text`
           - `status.outputModalities.embedding`
           - `status.outputModalities.audio`
           - `status.outputModalities.reranking`
+          - `status.outputModalities.transcription`
       
         Поля, по которым можно сортировать (`orderBy`):
           - `metadata.id.name`
@@ -325,6 +329,7 @@ components:
           format: date-time
         purgeTime:
           type: string
+          description: Время удаления ресурса
           format: date-time
         usages:
           type: array

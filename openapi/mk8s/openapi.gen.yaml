@@ -578,6 +578,11 @@ components:
           allOf:
             - $ref: '#/components/schemas/PluginsSpecResponse'
           nullable: true
+        securityPosture:
+          allOf:
+            - $ref: '#/components/schemas/SecurityPostureSpecResponse'
+          description: Настройка KSP для кластера
+          nullable: true
       required:
         - availability
         - network
@@ -842,6 +847,15 @@ components:
               description: Настройка CNI-плагина Cilium
           nullable: true
 
+    SecurityPostureSpecResponse:
+      type: object
+      description: Настройка KSP для кластера
+      properties:
+        enabled:
+          type: boolean
+          description: Определяет, работает ли в кластере KSP. Если значение равно false, сканирование кластера выключено
+          default: true
+
     ClusterStatusResponse:
       type: object
       description: Описывает статусную модель k8s cluster
@@ -1013,6 +1027,11 @@ components:
               allOf:
                 - $ref: '#/components/schemas/PluginsStatusResponse'
               nullable: true
+            securityPosture:
+              allOf:
+                - $ref: '#/components/schemas/SecurityPostureStatusResponse'
+              description: Статус KSP для кластера
+              nullable: true
 
     ResourceStatusResponse:
       type: object
@@ -1080,6 +1099,14 @@ components:
             cilium:
               description: Настройка CNI-плагина Cilium
           nullable: true
+
+    SecurityPostureStatusResponse:
+      type: object
+      description: Статус KSP для кластера
+      properties:
+        enabled:
+          type: boolean
+          description: Показывает, работает ли в кластере KSP
 
     NextPageToken:
       type: string
@@ -1175,6 +1202,11 @@ components:
         plugins:
           allOf:
             - $ref: '#/components/schemas/PluginsSpecRequest'
+          nullable: true
+        securityPosture:
+          allOf:
+            - $ref: '#/components/schemas/SecurityPostureSpecRequest'
+          description: Настройка KSP для кластера
           nullable: true
 
     ClusterAvailabilitySpecRequest:
@@ -1428,6 +1460,15 @@ components:
             cilium:
               description: Настройка CNI-плагина Cilium
           nullable: true
+
+    SecurityPostureSpecRequest:
+      type: object
+      description: Настройка KSP для кластера
+      properties:
+        enabled:
+          type: boolean
+          description: Определяет, работает ли в кластере KSP. Если значение равно false, сканирование кластера выключено
+          default: true
 
     VersionResponse:
       type: object

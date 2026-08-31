@@ -1820,8 +1820,7 @@ components:
           description: Спецификация задачи на управление кешем CDN
         status:
           allOf:
-            - $ref: '#/components/schemas/ResourceStatusResponse'
-          description: Текущее состояние ресурса, вычисляемое системой
+            - $ref: '#/components/schemas/CacheTaskStatusResponse'
           nullable: true
       required:
         - metadata
@@ -1896,6 +1895,34 @@ components:
             type: string
       required:
         - paths
+
+    CacheTaskStatusResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ResourceStatusResponse'
+        - type: object
+          properties:
+            responses:
+              type: array
+              description: Полученные HTTP-ответы по путям предзагруженного контента
+              items:
+                $ref: '#/components/schemas/CacheTaskPathResponseResponse'
+
+    CacheTaskPathResponseResponse:
+      type: object
+      properties:
+        path:
+          type: string
+          description: Путь к контенту
+        httpCodes:
+          type: array
+          description: Полученные уникальные HTTP-ответы
+          items:
+            type: integer
+            format: int32
+      required:
+        - path
+        - httpCodes
 
     CacheTaskRequest:
       type: object

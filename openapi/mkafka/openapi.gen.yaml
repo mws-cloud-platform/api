@@ -512,6 +512,207 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
 
+  /mkafka/v1/projects/{project}/clusters/{cluster}/connectors:
+    get:
+      tags:
+        - kafkaConnector
+      summary: List Kafka Connectors
+      description: |-
+        Операция позволяет получить список ресурсов
+      
+        Поддерживается фильтрация и сортировка с помощью query-параметров `filter` и `orderBy`.
+        Информация по использованию этих параметров находится в их описании
+      
+        Поля, по которым можно фильтровать (`filter`):
+          - `metadata.id.connector`
+      
+        Поля, по которым можно сортировать (`orderBy`):
+          - `metadata.id.connector`
+          - `metadata.displayName`
+          - `metadata.createTime`
+          - `metadata.updateTime`
+      operationId: ListKafkaConnectors
+      parameters:
+        - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/path_cluster"
+        - $ref: "#/components/parameters/query_pageSize"
+        - $ref: "#/components/parameters/query_pageToken"
+        - $ref: "#/components/parameters/query_filter"
+        - $ref: "#/components/parameters/query_orderBy"
+        - $ref: "#/components/parameters/query_showDeleted"
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaConnectorPageResponse'
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 403, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /mkafka/v1/projects/{project}/clusters/{cluster}/connectors/{connector}:stop:
+    post:
+      tags:
+        - kafkaConnector
+      summary: Request stopping Kafka Connector
+      operationId: StopConnector
+      parameters:
+        - $ref: "#/components/parameters/header_Idempotency-Key"
+        - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/path_cluster"
+        - $ref: "#/components/parameters/path_connector"
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaConnectorResponse'
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 409, 412, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /mkafka/v1/projects/{project}/clusters/{cluster}/connectors/{connector}:start:
+    post:
+      tags:
+        - kafkaConnector
+      summary: Request starting Kafka Connector
+      operationId: StartConnector
+      parameters:
+        - $ref: "#/components/parameters/header_Idempotency-Key"
+        - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/path_cluster"
+        - $ref: "#/components/parameters/path_connector"
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaConnectorResponse'
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 409, 412, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /mkafka/v1/projects/{project}/clusters/{cluster}/connectors/{connector}:
+    post:
+      tags:
+        - kafkaConnector
+      summary: Upsert Kafka Connector
+      description: |-
+        Метод создает новый ресурс или обновляет существующий.
+        Поддерживается частичное обновление ресурса
+      
+        Поля, переданные в запросе, объединяются с уже существующими полями по следующим правилам:
+          - текущие значения заменяются на новые, переданные в запросе;
+          - если для поля в запросе передается значение `null`, его текущее значение удаляется. Актуально только для опциональных полей, которые могут иметь значение `null`;
+          - простые коллекции полностью перезаписывают существующие;
+          - сложные коллекции объединяются рекурсивно:
+            - элементы идентифицируются по обязательному уникальному атрибуту `name`;
+            - если элементу соответствует элемент в запросе, он обновляется по тем же правилам, что и весь ресурс;
+            - если элемент присутствует в текущем описании ресурса, но отсутствует в запросе, он удаляется;
+            - если элемент присутствует в запросе, но отсутствует в текущем описании ресурса, он создается;
+            - порядок элементов становится таким же, как в запросе.
+      
+        Тип коллекции указывается в описании соответствующего поля
+      
+        Чтобы предотвратить конфликты при конкурентном обновлении ресурса, в запросе нужно передать поле `metadata.etag`.
+        Значение `ETag` вычисляется и возвращается сервисом при каждом обновлении состояния ресурса.
+        Если в момент отправки запроса `ETag` изменился на стороне сервиса, в ответе возвращается ошибка `INVALID_ETAG_KEY`.
+      operationId: UpsertKafkaConnector
+      parameters:
+        - $ref: "#/components/parameters/header_Idempotency-Key"
+        - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/path_cluster"
+        - $ref: "#/components/parameters/path_connector"
+        - $ref: "#/components/parameters/query_updateOnly"
+        - $ref: "#/components/parameters/query_createOnly"
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Update Kafka Connector
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KafkaConnectorRequest'
+      responses:
+        "200":
+          description: Kafka connector has been updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaConnectorResponse'
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 409, 412, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    get:
+      tags:
+        - kafkaConnector
+      summary: Get Kafka Connector
+      description: Получение информации о коннекторе
+      operationId: GetKafkaConnector
+      parameters:
+        - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/path_cluster"
+        - $ref: "#/components/parameters/path_connector"
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaConnectorResponse'
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - kafkaConnector
+      summary: Delete Kafka Connector
+      operationId: DeleteKafkaConnector
+      parameters:
+        - $ref: "#/components/parameters/header_Idempotency-Key"
+        - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/path_cluster"
+        - $ref: "#/components/parameters/path_connector"
+        - $ref: "#/components/parameters/query_purge"
+      security:
+        - BearerAuth: []
+      responses:
+        "204":
+          description: No content
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 412, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
 components:
   schemas:
     KafkaClusterPageResponse:
@@ -584,6 +785,7 @@ components:
           format: date-time
         purgeTime:
           type: string
+          description: Время удаления ресурса
           format: date-time
         usages:
           type: array
@@ -2155,6 +2357,343 @@ components:
           type: string
           description: Дополнительные параметры
 
+    KafkaConnectorPageResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          description: Список коннекторов
+          items:
+            $ref: '#/components/schemas/KafkaConnectorResponse'
+        nextPageToken:
+          $ref: '#/components/schemas/NextPageToken'
+          description: Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
+      required:
+        - items
+
+    KafkaConnectorResponse:
+      type: object
+      properties:
+        kind:
+          type: string
+          default: mkafka/v1/streaming/connector
+        metadata:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/TypedResourceMetadataResponse'
+            - type: object
+              properties:
+                id:
+                  type: string
+                  description: |-
+                    Ссылка на типизированный референс
+                  
+                    Строка в формате: "mkafka/projects/{project}/clusters/{cluster}/connectors/{connector}"
+                  
+                    Пример: "mkafka/projects/myProject/clusters/myCluster/connectors/myConnector"
+          nullable: true
+        spec:
+          $ref: '#/components/schemas/KafkaConnectorSpecResponse'
+          description: Параметры коннектора
+        status:
+          allOf:
+            - $ref: '#/components/schemas/KafkaConnectorStatusResponse'
+          nullable: true
+      required:
+        - spec
+
+    KafkaConnectorSpecResponse:
+      type: object
+      description: Параметры коннектора
+      properties:
+        active:
+          type: boolean
+          description: Значение включен/выключен коннектор
+          default: true
+        s3SinkConnector:
+          allOf:
+            - $ref: '#/components/schemas/KafkaS3SinkConnectorResponse'
+          description: Параметры коннектора S3 Sink
+          nullable: true
+
+    KafkaS3SinkConnectorResponse:
+      type: object
+      description: Параметры коннектора S3 Sink
+      properties:
+        topics:
+          type: string
+          description: Список топиков для резервного копирования в S3, через запятую
+        topicsRegex:
+          type: string
+          description: Регулярное выражение для выбора топиков
+        s3Properties:
+          allOf:
+            - $ref: '#/components/schemas/KafkaS3PropertiesResponse'
+          description: Параметры подключения к S3 для бэкапа данных
+          nullable: true
+        tasksMax:
+          type: integer
+          description: Максимальное количество задач (tasks) для коннектора. Не может быть больше числа партиций в топиках
+          format: int32
+          default: 1
+        inputFormat:
+          type: string
+          description: Формат данных в Kafka-топике (как коннектор десериализует сообщения)
+          enum:
+            - "STRING"
+            - "JSON"
+            - "AVRO"
+          default: JSON
+        outputFormat:
+          type: string
+          description: Формат файлов в S3 (как коннектор сериализует сообщения из топика при записи в файл)
+          enum:
+            - "JSONL"
+          default: JSONL
+        fileCompressionType:
+          type: string
+          description: Тип сжатия, используемый для файлов
+          enum:
+            - "GZIP"
+            - "SNAPPY"
+            - "ZSTD"
+            - "NONE"
+          default: NONE
+        outputFields:
+          type: array
+          description: Список полей сообщения в топике, которые будут записаны в файл, резервно копируемый в S3
+          items:
+            $ref: '#/components/schemas/KafkaConnectorOutputFields'
+        outputEnvelope:
+          type: boolean
+          description: Нужно ли оборачивать (envelope) значение в JSON-объект
+          default: true
+        errorHandling:
+          type: string
+          description: Политика обработки ошибок сериализации. DLQ — битые сообщения сохраняются в топик Dead Letter Queue
+          enum:
+            - "DLQ"
+          default: DLQ
+        dlqTopic:
+          type: string
+          description: Имя топика, используемого для Dead Letter Queue (только при errorHandling=DLQ)
+
+    KafkaS3PropertiesResponse:
+      type: object
+      description: Параметры подключения к S3 для бэкапа данных
+      properties:
+        bucketName:
+          type: string
+          description: Имя бакета в S3
+        accessKeyId:
+          type: string
+          description: Идентификатор ключа доступа для подключения к S3
+        endpoint:
+          type: string
+          description: Эндпоинт S3-хранилища
+      required:
+        - bucketName
+        - accessKeyId
+        - endpoint
+
+    KafkaConnectorOutputFields:
+      type: string
+      description: Список полей сообщения в топике, которые будут записаны в файл, резервно копируемый в S3
+      enum:
+        - "KEY"
+        - "VALUE"
+        - "OFFSET"
+        - "TIMESTAMP"
+        - "HEADERS"
+
+    KafkaConnectorStatusResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ResourceStatusResponse'
+        - type: object
+          properties:
+            state:
+              $ref: '#/components/schemas/KafkaConnectorState'
+              description: |-
+                Состояние коннектора
+                  * `CREATING`     - Создаётся
+                  * `RUNNING`      - Работает в штатном режиме
+                  * `STOPPING`     - Останавливается
+                  * `STOPPED`      - Остановлен
+                  * `STARTING`     - Запуск ранее остановленного
+                  * `UPDATING`     - Выполняется обновление
+                  * `ERROR`        - Произошла ошибка, требуется участие команды поддержки
+                  * `DELETING`     - Удаляется
+                  * `UNIDENTIFIED` - Не удаётся определить статус
+            health:
+              $ref: '#/components/schemas/ConnectorHealth'
+              description: |-
+                Работоспособность кластера
+                  * `ALIVE`    - Полностью работоспособен
+                  * `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны)
+                  * `FAILED`   - Неработоспособен
+                  * `UNKNOWN`  - Не удаётся определить состояние (на этапе создания)
+
+    KafkaConnectorState:
+      type: string
+      description: |-
+        Состояние коннектора
+          * `CREATING`     - Создаётся
+          * `RUNNING`      - Работает в штатном режиме
+          * `STOPPING`     - Останавливается
+          * `STOPPED`      - Остановлен
+          * `STARTING`     - Запуск ранее остановленного
+          * `UPDATING`     - Выполняется обновление
+          * `ERROR`        - Произошла ошибка, требуется участие команды поддержки
+          * `DELETING`     - Удаляется
+          * `UNIDENTIFIED` - Не удаётся определить статус
+      enum:
+        - "CREATING"
+        - "RUNNING"
+        - "STOPPING"
+        - "STOPPED"
+        - "STARTING"
+        - "UPDATING"
+        - "ERROR"
+        - "UNIDENTIFIED"
+        - "DELETING"
+
+    ConnectorHealth:
+      type: string
+      description: |-
+        Работоспособность кластера
+          * `ALIVE`    - Полностью работоспособен
+          * `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны)
+          * `FAILED`   - Неработоспособен
+          * `UNKNOWN`  - Не удаётся определить состояние (на этапе создания)
+      enum:
+        - "ALIVE"
+        - "DEGRADED"
+        - "FAILED"
+        - "UNKNOWN"
+
+    KafkaConnectorRequest:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/TypedResourceMetadataRequest'
+        spec:
+          $ref: '#/components/schemas/KafkaConnectorSpecRequest'
+          description: |-
+            Параметры коннектора
+          
+            Обязательно для заполнения при создании ресурса
+
+    KafkaConnectorSpecRequest:
+      type: object
+      description: Параметры коннектора
+      properties:
+        active:
+          type: boolean
+          description: Значение включен/выключен коннектор
+          default: true
+        s3SinkConnector:
+          allOf:
+            - $ref: '#/components/schemas/KafkaS3SinkConnectorRequest'
+          description: Параметры коннектора S3 Sink
+          nullable: true
+
+    KafkaS3SinkConnectorRequest:
+      type: object
+      description: Параметры коннектора S3 Sink
+      properties:
+        topics:
+          type: string
+          description: Список топиков для резервного копирования в S3, через запятую
+        topicsRegex:
+          type: string
+          description: Регулярное выражение для выбора топиков
+        s3Properties:
+          allOf:
+            - $ref: '#/components/schemas/KafkaS3PropertiesRequest'
+          description: Параметры подключения к S3 для бэкапа данных
+          nullable: true
+        tasksMax:
+          type: integer
+          description: Максимальное количество задач (tasks) для коннектора. Не может быть больше числа партиций в топиках
+          format: int32
+          default: 1
+        inputFormat:
+          type: string
+          description: Формат данных в Kafka-топике (как коннектор десериализует сообщения)
+          enum:
+            - "STRING"
+            - "JSON"
+            - "AVRO"
+          default: JSON
+        outputFormat:
+          type: string
+          description: Формат файлов в S3 (как коннектор сериализует сообщения из топика при записи в файл)
+          enum:
+            - "JSONL"
+          default: JSONL
+        fileCompressionType:
+          type: string
+          description: Тип сжатия, используемый для файлов
+          enum:
+            - "GZIP"
+            - "SNAPPY"
+            - "ZSTD"
+            - "NONE"
+          default: NONE
+        outputFields:
+          type: array
+          description: |-
+            Список полей сообщения в топике, которые будут записаны в файл, резервно копируемый в S3
+          
+            Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
+          items:
+            $ref: '#/components/schemas/KafkaConnectorOutputFields'
+        outputEnvelope:
+          type: boolean
+          description: Нужно ли оборачивать (envelope) значение в JSON-объект
+          default: true
+        errorHandling:
+          type: string
+          description: Политика обработки ошибок сериализации. DLQ — битые сообщения сохраняются в топик Dead Letter Queue
+          enum:
+            - "DLQ"
+          default: DLQ
+        dlqTopic:
+          type: string
+          description: Имя топика, используемого для Dead Letter Queue (только при errorHandling=DLQ)
+
+    KafkaS3PropertiesRequest:
+      type: object
+      description: Параметры подключения к S3 для бэкапа данных
+      properties:
+        bucketName:
+          type: string
+          description: |-
+            Имя бакета в S3
+          
+            Обязательно для заполнения при создании ресурса
+        accessKeyId:
+          type: string
+          description: |-
+            Идентификатор ключа доступа для подключения к S3
+          
+            Обязательно для заполнения при создании ресурса
+        secretAccessKey:
+          type: string
+          description: |-
+            Ключ доступа для подключения к S3-хранилищу
+          
+            Поле содержит чувствительные данные. Ограничьте доступ к ним
+          
+            Обязательно для заполнения при создании ресурса
+        endpoint:
+          type: string
+          description: |-
+            Эндпоинт S3-хранилища
+          
+            Обязательно для заполнения при создании ресурса
+
     ApiError:
       type: object
       description: Описание ошибки (если HTTP-статус отличен от 2xx)
@@ -2293,6 +2832,16 @@ components:
       schema:
         type: string
         pattern: ^[a-z]([a-z0-9-]{0,25}[a-z0-9])?$
+
+    path_connector:
+      name: connector
+      in: path
+      required: true
+      description: Имя коннектора.
+      style: simple
+      schema:
+        type: string
+        pattern: ^[a-zA-Z0-9][a-zA-Z0-9._-]{1,248}$
 
     path_project:
       name: project

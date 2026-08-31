@@ -414,6 +414,7 @@ paths:
         - $ref: "#/components/parameters/path_image"
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
         - $ref: "#/components/parameters/header_Idempotency-Key"
       security:
         - BearerAuth: []
@@ -470,6 +471,7 @@ paths:
         - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/path_image"
         - $ref: "#/components/parameters/query_purge"
+        - $ref: "#/components/parameters/query_validateOnly"
         - $ref: "#/components/parameters/header_Idempotency-Key"
       security:
         - BearerAuth: []
@@ -579,6 +581,7 @@ paths:
         - $ref: "#/components/parameters/path_disk"
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
         - $ref: "#/components/parameters/header_Idempotency-Key"
       security:
         - BearerAuth: []
@@ -635,6 +638,7 @@ paths:
         - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/path_disk"
         - $ref: "#/components/parameters/query_purge"
+        - $ref: "#/components/parameters/query_validateOnly"
         - $ref: "#/components/parameters/header_Idempotency-Key"
       security:
         - BearerAuth: []
@@ -735,6 +739,7 @@ paths:
         - $ref: "#/components/parameters/path_diskBackup"
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
         - $ref: "#/components/parameters/header_Idempotency-Key"
       security:
         - BearerAuth: []
@@ -791,6 +796,7 @@ paths:
         - $ref: "#/components/parameters/path_project_1758db71"
         - $ref: "#/components/parameters/path_diskBackup"
         - $ref: "#/components/parameters/query_purge"
+        - $ref: "#/components/parameters/query_validateOnly"
         - $ref: "#/components/parameters/header_Idempotency-Key"
       security:
         - BearerAuth: []
@@ -903,6 +909,7 @@ components:
           format: date-time
         purgeTime:
           type: string
+          description: Время удаления ресурса
           format: date-time
         usages:
           type: array
@@ -4492,6 +4499,15 @@ components:
       description: |-
         Обновить ресурс, если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
         Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+      style: form
+      explode: true
+      schema:
+        type: boolean
+
+    query_validateOnly:
+      name: validateOnly
+      in: query
+      description: Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
       style: form
       explode: true
       schema:

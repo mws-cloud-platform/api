@@ -380,6 +380,7 @@ components:
           format: date-time
         purgeTime:
           type: string
+          description: Время удаления ресурса
           format: date-time
         usages:
           type: array

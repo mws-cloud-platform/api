@@ -92,6 +92,7 @@ paths:
     post:
       tags:
         - secret
+      summary: Создать или изменить секрет
       description: |-
         Создать или изменить секрет
       
@@ -297,6 +298,7 @@ paths:
     post:
       tags:
         - secretVersion
+      summary: Изменить версию секрета
       description: |-
         Изменить версию секрета
       
@@ -815,7 +817,10 @@ components:
 
     SecretVersionDataSpec:
       type: object
-      description: Содержимое секрета
+      description: |-
+        Содержимое секрета
+      
+        Значения в объекте содержат чувствительные данные. Ограничьте доступ к ним
       additionalProperties:
         type: string
 
@@ -982,6 +987,7 @@ components:
 
     SecretVersionDataSpec2:
       type: object
+      description: Значения в объекте содержат чувствительные данные. Ограничьте доступ к ним
       additionalProperties:
         type: string
 
@@ -1155,11 +1161,6 @@ components:
             - $ref: '#/components/schemas/CommonRoleBindingFederationResponse'
           description: Субъект федерации пользователей
           nullable: true
-        workloadFederation:
-          allOf:
-            - $ref: '#/components/schemas/CommonRoleBindingWorkloadFederationResponse'
-          description: Субъект федерации удостоверений рабочей нагрузки (workload)
-          nullable: true
         userGroup:
           type: string
           description: |-
@@ -1258,38 +1259,6 @@ components:
       required:
         - name
         - value
-
-    CommonRoleBindingWorkloadFederationResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: |-
-            Идентификатор федерации удостоверений рабочей нагрузки (workload)
-          
-            Строка в форматах:
-              Полный формат:
-                - "iam/projects/{project}/workloadFederations/{workloadFederation}"
-              Сокращенные форматы:
-                - "projects/{project}/workloadFederations/{workloadFederation}"
-                - "workloadFederations/{workloadFederation}"
-                - "{workloadFederation}"
-          
-            Полный формат всегда корректен.
-            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
-          
-            Примеры:
-              - "iam/projects/myProject/workloadFederations/myWorkloadFederation"
-              - "projects/myProject/workloadFederations/myWorkloadFederation"
-              - "workloadFederations/myWorkloadFederation"
-              - "myWorkloadFederation"
-        context:
-          allOf:
-            - $ref: '#/components/schemas/CommonRoleBindingFederationContextResponse'
-          description: 'Контекст федерации, уточняющий субъекта: конкретный пользователь федерации или атрибут, которым он должен обладать. Должно быть заполнено ровно одно из полей'
-          nullable: true
-      required:
-        - id
 
     CommonRoleBindingStatusResponse:
       description: Текущее состояние привязки роли, вычисляемое системой
@@ -1432,11 +1401,6 @@ components:
             - $ref: '#/components/schemas/CommonRoleBindingFederationRequest'
           description: Субъект федерации пользователей
           nullable: true
-        workloadFederation:
-          allOf:
-            - $ref: '#/components/schemas/CommonRoleBindingWorkloadFederationRequest'
-          description: Субъект федерации удостоверений рабочей нагрузки (workload)
-          nullable: true
         userGroup:
           type: string
           description: |-
@@ -1538,38 +1502,6 @@ components:
             Значение атрибута
           
             Обязательно для заполнения при создании ресурса
-
-    CommonRoleBindingWorkloadFederationRequest:
-      type: object
-      properties:
-        id:
-          type: string
-          description: |-
-            Идентификатор федерации удостоверений рабочей нагрузки (workload)
-          
-            Строка в форматах:
-              Полный формат:
-                - "iam/projects/{project}/workloadFederations/{workloadFederation}"
-              Сокращенные форматы:
-                - "projects/{project}/workloadFederations/{workloadFederation}"
-                - "workloadFederations/{workloadFederation}"
-                - "{workloadFederation}"
-          
-            Полный формат всегда корректен.
-            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
-          
-            Обязательно для заполнения при создании ресурса
-          
-            Примеры:
-              - "iam/projects/myProject/workloadFederations/myWorkloadFederation"
-              - "projects/myProject/workloadFederations/myWorkloadFederation"
-              - "workloadFederations/myWorkloadFederation"
-              - "myWorkloadFederation"
-        context:
-          allOf:
-            - $ref: '#/components/schemas/CommonRoleBindingFederationContextRequest'
-          description: 'Контекст федерации, уточняющий субъекта: конкретный пользователь федерации или атрибут, которым он должен обладать. Должно быть заполнено ровно одно из полей'
-          nullable: true
 
     ApiError:
       type: object

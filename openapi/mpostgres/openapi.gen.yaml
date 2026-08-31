@@ -28,6 +28,7 @@ paths:
         Поля, по которым можно фильтровать (`filter`):
           - `metadata.id.cluster`
           - `metadata.displayName`
+          - `status.region.region`
       
         Поля, по которым можно сортировать (`orderBy`):
           - `metadata.id.cluster`
@@ -42,6 +43,7 @@ paths:
           - `status.health`
           - `status.state`
           - `status.ready.state`
+          - `status.region.region`
       operationId: ListPostgresClusters
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -798,6 +800,7 @@ components:
           format: date-time
         purgeTime:
           type: string
+          description: Время удаления ресурса
           format: date-time
         usages:
           type: array
