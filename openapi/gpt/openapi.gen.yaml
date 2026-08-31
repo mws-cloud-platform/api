@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.4.0
+  version: 0.6.0
   title: GPT Model Hub
   description: Публичная спецификация сервиса GPT Model Hub
 
@@ -14,6 +14,160 @@ security:
   - BearerAuth: []
 
 paths:
+  /gpt/v1/projects/{project}/deployments/{deploymentName}/deploymentRoleBindings:
+    get:
+      tags:
+        - deploymentRoleBinding
+      summary: Получить список привязок ролей деплойментов
+      description: |-
+        Операция позволяет получить список ресурсов
+      
+        Поддерживается фильтрация и сортировка с помощью query-параметров `filter` и `orderBy`.
+        Информация по использованию этих параметров находится в их описании
+      
+        Поля, по которым можно фильтровать (`filter`):
+          - `spec.subject.user.idPath`
+          - `spec.subject.serviceAccount.idPath`
+          - `spec.subject.systemServiceAccount.idPath`
+          - `spec.subject.serviceAgent.idPath`
+          - `spec.subject.userFederation.id.idPath`
+          - `spec.subject.userFederation.context.subject`
+          - `spec.subject.userFederation.context.attribute.name`
+          - `spec.subject.userFederation.context.attribute.value`
+          - `metadata.id.name`
+      
+        Поля, по которым можно сортировать (`orderBy`):
+          - `metadata.createTime`
+          - `metadata.updateTime`
+      operationId: ListRoleBindings
+      parameters:
+        - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/query_pageSize"
+        - $ref: "#/components/parameters/query_pageToken"
+        - $ref: "#/components/parameters/query_filter"
+        - $ref: "#/components/parameters/query_orderBy"
+        - $ref: "#/components/parameters/path_deploymentName"
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeploymentRoleBindingListResponse'
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /gpt/v1/projects/{project}/deployments/{deploymentName}/deploymentRoleBindings/{roleBinding}:
+    post:
+      tags:
+        - deploymentRoleBinding
+      summary: Создать или обновить привязку ролей деплоймента
+      description: |-
+        Метод создает новый ресурс или обновляет существующий.
+        Поддерживается частичное обновление ресурса
+      
+        Поля, переданные в запросе, объединяются с уже существующими полями по следующим правилам:
+          - текущие значения заменяются на новые, переданные в запросе;
+          - если для поля в запросе передается значение `null`, его текущее значение удаляется. Актуально только для опциональных полей, которые могут иметь значение `null`;
+          - простые коллекции полностью перезаписывают существующие;
+          - сложные коллекции объединяются рекурсивно:
+            - элементы идентифицируются по обязательному уникальному атрибуту `name`;
+            - если элементу соответствует элемент в запросе, он обновляется по тем же правилам, что и весь ресурс;
+            - если элемент присутствует в текущем описании ресурса, но отсутствует в запросе, он удаляется;
+            - если элемент присутствует в запросе, но отсутствует в текущем описании ресурса, он создается;
+            - порядок элементов становится таким же, как в запросе.
+      
+        Тип коллекции указывается в описании соответствующего поля
+      
+        Чтобы предотвратить конфликты при конкурентном обновлении ресурса, в запросе нужно передать поле `metadata.etag`.
+        Значение `ETag` вычисляется и возвращается сервисом при каждом обновлении состояния ресурса.
+        Если в момент отправки запроса `ETag` изменился на стороне сервиса, в ответе возвращается ошибка `INVALID_ETAG_KEY`.
+      operationId: UpsertRoleBinding
+      parameters:
+        - $ref: "#/components/parameters/path_deploymentName"
+        - $ref: "#/components/parameters/path_roleBinding"
+        - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/header_Idempotency-Key"
+        - $ref: "#/components/parameters/query_createOnly"
+        - $ref: "#/components/parameters/query_updateOnly"
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeploymentRoleBindingRequest'
+      responses:
+        "200":
+          description: Updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeploymentRoleBindingResponse'
+        "201":
+          description: Created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeploymentRoleBindingResponse'
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 409, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    get:
+      tags:
+        - deploymentRoleBinding
+      summary: Получить указанную привязку ролей деплоймента
+      operationId: GetRoleBinding
+      parameters:
+        - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/path_deploymentName"
+        - $ref: "#/components/parameters/path_roleBinding"
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeploymentRoleBindingResponse'
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    delete:
+      tags:
+        - deploymentRoleBinding
+      summary: Удалить привязку ролей Деплоймента
+      operationId: DeleteRoleBinding
+      parameters:
+        - $ref: "#/components/parameters/path_deploymentName"
+        - $ref: "#/components/parameters/path_roleBinding"
+        - $ref: "#/components/parameters/path_project"
+      security:
+        - BearerAuth: []
+      responses:
+        "204":
+          description: No Content
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
   /gpt/v1/projects/{project}/models:
     get:
       tags:
@@ -278,11 +432,28 @@ paths:
 
 components:
   schemas:
-    ModelResponse:
+    DeploymentRoleBindingListResponse:
       type: object
+      description: Страница списка привязок ролей к деплойментам
+      properties:
+        items:
+          type: array
+          description: Привязки ролей к деплойментам
+          items:
+            $ref: '#/components/schemas/DeploymentRoleBindingResponse'
+        nextPageToken:
+          $ref: '#/components/schemas/NextPageToken2'
+          description: Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
+      required:
+        - items
+
+    DeploymentRoleBindingResponse:
+      type: object
+      description: Привязка роли к деплойменту — это связь субъекта (пользователя, группы пользователей или сервисного аккаунта) и роли, определяющая права субъекта на конкретный деплоймент
       properties:
         kind:
           type: string
+          default: gpt/v1/deploymentRoleBinding
         metadata:
           type: object
           allOf:
@@ -294,16 +465,17 @@ components:
                   description: |-
                     Ссылка на типизированный референс
                   
-                    Строка в формате: "gpt/projects/{project}/models/{modelName}"
+                    Строка в формате: "gpt/projects/{project}/deployments/{deploymentName}/deploymentRoleBindings/{roleBinding}"
                   
-                    Пример: "gpt/projects/myProject/models/myModelName"
+                    Пример: "gpt/projects/myProject/deployments/myDeploymentName/deploymentRoleBindings/myRoleBinding"
           nullable: true
         spec:
-          $ref: '#/components/schemas/ModelSpecResponse'
+          $ref: '#/components/schemas/CommonRoleBindingSpecResponse'
+          description: Параметры привязки роли — субъект, которому выдаются права, и роль, определяющая набор этих прав
         status:
           allOf:
-            - $ref: '#/components/schemas/ResourceStatusResponse'
-          description: Текущее состояние ресурса, вычисляемое системой
+            - $ref: '#/components/schemas/CommonRoleBindingStatusResponse'
+          description: Текущее состояние привязки роли, вычисляемое системой
           nullable: true
       required:
         - spec
@@ -360,6 +532,553 @@ components:
       required:
         - usageType
         - resource
+
+    CommonRoleBindingSpecResponse:
+      type: object
+      description: Параметры привязки роли — субъект, которому выдаются права, и роль, определяющая набор этих прав
+      properties:
+        subject:
+          $ref: '#/components/schemas/CommonRoleBindingSpecSubjectResponse'
+          description: Субъект привязки роли — пользователь, сервисный аккаунт, группа пользователей или другая сущность, которой выдаются права. Должно быть заполнено ровно одно из полей
+        role:
+          type: string
+          description: |-
+            Роль, определяющая права субъекта на ресурс
+          
+            Строка в форматах:
+              Полный формат:
+                - "iam/roles/{role}"
+              Сокращенные форматы:
+                - "roles/{role}"
+                - "{role}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Примеры:
+              - "iam/roles/myRole"
+              - "roles/myRole"
+              - "myRole"
+        supportRequestId:
+          type: string
+          description: |-
+            Идентификатор запроса в службу поддержки, в рамках которого был создан биндинг
+          
+            Строка в форматах:
+              Полный формат:
+                - "support/requests/{requestName}"
+              Сокращенные форматы:
+                - "requests/{requestName}"
+                - "{requestName}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Примеры:
+              - "support/requests/myRequestName"
+              - "requests/myRequestName"
+              - "myRequestName"
+      required:
+        - subject
+        - role
+
+    CommonRoleBindingSpecSubjectResponse:
+      type: object
+      description: Субъект привязки роли — пользователь, сервисный аккаунт, группа пользователей или другая сущность, которой выдаются права. Должно быть заполнено ровно одно из полей
+      properties:
+        user:
+          type: string
+          description: |-
+            Идентификатор пользователя
+          
+            Строка в форматах:
+              Полный формат:
+                - "iam/users/{user}"
+              Сокращенные форматы:
+                - "users/{user}"
+                - "{user}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Примеры:
+              - "iam/users/myUser"
+              - "users/myUser"
+              - "myUser"
+        serviceAccount:
+          type: string
+          description: |-
+            Идентификатор сервисного аккаунта, принадлежащего проекту
+          
+            Строка в форматах:
+              Полный формат:
+                - "iam/projects/{project}/serviceAccounts/{serviceAccount}"
+              Сокращенные форматы:
+                - "projects/{project}/serviceAccounts/{serviceAccount}"
+                - "serviceAccounts/{serviceAccount}"
+                - "{serviceAccount}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Примеры:
+              - "iam/projects/myProject/serviceAccounts/myServiceAccount"
+              - "projects/myProject/serviceAccounts/myServiceAccount"
+              - "serviceAccounts/myServiceAccount"
+              - "myServiceAccount"
+        serviceAgent:
+          type: string
+          description: |-
+            Идентификатор сервисного агента, связанного с проектом
+          
+            Строка в форматах:
+              Полный формат:
+                - "iam/projects/{project}/serviceAgents/{serviceAgent}"
+              Сокращенные форматы:
+                - "projects/{project}/serviceAgents/{serviceAgent}"
+                - "serviceAgents/{serviceAgent}"
+                - "{serviceAgent}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Примеры:
+              - "iam/projects/myProject/serviceAgents/myServiceAgent"
+              - "projects/myProject/serviceAgents/myServiceAgent"
+              - "serviceAgents/myServiceAgent"
+              - "myServiceAgent"
+        userFederation:
+          allOf:
+            - $ref: '#/components/schemas/CommonRoleBindingFederationResponse'
+          description: Субъект федерации пользователей
+          nullable: true
+        userGroup:
+          type: string
+          description: |-
+            Идентификатор группы пользователей
+          
+            Строка в форматах:
+              Полный формат:
+                - "iam/userGroups/{userGroup}"
+              Сокращенные форматы:
+                - "userGroups/{userGroup}"
+                - "{userGroup}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Примеры:
+              - "iam/userGroups/myUserGroup"
+              - "userGroups/myUserGroup"
+              - "myUserGroup"
+        employee:
+          type: string
+          description: |-
+            Идентификатор пользователя backoffice
+          
+            Строка в форматах:
+              Полный формат:
+                - "iam/employees/{employee}"
+              Сокращенные форматы:
+                - "employees/{employee}"
+                - "{employee}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Примеры:
+              - "iam/employees/myEmployee"
+              - "employees/myEmployee"
+              - "myEmployee"
+
+    CommonRoleBindingFederationResponse:
+      type: object
+      description: Субъект федерации пользователей — идентификатор федерации и, опционально, контекст, уточняющий, на каких пользователей федерации распространяется привязка роли
+      properties:
+        id:
+          type: string
+          description: |-
+            Идентификатор федерации
+          
+            Строка в форматах:
+              Полный формат:
+                - "iam/organizations/{organization}/userFederations/{userFederation}"
+              Сокращенные форматы:
+                - "organizations/{organization}/userFederations/{userFederation}"
+                - "userFederations/{userFederation}"
+                - "{userFederation}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Примеры:
+              - "iam/organizations/myOrganization/userFederations/myUserFederation"
+              - "organizations/myOrganization/userFederations/myUserFederation"
+              - "userFederations/myUserFederation"
+              - "myUserFederation"
+        context:
+          allOf:
+            - $ref: '#/components/schemas/CommonRoleBindingFederationContextResponse'
+          description: 'Контекст федерации, уточняющий субъекта: конкретный пользователь федерации или атрибут, которым он должен обладать. Должно быть заполнено ровно одно из полей'
+          nullable: true
+      required:
+        - id
+
+    CommonRoleBindingFederationContextResponse:
+      type: object
+      description: 'Контекст федерации, уточняющий субъекта: конкретный пользователь федерации или атрибут, которым он должен обладать. Должно быть заполнено ровно одно из полей'
+      properties:
+        subject:
+          type: string
+          description: Идентификатор субъекта федерации
+          example: vasya@mts.ru
+        attribute:
+          allOf:
+            - $ref: '#/components/schemas/CommonRoleBindingFederationContextAttributeResponse'
+          description: Атрибут пользователя федерации в виде пары «имя — значение»
+          nullable: true
+
+    CommonRoleBindingFederationContextAttributeResponse:
+      type: object
+      description: Атрибут пользователя федерации в виде пары «имя — значение»
+      properties:
+        name:
+          type: string
+          description: Имя атрибута
+          example: federationAttributeName
+        value:
+          type: string
+          description: Значение атрибута
+          example: federationAttributeValue
+      required:
+        - name
+        - value
+
+    CommonRoleBindingStatusResponse:
+      description: Текущее состояние привязки роли, вычисляемое системой
+      $ref: '#/components/schemas/ResourceStatusResponse'
+
+    ResourceStatusResponse:
+      type: object
+      description: Текущее состояние ресурса, вычисляемое системой
+      properties:
+        ready:
+          $ref: '#/components/schemas/ResourceStatusReadyResponse'
+          description: Информация о статусе реконсиляции
+      required:
+        - ready
+
+    ResourceStatusReadyResponse:
+      type: object
+      description: Информация о статусе реконсиляции
+      properties:
+        state:
+          $ref: '#/components/schemas/ResourceStatusState'
+          description: Состояние ресурса
+        message:
+          type: string
+          description: Описание статуса
+          example: Success operation
+      required:
+        - state
+
+    ResourceStatusState:
+      type: string
+      description: Состояние ресурса
+      enum:
+        - "OK"
+        - "FAILED"
+        - "PROCESSING"
+
+    NextPageToken2:
+      type: string
+      description: Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
+
+    DeploymentRoleBindingRequest:
+      type: object
+      description: Привязка роли к деплойменту — это связь субъекта (пользователя, группы пользователей или сервисного аккаунта) и роли, определяющая права субъекта на конкретный деплоймент
+      properties:
+        metadata:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/TypedResourceMetadataRequest'
+          nullable: true
+        spec:
+          $ref: '#/components/schemas/CommonRoleBindingSpecRequest'
+          description: |-
+            Параметры привязки роли — субъект, которому выдаются права, и роль, определяющая набор этих прав
+          
+            Обязательно для заполнения при создании ресурса
+
+    TypedResourceMetadataRequest:
+      type: object
+      description: Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров
+      properties:
+        displayName:
+          type: string
+          description: Отображаемое имя. Необязательное поле, можно свободно задавать и изменять для удобства организации ресурсов
+        etag:
+          type: string
+          description: Идентификатор состояния ресурса, позволяет отслеживать изменение ресурса
+        description:
+          type: string
+          description: Описание ресурса
+
+    CommonRoleBindingSpecRequest:
+      type: object
+      description: Параметры привязки роли — субъект, которому выдаются права, и роль, определяющая набор этих прав
+      properties:
+        subject:
+          $ref: '#/components/schemas/CommonRoleBindingSpecSubjectRequest'
+          description: |-
+            Субъект привязки роли — пользователь, сервисный аккаунт, группа пользователей или другая сущность, которой выдаются права. Должно быть заполнено ровно одно из полей
+          
+            Обязательно для заполнения при создании ресурса
+        role:
+          type: string
+          description: |-
+            Роль, определяющая права субъекта на ресурс
+          
+            Строка в форматах:
+              Полный формат:
+                - "iam/roles/{role}"
+              Сокращенные форматы:
+                - "roles/{role}"
+                - "{role}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Обязательно для заполнения при создании ресурса
+          
+            Примеры:
+              - "iam/roles/myRole"
+              - "roles/myRole"
+              - "myRole"
+        supportRequestId:
+          type: string
+          description: |-
+            Идентификатор запроса в службу поддержки, в рамках которого был создан биндинг
+          
+            Строка в форматах:
+              Полный формат:
+                - "support/requests/{requestName}"
+              Сокращенные форматы:
+                - "requests/{requestName}"
+                - "{requestName}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Примеры:
+              - "support/requests/myRequestName"
+              - "requests/myRequestName"
+              - "myRequestName"
+
+    CommonRoleBindingSpecSubjectRequest:
+      type: object
+      description: Субъект привязки роли — пользователь, сервисный аккаунт, группа пользователей или другая сущность, которой выдаются права. Должно быть заполнено ровно одно из полей
+      properties:
+        user:
+          type: string
+          description: |-
+            Идентификатор пользователя
+          
+            Строка в форматах:
+              Полный формат:
+                - "iam/users/{user}"
+              Сокращенные форматы:
+                - "users/{user}"
+                - "{user}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Примеры:
+              - "iam/users/myUser"
+              - "users/myUser"
+              - "myUser"
+        serviceAccount:
+          type: string
+          description: |-
+            Идентификатор сервисного аккаунта, принадлежащего проекту
+          
+            Строка в форматах:
+              Полный формат:
+                - "iam/projects/{project}/serviceAccounts/{serviceAccount}"
+              Сокращенные форматы:
+                - "projects/{project}/serviceAccounts/{serviceAccount}"
+                - "serviceAccounts/{serviceAccount}"
+                - "{serviceAccount}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Примеры:
+              - "iam/projects/myProject/serviceAccounts/myServiceAccount"
+              - "projects/myProject/serviceAccounts/myServiceAccount"
+              - "serviceAccounts/myServiceAccount"
+              - "myServiceAccount"
+        serviceAgent:
+          type: string
+          description: |-
+            Идентификатор сервисного агента, связанного с проектом
+          
+            Строка в форматах:
+              Полный формат:
+                - "iam/projects/{project}/serviceAgents/{serviceAgent}"
+              Сокращенные форматы:
+                - "projects/{project}/serviceAgents/{serviceAgent}"
+                - "serviceAgents/{serviceAgent}"
+                - "{serviceAgent}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Примеры:
+              - "iam/projects/myProject/serviceAgents/myServiceAgent"
+              - "projects/myProject/serviceAgents/myServiceAgent"
+              - "serviceAgents/myServiceAgent"
+              - "myServiceAgent"
+        userFederation:
+          allOf:
+            - $ref: '#/components/schemas/CommonRoleBindingFederationRequest'
+          description: Субъект федерации пользователей
+          nullable: true
+        userGroup:
+          type: string
+          description: |-
+            Идентификатор группы пользователей
+          
+            Строка в форматах:
+              Полный формат:
+                - "iam/userGroups/{userGroup}"
+              Сокращенные форматы:
+                - "userGroups/{userGroup}"
+                - "{userGroup}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Примеры:
+              - "iam/userGroups/myUserGroup"
+              - "userGroups/myUserGroup"
+              - "myUserGroup"
+        employee:
+          type: string
+          description: |-
+            Идентификатор пользователя backoffice
+          
+            Строка в форматах:
+              Полный формат:
+                - "iam/employees/{employee}"
+              Сокращенные форматы:
+                - "employees/{employee}"
+                - "{employee}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Примеры:
+              - "iam/employees/myEmployee"
+              - "employees/myEmployee"
+              - "myEmployee"
+
+    CommonRoleBindingFederationRequest:
+      type: object
+      description: Субъект федерации пользователей — идентификатор федерации и, опционально, контекст, уточняющий, на каких пользователей федерации распространяется привязка роли
+      properties:
+        id:
+          type: string
+          description: |-
+            Идентификатор федерации
+          
+            Строка в форматах:
+              Полный формат:
+                - "iam/organizations/{organization}/userFederations/{userFederation}"
+              Сокращенные форматы:
+                - "organizations/{organization}/userFederations/{userFederation}"
+                - "userFederations/{userFederation}"
+                - "{userFederation}"
+          
+            Полный формат всегда корректен.
+            Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+          
+            Обязательно для заполнения при создании ресурса
+          
+            Примеры:
+              - "iam/organizations/myOrganization/userFederations/myUserFederation"
+              - "organizations/myOrganization/userFederations/myUserFederation"
+              - "userFederations/myUserFederation"
+              - "myUserFederation"
+        context:
+          allOf:
+            - $ref: '#/components/schemas/CommonRoleBindingFederationContextRequest'
+          description: 'Контекст федерации, уточняющий субъекта: конкретный пользователь федерации или атрибут, которым он должен обладать. Должно быть заполнено ровно одно из полей'
+          nullable: true
+
+    CommonRoleBindingFederationContextRequest:
+      type: object
+      description: 'Контекст федерации, уточняющий субъекта: конкретный пользователь федерации или атрибут, которым он должен обладать. Должно быть заполнено ровно одно из полей'
+      properties:
+        subject:
+          type: string
+          description: Идентификатор субъекта федерации
+          example: vasya@mts.ru
+        attribute:
+          allOf:
+            - $ref: '#/components/schemas/CommonRoleBindingFederationContextAttributeRequest'
+          description: Атрибут пользователя федерации в виде пары «имя — значение»
+          nullable: true
+
+    CommonRoleBindingFederationContextAttributeRequest:
+      type: object
+      description: Атрибут пользователя федерации в виде пары «имя — значение»
+      properties:
+        name:
+          type: string
+          description: |-
+            Имя атрибута
+          
+            Обязательно для заполнения при создании ресурса
+          example: federationAttributeName
+        value:
+          type: string
+          description: |-
+            Значение атрибута
+          
+            Обязательно для заполнения при создании ресурса
+          example: federationAttributeValue
+
+    ModelResponse:
+      type: object
+      properties:
+        kind:
+          type: string
+        metadata:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/TypedResourceMetadataResponse'
+            - type: object
+              properties:
+                id:
+                  type: string
+                  description: |-
+                    Ссылка на типизированный референс
+                  
+                    Строка в формате: "gpt/projects/{project}/models/{modelName}"
+                  
+                    Пример: "gpt/projects/myProject/models/myModelName"
+          nullable: true
+        spec:
+          $ref: '#/components/schemas/ModelSpecResponse'
+        status:
+          allOf:
+            - $ref: '#/components/schemas/ResourceStatusResponse'
+          description: Текущее состояние ресурса, вычисляемое системой
+          nullable: true
+      required:
+        - spec
 
     ModelSpecResponse:
       type: object
@@ -464,37 +1183,6 @@ components:
         inference:
           type: string
           format: date-time
-
-    ResourceStatusResponse:
-      type: object
-      description: Текущее состояние ресурса, вычисляемое системой
-      properties:
-        ready:
-          $ref: '#/components/schemas/ResourceStatusReadyResponse'
-          description: Информация о статусе реконсиляции
-      required:
-        - ready
-
-    ResourceStatusReadyResponse:
-      type: object
-      description: Информация о статусе реконсиляции
-      properties:
-        state:
-          $ref: '#/components/schemas/ResourceStatusState'
-          description: Состояние ресурса
-        message:
-          type: string
-          description: Описание статуса
-      required:
-        - state
-
-    ResourceStatusState:
-      type: string
-      description: Состояние ресурса
-      enum:
-        - "OK"
-        - "FAILED"
-        - "PROCESSING"
 
     NextPageToken:
       type: string
@@ -610,20 +1298,6 @@ components:
             Спецификация желаемого состояния деплоймента
           
             Обязательно для заполнения при создании ресурса
-
-    TypedResourceMetadataRequest:
-      type: object
-      description: Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров
-      properties:
-        displayName:
-          type: string
-          description: Отображаемое имя. Необязательное поле, можно свободно задавать и изменять для удобства организации ресурсов
-        etag:
-          type: string
-          description: Идентификатор состояния ресурса, позволяет отслеживать изменение ресурса
-        description:
-          type: string
-          description: Описание ресурса
 
     DeploymentSpecRequest:
       type: object
@@ -806,6 +1480,14 @@ components:
       in: path
       required: true
       description: Путь к проекту.
+      style: simple
+      schema:
+        type: string
+
+    path_roleBinding:
+      name: roleBinding
+      in: path
+      required: true
       style: simple
       schema:
         type: string

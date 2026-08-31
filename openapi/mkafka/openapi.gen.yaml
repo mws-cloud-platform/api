@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.4.0
+  version: 0.6.0
   title: Managed Kafka
   description: Публичная спецификация сервиса Managed Kafka
 
@@ -1124,6 +1124,7 @@ components:
       type: integer
       description: Количество дисковых операций в секунду
       format: int32
+      example: 1000
 
     KafkaAllocationResponse:
       type: object
@@ -1363,6 +1364,7 @@ components:
         message:
           type: string
           description: Описание статуса
+          example: Success operation
       required:
         - state
 

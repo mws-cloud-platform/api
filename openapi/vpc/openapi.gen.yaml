@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.4.0
+  version: 0.6.0
   title: Virtual Private Cloud (VPC)
   description: Публичная спецификация сервиса Virtual Private Cloud (VPC)
 
@@ -1531,6 +1531,7 @@ components:
               type: integer
               description: Максимальная единица передачи в байтах (maximum transmission unit - MTU)
               format: int32
+              example: 1500
             internetAccess:
               type: boolean
               description: Доступ в интернет
@@ -1555,6 +1556,7 @@ components:
         message:
           type: string
           description: Описание статуса
+          example: Success operation
       required:
         - state
 
@@ -1755,6 +1757,7 @@ components:
                 Примеры:
                   - "192.168.1.1"
                   - "2001:db8:130F::9C0:876A:130B"
+              example: 201.1.1.1
             active:
               type: boolean
               description: 'Состояние внешнего адреса: активен или не активен'
@@ -1902,6 +1905,7 @@ components:
             При обновлении ресурса можно передать только текущее значение
           
             Пример: "192.168.1.0/24"
+          example: 192.168.0.0/24
         dhcpOptions:
           allOf:
             - $ref: '#/components/schemas/SubnetDhcpOptionsResponse'
@@ -1915,6 +1919,7 @@ components:
         domainName:
           type: string
           description: Базовое доменное имя для разрешения имен
+          example: vpc.local
           nullable: true
         domainNameServers:
           type: array
@@ -2005,6 +2010,7 @@ components:
             При обновлении ресурса можно передать только текущее значение
           
             Пример: "192.168.1.0/24"
+          example: 192.168.0.0/24
         dhcpOptions:
           allOf:
             - $ref: '#/components/schemas/SubnetDhcpOptionsRequest'
@@ -2016,6 +2022,7 @@ components:
         domainName:
           type: string
           description: Базовое доменное имя для разрешения имен
+          example: vpc.local
           nullable: true
         domainNameServers:
           type: array
@@ -2257,6 +2264,7 @@ components:
             Примеры:
               - "192.168.1.1"
               - "2001:db8:130F::9C0:876A:130B"
+          example: 192.168.1.2
       required:
         - ref
         - ipAddress
@@ -2522,6 +2530,7 @@ components:
             Примеры:
               - "192.168.1.1"
               - "2001:db8:130F::9C0:876A:130B"
+          example: 192.168.1.2
         dns:
           type: array
           description: Спецификация DNS для IP-адреса
@@ -2537,6 +2546,7 @@ components:
         name:
           type: string
           description: DNS-имя виртуальной машины в MWS Cloud Platform
+          example: vm1dns.dev
         ttl:
           type: string
           description: |-
@@ -2559,6 +2569,7 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+          example: 60s
         ptr:
           type: boolean
           description: Создать обратную DNS-запись
@@ -2719,6 +2730,7 @@ components:
             Примеры:
               - "192.168.1.1"
               - "2001:db8:130F::9C0:876A:130B"
+          example: 203.0.13.17
       required:
         - ref
         - ipAddress
@@ -2843,6 +2855,7 @@ components:
             Примеры:
               - "192.168.1.1"
               - "2001:db8:130F::9C0:876A:130B"
+          example: 192.168.1.2
         dns:
           type: array
           description: |-
@@ -2862,6 +2875,7 @@ components:
             DNS-имя виртуальной машины в MWS Cloud Platform
           
             Обязательно для заполнения при создании ресурса
+          example: vm1dns.dev
         ttl:
           type: string
           description: |-
@@ -2886,6 +2900,7 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+          example: 60s
         ptr:
           type: boolean
           description: |-
@@ -3015,6 +3030,7 @@ components:
           type: integer
           description: Приоритет правила. Чем меньше число, тем больший приоритет имеет правило
           format: int32
+          example: 1110
         action:
           type: string
           description: Действие, которое должно быть применено к трафику при срабатывании правила
@@ -3106,6 +3122,7 @@ components:
               type: integer
               description: Эффективный приоритет правила
               format: int32
+              example: 1110
             active:
               type: boolean
               description: Состояние правила. True - правило активно и контролирует поведение трафика. False - правило не активно
@@ -3143,6 +3160,7 @@ components:
           type: integer
           description: Приоритет правила. Чем меньше число, тем больший приоритет имеет правило
           format: int32
+          example: 1110
         action:
           type: string
           description: |-
@@ -3434,6 +3452,7 @@ components:
             IPv4 подсеть в CIDR нотации
           
             Пример: "192.168.1.0/24"
+          example: 192.168.1.2
       required:
         - ref
         - cidr
@@ -3469,6 +3488,7 @@ components:
               - "1-3"
               - "10-20 k"
               - "2.5-5 K"
+          example: 256-1024
 
     EgressNatRequest:
       type: object
@@ -3660,6 +3680,7 @@ components:
             Примеры:
               - "192.168.1.1"
               - "2001:db8:130F::9C0:876A:130B"
+          example: 192.168.1.2
         dns:
           type: array
           items:
@@ -3755,6 +3776,7 @@ components:
             Примеры:
               - "192.168.1.1"
               - "2001:db8:130F::9C0:876A:130B"
+          example: 192.168.1.2
         dns:
           type: array
           description: Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`

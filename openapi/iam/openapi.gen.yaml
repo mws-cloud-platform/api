@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.4.0
+  version: 0.6.0
   title: Identity and Access Management (IAM)
   description: Публичная спецификация сервиса Identity and Access Management (IAM)
 
@@ -743,10 +743,12 @@ components:
         accessToken:
           type: string
           description: Поле содержит чувствительные данные. Ограничьте доступ к ним
+          example: MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3
         expirationTs:
           type: string
           description: Момент времени, после которого токен перестанет считаться действительным
           format: date-time
+          example: 1970-01-01T01:01:01.11Z
       required:
         - accessToken
 
@@ -757,6 +759,7 @@ components:
         iamToken:
           type: string
           description: Токен, который отзывается
+          example: ACCESS_TOKEN
       required:
         - iamToken
 
@@ -767,6 +770,7 @@ components:
         subject:
           type: string
           description: Субъект, у которого отозвали токен
+          example: users/vasya@mts.ru
       required:
         - subject
 
@@ -776,22 +780,27 @@ components:
         SessionToken:
           type: string
           description: Поле содержит чувствительные данные. Ограничьте доступ к ним
+          example: MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3.MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3.MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3
         Expiration:
           type: string
           description: Момент времени, после которого токен и ключ перестанут считаться действительными
           format: date-time
+          example: 1970-01-01T01:01:01.11Z
         AccessKeyId:
           type: string
           description: Идентификатор HMAC-ключа, используемого для подписания запросов
+          example: bd94b376-b78c-4adb-ad95-66201ce4c35b
         SecretAccessKey:
           type: string
           description: |-
             Ключ, которым клиент будет подписывать запросы
           
             Поле содержит чувствительные данные. Ограничьте доступ к ним
+          example: MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3
         Version:
           type: integer
           description: Версия ключа
+          example: 1
 
     ServiceAccountListResponse:
       type: object
@@ -910,6 +919,7 @@ components:
             lastAuthDateTime:
               type: string
               format: date-time
+              example: 2024-01-01T00:00:00Z
 
     ResourceStatusResponse:
       type: object
@@ -931,6 +941,7 @@ components:
         message:
           type: string
           description: Описание статуса
+          example: Success operation
       required:
         - state
 
@@ -1070,6 +1081,7 @@ components:
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
           format: date-time
+          example: 2024-04-23T07:41:25.261549Z
 
     HmacKeyResourceStatusResponse:
       type: object
@@ -1080,6 +1092,7 @@ components:
             accessKeyId:
               type: string
               description: Идентификатор ключа (readOnly)
+              example: 3q1mBkClcI5oj7li+cqD
             secretAccessKey:
               type: string
               description: |-
@@ -1088,10 +1101,12 @@ components:
                 Поле содержит чувствительные данные. Ограничьте доступ к ним
               
                 Значение поля будет доступно только один раз в ответе при создании ресурса
+              example: 68Qb97d3DeVFDX/hV3NYH3DBq0b9SDn+EYagzQ/Y
             lastAuthTime:
               type: string
               description: Время последней аутентификации
               format: date-time
+              example: 2024-04-23T07:41:25.261549Z
 
     HmacKeyRequest:
       type: object
@@ -1117,6 +1132,7 @@ components:
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
           format: date-time
+          example: 2024-04-23T07:41:25.261549Z
 
     AuthorizedKeyListResponse:
       type: object
@@ -1173,6 +1189,10 @@ components:
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
+          example: |
+            -----BEGIN PUBLIC KEY-----
+            ...
+            -----END PUBLIC KEY-----
         keyAlgorithm:
           type: string
           description: |-
@@ -1180,6 +1200,7 @@ components:
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
+          example: ES256
         expirationTime:
           type: string
           description: |-
@@ -1188,6 +1209,7 @@ components:
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
           format: date-time
+          example: 2024-04-23T07:41:25.261549Z
         active:
           type: boolean
           description: Флаг активности ключа
@@ -1220,10 +1242,15 @@ components:
             publicKey:
               type: string
               description: Открытый ключ, сгенерированный на стороне сервиса
+              example: |
+                -----BEGIN PUBLIC KEY-----
+                ...
+                -----END PUBLIC KEY-----
             lastAuthTime:
               type: string
               description: Время последней аутентификации
               format: date-time
+              example: 2024-04-23T07:41:25.261549Z
             active:
               type: boolean
               description: Флаг активности ключа
@@ -1254,6 +1281,10 @@ components:
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
+          example: |
+            -----BEGIN PUBLIC KEY-----
+            ...
+            -----END PUBLIC KEY-----
         keyAlgorithm:
           type: string
           description: |-
@@ -1263,6 +1294,7 @@ components:
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
+          example: ES256
         expirationTime:
           type: string
           description: |-
@@ -1271,6 +1303,7 @@ components:
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
           format: date-time
+          example: 2024-04-23T07:41:25.261549Z
         active:
           type: boolean
           description: Флаг активности ключа
@@ -1336,6 +1369,7 @@ components:
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
           format: date-time
+          example: 2024-04-23T07:41:25.261549Z
         active:
           type: boolean
           description: Флаг, указывающий на текущее состояние API‑ключа. Активный ключ может использоваться для аутентификации, деактивированный — нет
@@ -1359,6 +1393,7 @@ components:
               type: string
               description: Время последней аутентификации
               format: date-time
+              example: 2024-04-23T07:41:25.261549Z
 
     ApiKeyRequest:
       type: object
@@ -1391,6 +1426,7 @@ components:
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
           format: date-time
+          example: 2024-04-23T07:41:25.261549Z
         active:
           type: boolean
           description: Флаг, указывающий на текущее состояние API‑ключа. Активный ключ может использоваться для аутентификации, деактивированный — нет

@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.4.0
+  version: 0.6.0
   title: Secret Manager
   description: Публичная спецификация сервиса Secret Manager
 
@@ -771,6 +771,7 @@ components:
         message:
           type: string
           description: Описание статуса
+          example: Success operation
       required:
         - state
 
@@ -1240,6 +1241,7 @@ components:
         subject:
           type: string
           description: Идентификатор субъекта федерации
+          example: vasya@mts.ru
         attribute:
           allOf:
             - $ref: '#/components/schemas/CommonRoleBindingFederationContextAttributeResponse'
@@ -1253,9 +1255,11 @@ components:
         name:
           type: string
           description: Имя атрибута
+          example: federationAttributeName
         value:
           type: string
           description: Значение атрибута
+          example: federationAttributeValue
       required:
         - name
         - value
@@ -1480,6 +1484,7 @@ components:
         subject:
           type: string
           description: Идентификатор субъекта федерации
+          example: vasya@mts.ru
         attribute:
           allOf:
             - $ref: '#/components/schemas/CommonRoleBindingFederationContextAttributeRequest'
@@ -1496,12 +1501,14 @@ components:
             Имя атрибута
           
             Обязательно для заполнения при создании ресурса
+          example: federationAttributeName
         value:
           type: string
           description: |-
             Значение атрибута
           
             Обязательно для заполнения при создании ресурса
+          example: federationAttributeValue
 
     ApiError:
       type: object

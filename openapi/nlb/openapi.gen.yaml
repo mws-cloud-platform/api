@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.4.0
+  version: 0.6.0
   title: Network Load Balancer (NLB)
   description: Публичная спецификация сервиса Network Load Balancer (NLB)
 
@@ -422,6 +422,7 @@ components:
             Примеры:
               - "192.168.1.1"
               - "2001:db8:130F::9C0:876A:130B"
+          example: 192.168.1.2
         dns:
           type: array
           description: Спецификация DNS для IP-адреса
@@ -437,6 +438,7 @@ components:
         name:
           type: string
           description: DNS-имя виртуальной машины в MWS Cloud Platform
+          example: vm1dns.dev
         ttl:
           type: string
           description: |-
@@ -459,6 +461,7 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+          example: 60s
         ptr:
           type: boolean
           description: Создать обратную DNS-запись
@@ -545,10 +548,12 @@ components:
         protoPort:
           type: string
           description: Порт балансировщика и протокол по который клиенты отправляют запросы в рамках этого правила. Поддерживаются протоколы TCP и UDP. В рамках одного балансировщика это поле должно быть уникальным среди всех его правил
+          example: tcp:80
         targetPort:
           type: integer
           description: Целевой порт бэкенд-серверов, на которые балансировщик перенаправляет запросы. Если не указан, то считается равным порту балансировщика
           format: int32
+          example: 80
           nullable: true
         targetAddressGroups:
           type: array
@@ -661,6 +666,7 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+          example: 60s
         timeout:
           type: string
           description: |-
@@ -683,6 +689,7 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+          example: 1s
         unhealthyThreshold:
           type: integer
           description: Количество последовательных проваленных проверок, после которого виртуальная машина считается неработоспособной
@@ -693,7 +700,6 @@ components:
           default: 2
       required:
         - protocol
-        - interval
         - timeout
 
     NlbHealthCheckProtocolResponse:
@@ -723,9 +729,11 @@ components:
         port:
           type: integer
           description: Порт виртуальной машины, на который будет отправляться запрос
+          example: 80
         path:
           type: string
           description: URL-путь, на который будет отправляться запрос
+          example: /healthz
         expectedCode:
           type: integer
           description: Ожидаемый HTTP-код ответа
@@ -741,9 +749,11 @@ components:
         port:
           type: integer
           description: Порт виртуальной машины, на который будет отправляться запрос
+          example: 80
         path:
           type: string
           description: URL-путь, на который будет отправляться запрос
+          example: /healthz
         expectedCode:
           type: integer
           description: Ожидаемый HTTP-код ответа
@@ -816,6 +826,7 @@ components:
         message:
           type: string
           description: Описание статуса
+          example: Success operation
       required:
         - state
 
@@ -889,6 +900,7 @@ components:
             Примеры:
               - "192.168.1.1"
               - "2001:db8:130F::9C0:876A:130B"
+          example: 192.168.1.2
       required:
         - ref
         - ipAddress
@@ -938,6 +950,7 @@ components:
             Примеры:
               - "192.168.1.1"
               - "2001:db8:130F::9C0:876A:130B"
+          example: 203.0.13.17
       required:
         - ref
         - ipAddress
@@ -1003,10 +1016,12 @@ components:
         protoPort:
           type: string
           description: Порт балансировщика и протокол по который клиенты отправляют запросы в рамках этого правила. Поддерживаются протоколы TCP и UDP. В рамках одного балансировщика это поле должно быть уникальным среди всех его правил
+          example: tcp:80
         targetPort:
           type: integer
           description: Целевой порт бэкенд-серверов, на которые балансировщик перенаправляет запросы. Если не указан, то считается равным порту балансировщика
           format: int32
+          example: 80
         targetAddressGroups:
           type: array
           description: Адреса бэкенд-серверов, на которые балансировщик направляет запросы
@@ -1093,6 +1108,7 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+          example: 60s
         timeout:
           type: string
           description: |-
@@ -1115,6 +1131,7 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+          example: 1s
         unhealthyThreshold:
           type: integer
           description: Количество последовательных проваленных проверок, после которого виртуальная машина считается неработоспособной
@@ -1155,9 +1172,11 @@ components:
         port:
           type: integer
           description: Порт виртуальной машины, на который будет отправляться запрос
+          example: 80
         path:
           type: string
           description: URL-путь, на который будет отправляться запрос
+          example: /healthz
         expectedCode:
           type: integer
           description: Ожидаемый HTTP-код ответа
@@ -1173,9 +1192,11 @@ components:
         port:
           type: integer
           description: Порт виртуальной машины, на который будет отправляться запрос
+          example: 80
         path:
           type: string
           description: URL-путь, на который будет отправляться запрос
+          example: /healthz
         expectedCode:
           type: integer
           description: Ожидаемый HTTP-код ответа
@@ -1351,6 +1372,7 @@ components:
             Примеры:
               - "192.168.1.1"
               - "2001:db8:130F::9C0:876A:130B"
+          example: 192.168.1.2
         dns:
           type: array
           description: |-
@@ -1370,6 +1392,7 @@ components:
             DNS-имя виртуальной машины в MWS Cloud Platform
           
             Обязательно для заполнения при создании ресурса
+          example: vm1dns.dev
         ttl:
           type: string
           description: |-
@@ -1394,6 +1417,7 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+          example: 60s
         ptr:
           type: boolean
           description: |-
@@ -1483,10 +1507,12 @@ components:
             Порт балансировщика и протокол по который клиенты отправляют запросы в рамках этого правила. Поддерживаются протоколы TCP и UDP. В рамках одного балансировщика это поле должно быть уникальным среди всех его правил
           
             Обязательно для заполнения при создании ресурса
+          example: tcp:80
         targetPort:
           type: integer
           description: Целевой порт бэкенд-серверов, на которые балансировщик перенаправляет запросы. Если не указан, то считается равным порту балансировщика
           format: int32
+          example: 80
           nullable: true
         targetAddressGroups:
           type: array
@@ -1599,8 +1625,6 @@ components:
             Отрицательные значения обозначаются префиксом "-", в простом формате могут быть ограничены скобками.
             Регистр и пробелы игнорируются
           
-            Обязательно для заполнения при создании ресурса
-          
             Примеры:
               - "PT1S"
               - "-PT4.2S"
@@ -1609,6 +1633,7 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+          example: 60s
         timeout:
           type: string
           description: |-
@@ -1633,6 +1658,7 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+          example: 1s
         unhealthyThreshold:
           type: integer
           description: Количество последовательных проваленных проверок, после которого виртуальная машина считается неработоспособной
@@ -1672,12 +1698,14 @@ components:
             Порт виртуальной машины, на который будет отправляться запрос
           
             Обязательно для заполнения при создании ресурса
+          example: 80
         path:
           type: string
           description: |-
             URL-путь, на который будет отправляться запрос
           
             Обязательно для заполнения при создании ресурса
+          example: /healthz
         expectedCode:
           type: integer
           description: Ожидаемый HTTP-код ответа
@@ -1693,12 +1721,14 @@ components:
             Порт виртуальной машины, на который будет отправляться запрос
           
             Обязательно для заполнения при создании ресурса
+          example: 80
         path:
           type: string
           description: |-
             URL-путь, на который будет отправляться запрос
           
             Обязательно для заполнения при создании ресурса
+          example: /healthz
         expectedCode:
           type: integer
           description: Ожидаемый HTTP-код ответа

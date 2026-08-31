@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.4.0
+  version: 0.6.0
   title: Key Management Service (KMS)
   description: Публичная спецификация сервиса Key Management Service (KMS)
 
@@ -791,6 +791,7 @@ components:
                 При обновлении ресурса можно передать только текущее значение
               format: int32
               default: 1
+              example: 7
           nullable: true
         usagePolicy:
           type: object
@@ -816,6 +817,7 @@ components:
               type: integer
               description: Интервал в днях, через который должна выполняться ротация криптографического ключа
               format: int32
+              example: 30
           nullable: true
         primaryKeyVersionRef:
           type: string
@@ -867,10 +869,12 @@ components:
                   type: string
                   description: Временная метка последней ротации криптографического ключа
                   format: date-time
+                  example: 2023-08-01T12:00:00Z
                 nextTime:
                   type: string
                   description: Временная метка следующей запланированной ротации криптографического ключа
                   format: date-time
+                  example: 2023-09-01T12:00:00Z
                 primaryKeyVersionRef:
                   type: string
                   description: |-
@@ -921,10 +925,12 @@ components:
                     Временная метка, указывающая, когда ключ должен быть уничтожен.
                     Если это поле установлено, ключ будет автоматически уничтожен в указанное время
                   format: date-time
+                  example: 2025-08-01T12:00:00Z
                 destroyTime:
                   type: string
                   description: Время уничтожения криптографического ключа
                   format: date-time
+                  example: 2025-11-01T12:00:00Z
               nullable: true
 
     ResourceStatusResponse:
@@ -947,6 +953,7 @@ components:
         message:
           type: string
           description: Описание статуса
+          example: Success operation
       required:
         - state
 
@@ -1013,6 +1020,7 @@ components:
                 При обновлении ресурса можно передать только текущее значение
               format: int32
               default: 1
+              example: 7
           nullable: true
         usagePolicy:
           type: object
@@ -1038,6 +1046,7 @@ components:
               type: integer
               description: Интервал в днях, через который должна выполняться ротация криптографического ключа
               format: int32
+              example: 30
           nullable: true
         primaryKeyVersionRef:
           type: string
@@ -1072,10 +1081,12 @@ components:
           type: integer
           description: Версия криптографического ключа, используемая для шифрования ключа данных
           format: int32
+          example: 3
         bits:
           type: integer
           description: Длина генерируемого ключа (в битах — 128, 192, 256)
           format: int32
+          example: 256
         associatedData:
           type: string
           description: |-
@@ -1096,6 +1107,7 @@ components:
           type: integer
           description: Версия криптографического ключа, используемая для шифрования ключа данных
           format: int32
+          example: 3
         dataKeyCiphertext:
           type: string
           description: |-
@@ -1121,6 +1133,7 @@ components:
           type: integer
           description: Версия криптографического ключа, используемая для шифрования открытых данных
           format: int32
+          example: 3
         plaintext:
           type: string
           description: |-
@@ -1145,6 +1158,7 @@ components:
           type: integer
           description: Версия криптографического ключа, используемая для шифрования открытых данных
           format: int32
+          example: 3
         ciphertext:
           type: string
           description: |-
@@ -1190,6 +1204,7 @@ components:
           type: integer
           description: Версия криптографического ключа, использованная для расшифровки
           format: int32
+          example: 3
       required:
         - plaintext
         - version
@@ -1247,6 +1262,7 @@ components:
           type: integer
           description: Версия криптографического ключа, используемая для повторного шифрования. Если не указано, используется основная версия ключа
           format: int32
+          example: 5
       required:
         - ciphertext
 
@@ -1264,6 +1280,7 @@ components:
           type: integer
           description: Версия криптографического ключа, использованная для шифрования
           format: int32
+          example: 5
       required:
         - ciphertext
         - version
@@ -1315,10 +1332,6 @@ components:
                 криптографические операции с этой версией ключа будут заблокированы
               default: true
           nullable: true
-        destructionPolicy:
-          type: object
-          description: Политика уничтожения версии ключа. Определяет параметры и расписание
-          nullable: true
 
     CryptoKeyVersionStatusResponse:
       type: object
@@ -1330,9 +1343,11 @@ components:
               type: integer
               description: Порядковый номер ключа. Каждый раз при создании новой версии ключа это значение увеличивается
               format: int32
+              example: 3
             algorithm:
               type: string
               description: Криптографический алгоритм
+              example: AES_256_GCM
             primary:
               type: boolean
               description: |-
@@ -1363,10 +1378,12 @@ components:
                     Метка времени, указывающая, когда версия ключа должна быть уничтожена.
                     Если это поле установлено, версия ключа будет автоматически уничтожена в указанное время
                   format: date-time
+                  example: 2025-08-01T12:00:00Z
                 destroyTime:
                   type: string
                   description: Время уничтожения версии криптографического ключа
                   format: date-time
+                  example: 2025-11-01T12:00:00Z
               nullable: true
 
     CryptoKeyVersionRequest:
@@ -1395,10 +1412,6 @@ components:
                 Если значение установлено в `false`, все операции шифрования, расшифровки и другие
                 криптографические операции с этой версией ключа будут заблокированы
               default: true
-          nullable: true
-        destructionPolicy:
-          type: object
-          description: Политика уничтожения версии ключа. Определяет параметры и расписание
           nullable: true
 
     CryptoKeyRoleBindingListResponse:
@@ -1635,6 +1648,7 @@ components:
         subject:
           type: string
           description: Идентификатор субъекта федерации
+          example: vasya@mts.ru
         attribute:
           allOf:
             - $ref: '#/components/schemas/CommonRoleBindingFederationContextAttributeResponse'
@@ -1648,9 +1662,11 @@ components:
         name:
           type: string
           description: Имя атрибута
+          example: federationAttributeName
         value:
           type: string
           description: Значение атрибута
+          example: federationAttributeValue
       required:
         - name
         - value
@@ -1874,6 +1890,7 @@ components:
         subject:
           type: string
           description: Идентификатор субъекта федерации
+          example: vasya@mts.ru
         attribute:
           allOf:
             - $ref: '#/components/schemas/CommonRoleBindingFederationContextAttributeRequest'
@@ -1890,12 +1907,14 @@ components:
             Имя атрибута
           
             Обязательно для заполнения при создании ресурса
+          example: federationAttributeName
         value:
           type: string
           description: |-
             Значение атрибута
           
             Обязательно для заполнения при создании ресурса
+          example: federationAttributeValue
 
     ApiError:
       type: object

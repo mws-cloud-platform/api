@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.4.0
+  version: 0.6.0
   title: Managed PostgreSQL
   description: Публичная спецификация сервиса Managed PostgreSQL
 
@@ -1125,6 +1125,7 @@ components:
       type: integer
       description: IOPS
       format: int32
+      example: 1000
 
     PostgresInstanceResponse:
       type: object
@@ -1300,6 +1301,7 @@ components:
         message:
           type: string
           description: Описание статуса
+          example: Success operation
       required:
         - state
 
@@ -1625,6 +1627,7 @@ components:
           type: integer
           description: IOPS
           format: int32
+          example: 1000
       required:
         - size
         - type

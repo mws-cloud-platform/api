@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.4.0
+  version: 0.6.0
   title: Compute
   description: Публичная спецификация сервиса Compute
 
@@ -978,6 +978,7 @@ components:
           type: string
           description: Количество виртуальных ядер
           format: int32
+          example: "2"
 
     VmTypeMemorySpecResponse:
       type: object
@@ -999,6 +1000,7 @@ components:
               - "1 B"
               - "1024 kb"
               - "1.5 TB"
+          example: 16 GB
 
     VmTypeDisksSpecResponse:
       type: object
@@ -1008,6 +1010,7 @@ components:
           type: string
           description: Максимальное количество операций ввода-вывода в секунду (IOPS) на ВМ. Зависит от количества виртуальных процессорных ядер (vCPU) у ВМ
           format: int32
+          example: "16000"
 
     VmTypeLocalDisksSpecResponse:
       type: object
@@ -1064,6 +1067,7 @@ components:
               - "1 B"
               - "1024 kb"
               - "1.5 TB"
+          example: 248 GB
         max:
           type: string
           description: |-
@@ -1080,6 +1084,7 @@ components:
               - "1 B"
               - "1024 kb"
               - "1.5 TB"
+          example: 3 TB
         step:
           type: string
           description: |-
@@ -1096,6 +1101,7 @@ components:
               - "1 B"
               - "1024 kb"
               - "1.5 TB"
+          example: 248 GB
 
     TotalLocalDiskLimitsSpecResponse:
       type: object
@@ -1127,6 +1133,7 @@ components:
               - "1 B"
               - "1024 kb"
               - "1.5 TB"
+          example: 496 GB
         max:
           type: string
           description: |-
@@ -1143,6 +1150,7 @@ components:
               - "1 B"
               - "1024 kb"
               - "1.5 TB"
+          example: 3 TB
 
     VmTypeStatusResponse:
       description: Статус типа ВМ
@@ -1168,6 +1176,7 @@ components:
         message:
           type: string
           description: Описание статуса
+          example: Success operation
       required:
         - state
 
@@ -1782,6 +1791,7 @@ components:
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
+          example: eth0
         primary:
           type: boolean
           description: |-
@@ -1889,6 +1899,7 @@ components:
             Примеры:
               - "192.168.1.1"
               - "2001:db8:130F::9C0:876A:130B"
+          example: 192.168.1.2
         dns:
           type: array
           description: Настройки DNS
@@ -1903,6 +1914,7 @@ components:
         name:
           type: string
           description: DNS-имя виртуальной машины в MWS Cloud Platform
+          example: vm1dns.dev
         ttl:
           type: string
           description: |-
@@ -1925,6 +1937,7 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+          example: 60s
         ptr:
           type: boolean
           description: Создать обратную DNS-запись
@@ -2265,6 +2278,7 @@ components:
         name:
           type: string
           description: DNS-имя виртуальной машины в MWS Cloud Platform
+          example: vm1dns.dev
         ttl:
           type: string
           description: |-
@@ -2287,6 +2301,7 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+          example: 60s
         ptr:
           type: boolean
           description: Создать обратную DNS-запись
@@ -2793,6 +2808,7 @@ components:
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
+          example: eth0
         primary:
           type: boolean
           description: |-
@@ -2899,6 +2915,7 @@ components:
             Примеры:
               - "192.168.1.1"
               - "2001:db8:130F::9C0:876A:130B"
+          example: 192.168.1.2
         dns:
           type: array
           description: |-
@@ -2917,6 +2934,7 @@ components:
             DNS-имя виртуальной машины в MWS Cloud Platform
           
             Обязательно для заполнения при создании ресурса
+          example: vm1dns.dev
         ttl:
           type: string
           description: |-
@@ -2941,6 +2959,7 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+          example: 60s
         ptr:
           type: boolean
           description: |-
@@ -3022,6 +3041,7 @@ components:
         family:
           type: string
           description: Семейство образа
+          example: ubuntu-2204-lts-oslogin
         source:
           type: object
           description: |-
@@ -3033,6 +3053,7 @@ components:
             externalUrl:
               type: string
               description: URL для загрузки образа
+              example: https://example.com/image.qcow2
             diskId:
               type: string
               description: |-
@@ -3097,6 +3118,7 @@ components:
               - "1 B"
               - "1024 kb"
               - "1.5 TB"
+          example: 1 GB
         osType:
           $ref: '#/components/schemas/OsType'
           description: Тип операционной системы
@@ -3180,6 +3202,7 @@ components:
                   - "1 B"
                   - "1024 kb"
                   - "1.5 TB"
+              example: 2 GB
             sourceExists:
               type: boolean
               description: Признак, указывающий, удален ли родительский ресурс-источник
@@ -3202,6 +3225,7 @@ components:
                   - "1 B"
                   - "1024 kb"
                   - "1.5 TB"
+              example: 1 GB
             initialSourceImage:
               type: string
               description: |-
@@ -3308,6 +3332,7 @@ components:
         family:
           type: string
           description: Семейство образа
+          example: ubuntu-2204-lts-oslogin
         source:
           type: object
           description: |-
@@ -3321,6 +3346,7 @@ components:
             externalUrl:
               type: string
               description: URL для загрузки образа
+              example: https://example.com/image.qcow2
             diskId:
               type: string
               description: |-
@@ -3385,6 +3411,7 @@ components:
               - "1 B"
               - "1024 kb"
               - "1.5 TB"
+          example: 1 GB
         osType:
           $ref: '#/components/schemas/OsType'
           description: Тип операционной системы
@@ -3462,6 +3489,7 @@ components:
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
+          example: ru-central1-a
         size:
           type: string
           description: |-
@@ -3478,6 +3506,7 @@ components:
               - "1 B"
               - "1024 kb"
               - "1.5 TB"
+          example: 22 GB
         source:
           type: object
           description: |-
@@ -3576,7 +3605,7 @@ components:
               - "diskTypes/myDiskType"
               - "myDiskType"
         iops:
-          $ref: '#/components/schemas/Iops'
+          $ref: '#/components/schemas/Iops2'
           description: Запрашиваемое пользователем количество операций ввода-вывода в секунду (IOPS)
         blockSize:
           type: string
@@ -3597,6 +3626,7 @@ components:
               - "1 B"
               - "1024 kb"
               - "1.5 TB"
+          example: 4096 B
         osType:
           $ref: '#/components/schemas/OsType'
           description: Тип операционной системы
@@ -3611,6 +3641,12 @@ components:
           nullable: true
       required:
         - zone
+
+    Iops2:
+      type: integer
+      description: Общее количество операций ввода-вывода в секунду (IOPS)
+      format: int64
+      example: 1000
 
     DiskStatusResponse:
       type: object
@@ -3638,6 +3674,7 @@ components:
                   - "1 B"
                   - "1024 kb"
                   - "1.5 TB"
+              example: 1 GB
             iops:
               allOf:
                 - $ref: '#/components/schemas/DiskStatusIopsResponse'
@@ -3681,6 +3718,7 @@ components:
                   - "1 B"
                   - "1024 kb"
                   - "1.5 TB"
+              example: 4096 B
             linkedVms:
               type: array
               description: |-
@@ -3714,13 +3752,13 @@ components:
       description: Запрашиваемое базовое и дополнительное количество операций ввода-вывода в секунду (IOPS)
       properties:
         base:
-          $ref: '#/components/schemas/Iops'
+          $ref: '#/components/schemas/Iops2'
           description: Базовое количество операций ввода-вывода в секунду (IOPS)
         extra:
           $ref: '#/components/schemas/PossiblyZeroIops'
           description: Дополнительное количество операций ввода-вывода в секунду (IOPS)
         total:
-          $ref: '#/components/schemas/Iops'
+          $ref: '#/components/schemas/Iops2'
           description: Общее количество операций ввода-вывода в секунду (IOPS)
       required:
         - base
@@ -3748,6 +3786,7 @@ components:
           - "1 Bps"
           - "1024 kbps"
           - "2.5 GBps"
+      example: 1000 Bps
 
     LinkedVmInfoResponse:
       type: object
@@ -3783,6 +3822,7 @@ components:
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
+          example: vm
       required:
         - id
         - name
@@ -3816,6 +3856,7 @@ components:
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
+          example: ru-central1-a
         size:
           type: string
           description: |-
@@ -3832,6 +3873,7 @@ components:
               - "1 B"
               - "1024 kb"
               - "1.5 TB"
+          example: 22 GB
         source:
           type: object
           description: |-
@@ -3930,7 +3972,7 @@ components:
               - "diskTypes/myDiskType"
               - "myDiskType"
         iops:
-          $ref: '#/components/schemas/Iops'
+          $ref: '#/components/schemas/Iops2'
           description: Запрашиваемое пользователем количество операций ввода-вывода в секунду (IOPS)
         blockSize:
           type: string
@@ -3951,6 +3993,7 @@ components:
               - "1 B"
               - "1024 kb"
               - "1.5 TB"
+          example: 4096 B
         osType:
           $ref: '#/components/schemas/OsType'
           description: Тип операционной системы
@@ -4061,9 +4104,11 @@ components:
                   - "1 B"
                   - "1024 kb"
                   - "1.5 TB"
+              example: 2 GB
             progress:
               type: string
               description: Прогресс готовности резервной копии диска в процентах, с точностью до сотых
+              example: "50.00"
             sourceExists:
               type: boolean
               description: Признак, указывающий, удален ли родительский ресурс-источник
@@ -4083,6 +4128,7 @@ components:
                   - "1 B"
                   - "1024 kb"
                   - "1.5 TB"
+              example: 1G
             initialSourceImage:
               type: string
               description: |-

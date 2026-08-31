@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.4.0
+  version: 0.6.0
   title: Virtual Infrastructure
   description: Публичная спецификация сервиса Virtual Infrastructure
 
@@ -813,6 +813,7 @@ components:
         href:
           type: string
           description: Ссылка на ресурс
+          example: https://example.com/data/123
         zone:
           type: string
           description: |-
@@ -1000,6 +1001,7 @@ components:
         message:
           type: string
           description: Описание статуса
+          example: Success operation
       required:
         - state
 

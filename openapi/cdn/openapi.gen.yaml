@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.4.0
+  version: 0.6.0
   title: Content Delivery Network (CDN)
   description: Публичная спецификация сервиса Content Delivery Network (CDN)
 
@@ -283,6 +283,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EgressIpsResponse'
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /cdn/v1/projects/{project}:getStatistics:
+    get:
+      tags:
+        - statistic
+      summary: Получить статистику по CDN-проекту
+      description: |-
+        Возвращает временной ряд статистики доставки контента за период,
+        сгруппированный по временным корзинам.
+      
+        Корзины выравниваются по естественным границам календаря в UTC —
+        независимо от смещения, указанного в `from` и `to`. Например,
+        период с `2026-08-11T23:50:00Z` по `2026-08-12T00:40:00Z` с шагом `1d`
+        даст две корзины: `2026-08-11T00:00:00Z` и `2026-08-12T00:00:00Z`. Поля
+        `from` и `to` в ответе возвращаются нормализованными к границам корзин.
+      
+        Фактически использованные границы корзин возвращаются в полях `from` и
+        `to` ответа.
+      
+        По умолчанию значения всех ресурсов проекта суммируются в один ряд.
+        Параметр `resource` ограничивает выборку одним ресурсом, `groupBy`
+        разбивает результат на ряд по каждому ресурсу — эти параметры независимы
+      operationId: GetCdnStatistics
+      parameters:
+        - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/query_from"
+        - $ref: "#/components/parameters/query_to"
+        - $ref: "#/components/parameters/query_interval"
+        - $ref: "#/components/parameters/query_resource"
+        - $ref: "#/components/parameters/query_groupBy"
+        - $ref: "#/components/parameters/query_metrics"
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Статистика доставки контента за период
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetStatisticsResponseResponse'
         default:
           description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
           content:
@@ -754,9 +800,11 @@ components:
         regex:
           type: string
           description: Регулярное выражение, определяющее путь, для которого будет применяться перезапись
+          example: ^(/download/.*)/media/(.*)\..*$
         replacement:
           type: string
           description: Целевой паттерн для перезаписи
+          example: $1/mp3/$2.mp3
       required:
         - regex
         - replacement
@@ -879,6 +927,7 @@ components:
         sniHost:
           type: string
           description: Имя SNI-хоста
+          example: sni.example.com
         useHostHeader:
           type: boolean
           description: Имя SNI-хоста соответствует значению заголовка Host. См. опцию hostHeader
@@ -1023,6 +1072,7 @@ components:
             fqdn:
               type: string
               description: Сгенерированное доменное имя ресурса CDN
+              example: top1775336473.mwscdn.ru
 
     ResourceStatusResponse:
       type: object
@@ -1044,6 +1094,7 @@ components:
         message:
           type: string
           description: Описание статуса
+          example: Success operation
       required:
         - state
 
@@ -1496,12 +1547,14 @@ components:
             Регулярное выражение, определяющее путь, для которого будет применяться перезапись
           
             Обязательно для заполнения при создании ресурса
+          example: ^(/download/.*)/media/(.*)\..*$
         replacement:
           type: string
           description: |-
             Целевой паттерн для перезаписи
           
             Обязательно для заполнения при создании ресурса
+          example: $1/mp3/$2.mp3
 
     OptimizationOptionRequest:
       type: object
@@ -1646,6 +1699,7 @@ components:
         sniHost:
           type: string
           description: Имя SNI-хоста
+          example: sni.example.com
         useHostHeader:
           type: boolean
           description: Имя SNI-хоста соответствует значению заголовка Host. См. опцию hostHeader
@@ -2040,6 +2094,131 @@ components:
       required:
         - ipPrefix
 
+    GetStatisticsResponseResponse:
+      type: object
+      description: Статистика доставки контента за период
+      properties:
+        interval:
+          type: string
+          description: |-
+            Шаг временной группировки, с которым посчитан ответ. Совпадает со
+            значением параметра `interval` запроса: `1m`, `5m`, `15m`, `1h`, `6h`,
+            `1d`, `1w`, `1M`
+          example: 1d
+        from:
+          type: string
+          description: |-
+            Начало периода, нормализованное к границе первой корзины. Может быть
+            раньше значения `from` из запроса
+          format: date-time
+          example: 2026-08-11T00:00:00Z
+        to:
+          type: string
+          description: |-
+            Конец периода, нормализованный к границе последней корзины. Может быть
+            позже значения `to` из запроса. Граница не включается в период
+          format: date-time
+          example: 2026-08-12T00:00:00Z
+        items:
+          type: array
+          description: |-
+            Временные ряды. Без группировки — ровно один ряд без поля `resource`,
+            с группировкой — по ряду на каждый ресурс
+          items:
+            $ref: '#/components/schemas/StatisticSeriesResponse'
+      required:
+        - interval
+        - from
+        - to
+        - items
+
+    StatisticSeriesResponse:
+      type: object
+      description: |-
+        Временной ряд статистики. Если запрос сделан без группировки, ряд один и
+        поле `resource` не заполнено — значения просуммированы по всем ресурсам
+        проекта. При группировке по ресурсам возвращается ряд на каждый ресурс
+      properties:
+        resource:
+          type: string
+          description: |-
+            Имя ресурса CDN, к которому относится ряд. Не заполнено, если ряд
+            относится к проекту целиком
+          example: video-cdn
+        points:
+          type: array
+          description: Временные корзины в порядке возрастания времени
+          items:
+            $ref: '#/components/schemas/StatisticPointResponse'
+      required:
+        - points
+
+    StatisticPointResponse:
+      type: object
+      description: |-
+        Значения метрик за одну временную корзину. Значение метрики относится к
+        интервалу `[timestamp, timestamp + interval)`.
+      
+        Точка содержит метрики, перечисленные в параметре запроса `metrics`, либо
+        все метрики, если параметр не задан. Запрошенная метрика возвращается даже
+        при отсутствии трафика за корзину — со значением `0`.
+      
+        Числовые значения передаются строками, так как выходят за пределы точности
+        целых чисел в JavaScript
+      properties:
+        timestamp:
+          type: string
+          description: Начало временной корзины, выровненное по границе интервала
+          format: date-time
+          example: 2026-08-11T00:00:00Z
+        sentBytes:
+          type: string
+          description: Объем трафика, отданного клиентам с эджей
+          format: int64
+          example: "1400000000"
+        shieldBytes:
+          type: string
+          description: Объем трафика, полученного эджами с шилдов
+          format: int64
+          example: "310000000"
+        upstreamBytes:
+          type: string
+          description: Объем трафика, полученного с источников контента
+          format: int64
+          example: "120000000"
+        requests:
+          type: string
+          description: Количество запросов от клиентов
+          format: int64
+          example: "150000"
+        responsesHit:
+          type: string
+          description: Количество ответов, отданных из кеша CDN
+          format: int64
+          example: "120000"
+        responses2xx:
+          type: string
+          description: Количество ответов с кодом 2xx
+          format: int64
+          example: "148000"
+        responses3xx:
+          type: string
+          description: Количество ответов с кодом 3xx
+          format: int64
+          example: "1200"
+        responses4xx:
+          type: string
+          description: Количество ответов с кодом 4xx
+          format: int64
+          example: "800"
+        responses5xx:
+          type: string
+          description: Количество ответов с кодом 5xx
+          format: int64
+          example: "12"
+      required:
+        - timestamp
+
     ApiError:
       type: object
       description: Описание ошибки (если HTTP-статус отличен от 2xx)
@@ -2228,6 +2407,33 @@ components:
       schema:
         type: string
 
+    query_from:
+      name: from
+      in: query
+      required: true
+      description: |-
+        Начало периода, RFC3339. Округляется вниз до границы корзины, заданной
+        параметром `interval`. Смещение допустимо, но границы корзин всегда
+        считаются в UTC
+      style: form
+      explode: true
+      schema:
+        type: string
+        format: date-time
+        example: 2026-08-11T00:00:00Z
+
+    query_groupBy:
+      name: groupBy
+      in: query
+      description: |-
+        Разрез разбивки статистики. Если не задан, значения всех ресурсов
+        суммируются в один ряд
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: RESOURCE
+
     query_ifExist:
       name: ifExist
       in: query
@@ -2238,6 +2444,33 @@ components:
       explode: true
       schema:
         type: boolean
+
+    query_interval:
+      name: interval
+      in: query
+      required: true
+      description: |-
+        Шаг временной группировки. Допустимые значения: `1m`, `5m`, `15m`, `1h`,
+        `6h`, `1d`, `1w`, `1M` (m — минуты, h — часы, d — сутки, w — недели,
+        M — месяцы). Корзины выравниваются по естественным границам календаря
+        в UTC: начало минуты, часа, суток, недели (понедельник), месяца
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: 1d
+
+    query_metrics:
+      name: metrics
+      in: query
+      description: |-
+        Список метрик, которые нужно вернуть. Если не задан, возвращаются все
+        метрики. В точках ответа присутствуют только запрошенные метрики
+      style: form
+      schema:
+        type: array
+        items:
+          type: string
 
     query_orderBy:
       name: orderBy
@@ -2270,6 +2503,19 @@ components:
       schema:
         type: string
 
+    query_resource:
+      name: resource
+      in: query
+      description: |-
+        Имя ресурса CDN для фильтрации. Если не задано, в выборку попадают все
+        ресурсы проекта
+      style: form
+      explode: true
+      schema:
+        type: string
+        example: video-cdn
+        pattern: ^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$
+
     query_showDeleted:
       name: showDeleted
       in: query
@@ -2278,6 +2524,21 @@ components:
       explode: true
       schema:
         type: string
+
+    query_to:
+      name: to
+      in: query
+      required: true
+      description: |-
+        Конец периода, RFC3339. Округляется вверх до границы корзины, заданной
+        параметром `interval`. Граница не включается в период. Смещение
+        допустимо, но границы корзин всегда считаются в UTC
+      style: form
+      explode: true
+      schema:
+        type: string
+        format: date-time
+        example: 2026-08-12T00:00:00Z
 
     query_updateOnly:
       name: updateOnly

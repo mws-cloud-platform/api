@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.4.0
+  version: 0.6.0
   title: Resource Manager
   description: Публичная спецификация сервиса Resource Manager
 
@@ -494,6 +494,7 @@ components:
         message:
           type: string
           description: Описание статуса
+          example: Success operation
       required:
         - state
 
@@ -662,8 +663,10 @@ components:
           properties:
             flag:
               type: string
+              example: flag_iaas
             comment:
               type: string
+              example: Please enable this functionality in my project
           required:
             - flag
             - comment

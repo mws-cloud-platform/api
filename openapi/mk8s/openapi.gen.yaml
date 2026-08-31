@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.4.0
+  version: 0.6.0
   title: Managed Kubernetes
   description: Публичная спецификация сервиса Managed Kubernetes
 
@@ -557,6 +557,7 @@ components:
                 При обновлении ресурса можно передать только текущее значение
               
                 Пример: "192.168.1.0/24"
+              example: 10.222.0.0/18
             servicesCidr:
               type: string
               description: |-
@@ -568,6 +569,7 @@ components:
                 При обновлении ресурса можно передать только текущее значение
               
                 Пример: "192.168.1.0/24"
+              example: 10.222.64.0/18
           required:
             - primaryEndpoint
             - podsCidr
@@ -684,6 +686,7 @@ components:
             При обновлении ресурса можно передать только текущее значение
           
             Пример: "192.168.1.1"
+          example: 192.168.1.2
           nullable: true
         subnet:
           type: string
@@ -963,6 +966,7 @@ components:
                     IPv4-адрес
                   
                     Пример: "192.168.1.1"
+                  example: 192.168.1.2
                   nullable: true
                 publicEndpoint:
                   type: object
@@ -1053,6 +1057,7 @@ components:
         message:
           type: string
           description: Описание статуса
+          example: Success operation
       required:
         - state
 
@@ -1183,6 +1188,7 @@ components:
                 При обновлении ресурса можно передать только текущее значение
               
                 Пример: "192.168.1.0/24"
+              example: 10.222.0.0/18
             servicesCidr:
               type: string
               description: |-
@@ -1196,6 +1202,7 @@ components:
                 При обновлении ресурса можно передать только текущее значение
               
                 Пример: "192.168.1.0/24"
+              example: 10.222.64.0/18
         versionControl:
           $ref: '#/components/schemas/ClusterVersionControlSpecRequest'
           description: Обязательно для заполнения при создании ресурса
@@ -1305,6 +1312,7 @@ components:
             При обновлении ресурса можно передать только текущее значение
           
             Пример: "192.168.1.1"
+          example: 192.168.1.2
           nullable: true
         subnet:
           type: string
@@ -1476,8 +1484,10 @@ components:
       properties:
         name:
           type: string
+          example: v1.22.3-mws.1
         description:
           type: string
+          example: kubernetes v1.22.3 - сборка 1
           nullable: true
         default:
           type: boolean
@@ -1836,6 +1846,7 @@ components:
                   - "1 B"
                   - "1024 kb"
                   - "1.5 TB"
+              example: 16 GB
               nullable: true
             imageStorageSize:
               type: string

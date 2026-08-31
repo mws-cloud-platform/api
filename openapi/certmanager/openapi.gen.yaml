@@ -3,7 +3,7 @@
 openapi: 3.0.3
 
 info:
-  version: 0.4.0
+  version: 0.6.0
   title: Certificate Manager
   description: Публичная спецификация сервиса Certificate Manager
 
@@ -669,6 +669,7 @@ components:
         subject:
           type: string
           description: Идентификатор субъекта федерации
+          example: vasya@mts.ru
         attribute:
           allOf:
             - $ref: '#/components/schemas/CommonRoleBindingFederationContextAttributeResponse'
@@ -682,9 +683,11 @@ components:
         name:
           type: string
           description: Имя атрибута
+          example: federationAttributeName
         value:
           type: string
           description: Значение атрибута
+          example: federationAttributeValue
       required:
         - name
         - value
@@ -713,6 +716,7 @@ components:
         message:
           type: string
           description: Описание статуса
+          example: Success operation
       required:
         - state
 
@@ -953,6 +957,7 @@ components:
         subject:
           type: string
           description: Идентификатор субъекта федерации
+          example: vasya@mts.ru
         attribute:
           allOf:
             - $ref: '#/components/schemas/CommonRoleBindingFederationContextAttributeRequest'
@@ -969,12 +974,14 @@ components:
             Имя атрибута
           
             Обязательно для заполнения при создании ресурса
+          example: federationAttributeName
         value:
           type: string
           description: |-
             Значение атрибута
           
             Обязательно для заполнения при создании ресурса
+          example: federationAttributeValue
 
     CertificateListResponse:
       type: object
@@ -1052,8 +1059,6 @@ components:
             При обновлении ресурса можно передать только текущее значение
           items:
             type: string
-      required:
-        - domains
 
     CertificateChallengeType:
       type: string
@@ -1075,26 +1080,30 @@ components:
       description: Конфигурация провайдера выпуска сертификата
       properties:
         acme:
-          type: object
-          properties:
-            server:
-              $ref: '#/components/schemas/CertificateManagedSpecAcmeServer'
-              description: ACME-сервер для выпуска сертификата
-            challengeType:
-              $ref: '#/components/schemas/CertificateChallengeType'
-              description: |-
-                Предпочтительный тип проверки домена (challenge).
-                Возможные значения: DNS01 или HTTP01. По умолчанию используется DNS01
-              
-                Неизменяемое поле. Задается только при создании ресурса.
-                При обновлении ресурса можно передать только текущее значение
-            profile:
-              type: string
-              description: Профиль сертификата
-          required:
-            - server
-            - challengeType
+          allOf:
+            - $ref: '#/components/schemas/AcmeIssuerResponse'
           nullable: true
+
+    AcmeIssuerResponse:
+      type: object
+      properties:
+        server:
+          $ref: '#/components/schemas/CertificateManagedSpecAcmeServer'
+          description: ACME-сервер для выпуска сертификата
+        challengeType:
+          $ref: '#/components/schemas/CertificateChallengeType'
+          description: |-
+            Предпочтительный тип проверки домена (challenge).
+            Возможные значения: DNS01 или HTTP01. По умолчанию используется DNS01
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+        profile:
+          type: string
+          description: Профиль сертификата
+      required:
+        - server
+        - challengeType
 
     CertificateManagedSpecAcmeServer:
       type: string
@@ -1140,12 +1149,14 @@ components:
               type: string
               description: Время следующего обновления сертификата
               format: date-time
+              example: 2028-01-01T12:30:00Z
             challengesDeadline:
               type: string
               description: |-
                 Крайний срок настройки делегации для прохождения проверки прав на домены.
                 Присутствует только в случае, если сертификат управляемый
               format: date-time
+              example: 2026-01-01T12:30:00Z
           required:
             - valid
             - reason
@@ -1157,20 +1168,25 @@ components:
         serial:
           type: string
           description: Серийный номер сертификата
+          example: "438217957920862641329873360945608421479497587288"
         issuer:
           type: string
           description: Издатель сертификата
+          example: CN=example.com, O=Internet Widgits Pty Ltd, L=moscow, ST=Moscow, C=RU
         subject:
           type: string
           description: Владелец сертификата
+          example: CN=example.com, O=Internet Widgits Pty Ltd, L=moscow, ST=Moscow, C=RU
         notAfter:
           type: string
           description: Дата окончания срока действия сертификата
           format: date-time
+          example: 2052-04-12T13:07:51Z
         notBefore:
           type: string
           description: Дата, с которой сертификат становится действительным
           format: date-time
+          example: 2024-11-25T13:07:51Z
         domains:
           type: array
           description: Домены, к которым относится сертификат
@@ -1220,14 +1236,17 @@ components:
         domain:
           type: string
           description: Домен, права на который проверяются
+          example: example.com
         createdAt:
           type: string
           description: Время создания проверки
           format: date-time
+          example: 2025-01-01T12:30:00Z
         updatedAt:
           type: string
           description: Время последнего обновления проверки
           format: date-time
+          example: 2025-01-05T21:05:28Z
         lastValidatedAt:
           type: string
           description: Время последней проверки
@@ -1242,6 +1261,7 @@ components:
         statusReason:
           type: string
           description: Причина текущего статуса проверки
+          example: TIMEOUT
         httpChallenge:
           allOf:
             - $ref: '#/components/schemas/Http01ChallengeResponse'
@@ -1277,6 +1297,7 @@ components:
           description: |-
             Исходный URL, по которому должен быть доступен HTTP-01 challenge.
             Используется для настройки перенаправления при включенной делегации
+          example: http://example.com/.well-known/acme-challenge/V8UV4gDZfXisIOdk8M1sxWESoMMxhB_pjt-6v97QEws
         delegated:
           type: boolean
           description: |-
@@ -1287,6 +1308,7 @@ components:
           description: |-
             Целевой URL, на который должен выполняться редирект с `sourceUrl`
             для поддержки автоматического продления сертификата
+          example: certmanager.mwsusercontent.ru/certmanager/v1/projects/proj-name/certificates/cert-name/V8UV4gDZfXisIOdk8M1sxWESoMMxhB_pjt-6v97QEws
       required:
         - sourceUrl
         - delegated
@@ -1301,6 +1323,7 @@ components:
         cnameTarget:
           type: string
           description: Целевой домен для делегации через CNAME
+          example: e8f8a0f86b66471fa8cf9afdca1abfe1.certmanager.mwsusercontent.ru.
       required:
         - delegated
 
@@ -1406,8 +1429,6 @@ components:
           
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           
-            Обязательно для заполнения при создании ресурса
-          
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
           items:
@@ -1418,28 +1439,32 @@ components:
       description: Конфигурация провайдера выпуска сертификата
       properties:
         acme:
-          type: object
-          properties:
-            server:
-              $ref: '#/components/schemas/CertificateManagedSpecAcmeServer'
-              description: |-
-                ACME-сервер для выпуска сертификата
-              
-                Обязательно для заполнения при создании ресурса
-            challengeType:
-              $ref: '#/components/schemas/CertificateChallengeType'
-              description: |-
-                Предпочтительный тип проверки домена (challenge).
-                Возможные значения: DNS01 или HTTP01. По умолчанию используется DNS01
-              
-                Обязательно для заполнения при создании ресурса
-              
-                Неизменяемое поле. Задается только при создании ресурса.
-                При обновлении ресурса можно передать только текущее значение
-            profile:
-              type: string
-              description: Профиль сертификата
+          allOf:
+            - $ref: '#/components/schemas/AcmeIssuerRequest'
           nullable: true
+
+    AcmeIssuerRequest:
+      type: object
+      properties:
+        server:
+          $ref: '#/components/schemas/CertificateManagedSpecAcmeServer'
+          description: |-
+            ACME-сервер для выпуска сертификата
+          
+            Обязательно для заполнения при создании ресурса
+        challengeType:
+          $ref: '#/components/schemas/CertificateChallengeType'
+          description: |-
+            Предпочтительный тип проверки домена (challenge).
+            Возможные значения: DNS01 или HTTP01. По умолчанию используется DNS01
+          
+            Обязательно для заполнения при создании ресурса
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+        profile:
+          type: string
+          description: Профиль сертификата
 
     ApiError:
       type: object
