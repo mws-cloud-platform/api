@@ -55,7 +55,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ListResourcesResponseResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 403, 500
           content:
             application/json:
               schema:
@@ -110,7 +110,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/CdnResourceResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 409, 412, 422, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 409, 500
           content:
             application/json:
               schema:
@@ -133,7 +133,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/CdnResourceResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
           content:
             application/json:
               schema:
@@ -156,7 +156,7 @@ paths:
         "204":
           description: Ресурс удалён
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
           content:
             application/json:
               schema:
@@ -204,7 +204,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ListCacheTasksResponseResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 403, 500
           content:
             application/json:
               schema:
@@ -238,7 +238,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/CacheTaskResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 409, 412, 422, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 409, 500
           content:
             application/json:
               schema:
@@ -261,7 +261,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/CacheTaskResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
           content:
             application/json:
               schema:
@@ -284,7 +284,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/EgressIpsResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 500
           content:
             application/json:
               schema:
@@ -330,7 +330,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetStatisticsResponseResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
           content:
             application/json:
               schema:
@@ -343,6 +343,7 @@ components:
       properties:
         items:
           type: array
+          description: Список ресурсов CDN
           items:
             $ref: '#/components/schemas/CdnResourceResponse'
         nextPageToken:
@@ -469,11 +470,13 @@ components:
                 - "projects/myProject/certificates/myName"
                 - "certificates/myName"
                 - "myName"
+          nullable: true
         cnames:
           type: array
           description: Список доменов 3-го уровня или выше, по которым будет доступен CDN помимо сгенерированного домена
           items:
             type: string
+          nullable: true
         forceHttps:
           type: boolean
           description: Принудительное использование защищенного HTTPS-соединения
@@ -491,6 +494,7 @@ components:
           description: Правила доставки контента для определенных путей
           items:
             $ref: '#/components/schemas/LocationOptionsResponse'
+          nullable: true
         accessLogs:
           allOf:
             - $ref: '#/components/schemas/AccessLogsResponse'
@@ -558,11 +562,13 @@ components:
           description: Дополнительные заголовки, которые добавляются в ответ источника контента на запросы клиента
           items:
             $ref: '#/components/schemas/HeaderOptionResponse'
+          nullable: true
         addRequestHeaders:
           type: array
           description: Дополнительные заголовки, которые добавляются в запрос клиента к источнику контента
           items:
             $ref: '#/components/schemas/HeaderOptionResponse'
+          nullable: true
         cors:
           allOf:
             - $ref: '#/components/schemas/CorsOptionResponse'
@@ -573,11 +579,13 @@ components:
           description: Исключить заголовки в ответе от источника контента клиенту
           items:
             type: string
+          nullable: true
         removeRequestHeaders:
           type: array
           description: Исключить заголовки в запросе от клиента к источнику контента
           items:
             type: string
+          nullable: true
         hostHeader:
           $ref: '#/components/schemas/HostHeaderOptionResponse'
           description: Задает значение заголовка Host при обращении к источнику контента
@@ -638,6 +646,7 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+          nullable: true
         drop:
           type: boolean
           description: Заголовок Cache-Control не передается
@@ -702,7 +711,7 @@ components:
 
     QueryCachingResponse:
       type: object
-      description: Кеширование контента по query-параметрам
+      description: Настройка кеширования контента по query-параметрам
       properties:
         useAll:
           type: boolean
@@ -715,11 +724,13 @@ components:
           description: Использовать белый список параметров
           items:
             type: string
+          nullable: true
         blacklist:
           type: array
           description: Использовать черный список параметров
           items:
             type: string
+          nullable: true
 
     CdnCachingOptionCustomResponse:
       type: object
@@ -749,8 +760,10 @@ components:
               - "42"
         intervals:
           type: array
+          description: Настройки времени жизни кеша для отдельных кодов HTTP-ответов
           items:
             $ref: '#/components/schemas/CacheIntervalResponse'
+          nullable: true
         queryCaching:
           allOf:
             - $ref: '#/components/schemas/QueryCachingResponse'
@@ -787,6 +800,7 @@ components:
               - "42"
         httpCodes:
           type: array
+          description: Коды HTTP-ответов, для которых применяется указанное время жизни кеша
           items:
             type: string
       required:
@@ -854,6 +868,7 @@ components:
           description: Разрешить CORS-запросы для доменов из списка. В заголовке Access-Control-Allow-Origin ответа будет значение заголовка Origin из запроса
           items:
             type: string
+          nullable: true
         all:
           type: boolean
           description: Разрешить CORS-запросы для всех доменов. В заголовке Access-Control-Allow-Origin ответа будет значение "*"
@@ -871,6 +886,7 @@ components:
         value:
           type: string
           description: Задает собственное значение заголовка Host
+          nullable: true
         forward:
           type: boolean
           description: Пересылается значение заголовка Host из запроса клиента
@@ -884,11 +900,13 @@ components:
           description: Список кодов стран в формате ISO 3166-1 alpha-2. Для указанных стран доступ к контенту разрешен, для остальных - запрещен
           items:
             type: string
+          nullable: true
         deny:
           type: array
           description: Список кодов стран в формате ISO 3166-1 alpha-2. Для указанных стран доступ к контенту запрещен, для остальных - разрешен
           items:
             type: string
+          nullable: true
 
     IpAccessPolicyOptionResponse:
       type: object
@@ -899,11 +917,13 @@ components:
           description: Список диапазонов IP-адресов в нотации CIDR. Для указанных диапазонов IP-адресов доступ к контенту разрешен, для остальных - запрещен
           items:
             type: string
+          nullable: true
         deny:
           type: array
           description: Список диапазонов IP-адресов в нотации CIDR. Для указанных диапазонов IP-адресов доступ к контенту запрещен, для остальных - разрешен
           items:
             type: string
+          nullable: true
 
     DomainNameAccessPolicyOptionResponse:
       type: object
@@ -914,11 +934,13 @@ components:
           description: Список доменных имен (поддерживаются маски). Для указанных доменных имен доступ к контенту разрешен, для остальных - запрещен
           items:
             type: string
+          nullable: true
         deny:
           type: array
           description: Список доменных имен (поддерживаются маски). Для указанных доменных имен доступ к контенту запрещен, для остальных - разрешен
           items:
             type: string
+          nullable: true
 
     SniHostOptionResponse:
       type: object
@@ -928,6 +950,7 @@ components:
           type: string
           description: Имя SNI-хоста
           example: sni.example.com
+          nullable: true
         useHostHeader:
           type: boolean
           description: Имя SNI-хоста соответствует значению заголовка Host. См. опцию hostHeader
@@ -980,11 +1003,13 @@ components:
           description: Дополнительные заголовки, которые добавляются в ответ источника контента на запросы клиента
           items:
             $ref: '#/components/schemas/HeaderOptionResponse'
+          nullable: true
         addRequestHeaders:
           type: array
           description: Дополнительные заголовки, которые добавляются в запрос клиента к источнику контента
           items:
             $ref: '#/components/schemas/HeaderOptionResponse'
+          nullable: true
         cors:
           allOf:
             - $ref: '#/components/schemas/CorsOptionResponse'
@@ -995,11 +1020,13 @@ components:
           description: Исключить заголовки в ответе от источника контента клиенту
           items:
             type: string
+          nullable: true
         removeRequestHeaders:
           type: array
           description: Исключить заголовки в запросе от клиента к источнику контента
           items:
             type: string
+          nullable: true
         hostHeader:
           allOf:
             - $ref: '#/components/schemas/HostHeaderOptionResponse'
@@ -1060,6 +1087,7 @@ components:
         prefix:
           type: string
           description: Prefix пути в бакете
+          nullable: true
       required:
         - bucket
 
@@ -1073,6 +1101,7 @@ components:
               type: string
               description: Сгенерированное доменное имя ресурса CDN
               example: top1775336473.mwscdn.ru
+              nullable: true
 
     ResourceStatusResponse:
       type: object
@@ -1181,6 +1210,7 @@ components:
                 - "projects/myProject/certificates/myName"
                 - "certificates/myName"
                 - "myName"
+          nullable: true
         cnames:
           type: array
           description: |-
@@ -1189,6 +1219,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             type: string
+          nullable: true
         forceHttps:
           type: boolean
           description: |-
@@ -1218,6 +1249,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             $ref: '#/components/schemas/LocationOptionsRequest'
+          nullable: true
         accessLogs:
           allOf:
             - $ref: '#/components/schemas/AccessLogsRequest'
@@ -1287,6 +1319,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             $ref: '#/components/schemas/HeaderOptionRequest'
+          nullable: true
         addRequestHeaders:
           type: array
           description: |-
@@ -1295,6 +1328,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             $ref: '#/components/schemas/HeaderOptionRequest'
+          nullable: true
         cors:
           allOf:
             - $ref: '#/components/schemas/CorsOptionRequest'
@@ -1308,6 +1342,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             type: string
+          nullable: true
         removeRequestHeaders:
           type: array
           description: |-
@@ -1316,6 +1351,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             type: string
+          nullable: true
         hostHeader:
           $ref: '#/components/schemas/HostHeaderOptionRequest'
           description: |-
@@ -1372,6 +1408,7 @@ components:
               - "1h10m42s"
               - "-(1d 2h 3m 4s 5ms 6us 7ns)"
               - "42"
+          nullable: true
         drop:
           type: boolean
           description: Заголовок Cache-Control не передается
@@ -1436,7 +1473,7 @@ components:
 
     QueryCachingRequest:
       type: object
-      description: Кеширование контента по query-параметрам
+      description: Настройка кеширования контента по query-параметрам
       properties:
         useAll:
           type: boolean
@@ -1452,6 +1489,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             type: string
+          nullable: true
         blacklist:
           type: array
           description: |-
@@ -1460,6 +1498,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             type: string
+          nullable: true
 
     CdnCachingOptionCustomRequest:
       type: object
@@ -1491,9 +1530,13 @@ components:
               - "42"
         intervals:
           type: array
-          description: Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
+          description: |-
+            Настройки времени жизни кеша для отдельных кодов HTTP-ответов
+          
+            Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             $ref: '#/components/schemas/CacheIntervalRequest'
+          nullable: true
         queryCaching:
           allOf:
             - $ref: '#/components/schemas/QueryCachingRequest'
@@ -1531,6 +1574,8 @@ components:
         httpCodes:
           type: array
           description: |-
+            Коды HTTP-ответов, для которых применяется указанное время жизни кеша
+          
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           
             Обязательно для заполнения при создании ресурса
@@ -1608,6 +1653,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             type: string
+          nullable: true
         all:
           type: boolean
           description: Разрешить CORS-запросы для всех доменов. В заголовке Access-Control-Allow-Origin ответа будет значение "*"
@@ -1625,6 +1671,7 @@ components:
         value:
           type: string
           description: Задает собственное значение заголовка Host
+          nullable: true
         forward:
           type: boolean
           description: Пересылается значение заголовка Host из запроса клиента
@@ -1641,6 +1688,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             type: string
+          nullable: true
         deny:
           type: array
           description: |-
@@ -1649,6 +1697,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             type: string
+          nullable: true
 
     IpAccessPolicyOptionRequest:
       type: object
@@ -1662,6 +1711,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             type: string
+          nullable: true
         deny:
           type: array
           description: |-
@@ -1670,6 +1720,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             type: string
+          nullable: true
 
     DomainNameAccessPolicyOptionRequest:
       type: object
@@ -1683,6 +1734,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             type: string
+          nullable: true
         deny:
           type: array
           description: |-
@@ -1691,6 +1743,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             type: string
+          nullable: true
 
     SniHostOptionRequest:
       type: object
@@ -1700,6 +1753,7 @@ components:
           type: string
           description: Имя SNI-хоста
           example: sni.example.com
+          nullable: true
         useHostHeader:
           type: boolean
           description: Имя SNI-хоста соответствует значению заголовка Host. См. опцию hostHeader
@@ -1757,6 +1811,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             $ref: '#/components/schemas/HeaderOptionRequest'
+          nullable: true
         addRequestHeaders:
           type: array
           description: |-
@@ -1765,6 +1820,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             $ref: '#/components/schemas/HeaderOptionRequest'
+          nullable: true
         cors:
           allOf:
             - $ref: '#/components/schemas/CorsOptionRequest'
@@ -1778,6 +1834,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             type: string
+          nullable: true
         removeRequestHeaders:
           type: array
           description: |-
@@ -1786,6 +1843,7 @@ components:
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
             type: string
+          nullable: true
         hostHeader:
           allOf:
             - $ref: '#/components/schemas/HostHeaderOptionRequest'
@@ -1845,12 +1903,14 @@ components:
         prefix:
           type: string
           description: Prefix пути в бакете
+          nullable: true
 
     ListCacheTasksResponseResponse:
       type: object
       properties:
         items:
           type: array
+          description: Список задач на управление кешем CDN
           items:
             $ref: '#/components/schemas/CacheTaskResponse'
         nextPageToken:
@@ -1961,6 +2021,7 @@ components:
               description: Полученные HTTP-ответы по путям предзагруженного контента
               items:
                 $ref: '#/components/schemas/CacheTaskPathResponseResponse'
+              nullable: true
 
     CacheTaskPathResponseResponse:
       type: object
@@ -2091,6 +2152,7 @@ components:
       properties:
         ipPrefix:
           type: string
+          description: IPv4- или IPv6-префикс CDN-сервера в формате CIDR
       required:
         - ipPrefix
 

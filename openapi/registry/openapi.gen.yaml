@@ -963,7 +963,7 @@ components:
           description: Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров
           nullable: true
         spec:
-          type: object
+          $ref: '#/components/schemas/RepositorySpecResponse'
           description: Спецификация репозитория
         status:
           allOf:
@@ -972,6 +972,10 @@ components:
           nullable: true
       required:
         - spec
+
+    RepositorySpecResponse:
+      type: object
+      description: Спецификация репозитория
 
     RepositoryStatusResponse:
       description: Статус репозитория
@@ -987,11 +991,15 @@ components:
           description: Набор общих для всех пользовательских объектов атрибутов. Может быть расширен атрибутами, специфичными для контейнеров
           nullable: true
         spec:
-          type: object
+          $ref: '#/components/schemas/RepositorySpecRequest'
           description: |-
             Спецификация репозитория
           
             Обязательно для заполнения при создании ресурса
+
+    RepositorySpecRequest:
+      type: object
+      description: Спецификация репозитория
 
     LifecyclePolicyListResponse:
       type: object

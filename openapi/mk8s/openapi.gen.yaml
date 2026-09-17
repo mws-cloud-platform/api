@@ -18,7 +18,7 @@ paths:
     get:
       tags:
         - mk8sProjectStat
-      summary: Получение статистики managed k8s в проекте
+      summary: Получить статистику Managed Kubernetes в проекте
       operationId: GetProjectStats
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -26,7 +26,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Returns statistics for managed k8s in the project
+          description: Статистика Managed Kubernetes в проекте
           content:
             application/json:
               schema:
@@ -42,7 +42,7 @@ paths:
     get:
       tags:
         - mk8sReleaseChannel
-      summary: Получение списка доступных релизных каналов
+      summary: Получить список доступных релизных каналов
       operationId: ListMk8sReleaseChannels
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -50,7 +50,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: List of available release channels
+          description: Список доступных релизных каналов
           content:
             application/json:
               schema:
@@ -73,7 +73,7 @@ paths:
     get:
       tags:
         - mk8sCluster
-      summary: Получение списка managed k8s cluster
+      summary: Получить список кластеров Managed Kubernetes
       description: |-
         Операция позволяет получить список ресурсов
       
@@ -100,7 +100,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: List of managed k8s clusters
+          description: Список кластеров Managed Kubernetes
           content:
             application/json:
               schema:
@@ -116,7 +116,7 @@ paths:
     post:
       tags:
         - mk8sCluster
-      summary: Создание или обновление managed k8s cluster-а
+      summary: Создать или обновить кластер Managed Kubernetes
       description: |-
         Метод создает новый ресурс или обновляет существующий.
         Поддерживается частичное обновление ресурса
@@ -147,7 +147,7 @@ paths:
       security:
         - BearerAuth: []
       requestBody:
-        description: managed k8s cluster object
+        description: Конфигурация кластера Managed Kubernetes
         required: true
         content:
           application/json:
@@ -155,7 +155,7 @@ paths:
               $ref: '#/components/schemas/ClusterRequest'
       responses:
         "200":
-          description: Managed k8s cluster object accepted
+          description: Конфигурация кластера Managed Kubernetes
           content:
             application/json:
               schema:
@@ -169,7 +169,7 @@ paths:
     get:
       tags:
         - mk8sCluster
-      summary: Получение cluster по имени
+      summary: Получить конфигурацию кластера по имени
       operationId: GetMk8sCluster
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -178,7 +178,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Managed k8s cluster
+          description: Конфигурация кластера Managed Kubernetes
           content:
             application/json:
               schema:
@@ -192,7 +192,7 @@ paths:
     delete:
       tags:
         - mk8sCluster
-      summary: Удаление managed k8s cluster
+      summary: Удалить кластер Managed Kubernetes
       operationId: DeleteMk8sCluster
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -202,7 +202,7 @@ paths:
         - BearerAuth: []
       responses:
         "204":
-          description: No content
+          description: Ответ без содержимого
         default:
           description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
           content:
@@ -214,7 +214,7 @@ paths:
     get:
       tags:
         - mk8sVersion
-      summary: Получение списка доступных managed k8s версий
+      summary: Получить список доступных версий Kubernetes
       operationId: ListMk8sVersions
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -226,7 +226,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: List of available versions
+          description: Список доступных версий Kubernetes
           content:
             application/json:
               schema:
@@ -249,7 +249,7 @@ paths:
     get:
       tags:
         - mk8sNodeGroup
-      summary: Получение списка managed k8s node groups
+      summary: Получить список групп узлов Managed Kubernetes
       description: |-
         Операция позволяет получить список ресурсов
       
@@ -278,7 +278,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: List of managed k8s node groups
+          description: Список групп узлов Managed Kubernetes
           content:
             application/json:
               schema:
@@ -294,7 +294,7 @@ paths:
     post:
       tags:
         - mk8sNodeGroup
-      summary: Создание или обновление managed k8s node group
+      summary: Создать или обновить группу узлов Managed Kubernetes
       description: |-
         Метод создает новый ресурс или обновляет существующий.
         Поддерживается частичное обновление ресурса
@@ -326,7 +326,7 @@ paths:
       security:
         - BearerAuth: []
       requestBody:
-        description: managed k8s node group object
+        description: Конфигурация группы узлов Managed Kubernetes
         required: true
         content:
           application/json:
@@ -334,7 +334,7 @@ paths:
               $ref: '#/components/schemas/NodeGroupRequest'
       responses:
         "200":
-          description: Данные для создания или обновления node group
+          description: Конфигурация группы узлов Managed Kubernetes
           content:
             application/json:
               schema:
@@ -348,7 +348,7 @@ paths:
     get:
       tags:
         - mk8sNodeGroup
-      summary: Получение managed k8s node group по имени
+      summary: Получить группу узлов Managed Kubernetes по имени
       operationId: GetMk8sNodeGroup
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -358,7 +358,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Managed k8s node group
+          description: Конфигурация группы узлов Managed Kubernetes
           content:
             application/json:
               schema:
@@ -372,7 +372,7 @@ paths:
     delete:
       tags:
         - mk8sNodeGroup
-      summary: Удаление managed k8s node group
+      summary: Удалить группу узлов Managed Kubernetes
       operationId: DeleteMk8sNodeGroup
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -383,7 +383,7 @@ paths:
         - BearerAuth: []
       responses:
         "204":
-          description: Managed k8s node group accepted to be removed with no content in response
+          description: Ответ без содержимого
         default:
           description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
           content:
@@ -411,13 +411,13 @@ components:
       properties:
         name:
           type: string
-          description: Если release channel name не указан, то будет проставлено default значение stable
+          description: Имя релизного канала. По умолчанию — stable
         description:
           type: string
           nullable: true
         enabled:
           type: boolean
-          description: Если false, то релизный канал не доступен для выбора
+          description: Доступность релизного канала. Если значение равно false, то канал недоступен для выбора
       required:
         - name
         - enabled
@@ -457,7 +457,7 @@ components:
         status:
           allOf:
             - $ref: '#/components/schemas/ClusterStatusResponse'
-          description: Описывает статусную модель k8s cluster
+          description: Статусная модель кластера Kubernetes
           nullable: true
       required:
         - spec
@@ -537,19 +537,19 @@ components:
             primaryEndpoint:
               $ref: '#/components/schemas/ClusterPrimaryEndpointSpecOrRefResponse'
               description: |-
-                Ip-адрес внутри vpc
+                IP-адрес внутри VPC
               
                 Неизменяемое поле. Задается только при создании ресурса.
                 При обновлении ресурса можно передать только текущее значение
             publicEndpoint:
               allOf:
                 - $ref: '#/components/schemas/ClusterPublicEndpointSpecOrRefResponse'
-              description: Внешний ip-адрес
+              description: Внешний IP-адрес
               nullable: true
             podsCidr:
               type: string
               description: |-
-                Необходим ip-range v4
+                CIDR IPv4-адресов
               
                 IPv4 подсеть в CIDR нотации
               
@@ -561,7 +561,7 @@ components:
             servicesCidr:
               type: string
               description: |-
-                Необходим ip-range v4
+                CIDR IPv4-адресов
               
                 IPv4 подсеть в CIDR нотации
               
@@ -604,7 +604,7 @@ components:
             zone:
               type: string
               description: |-
-                Имя зоны для размещения cluster
+                Имя зоны для размещения кластера
               
                 Неизменяемое поле. Задается только при создании ресурса.
                 При обновлении ресурса можно передать только текущее значение
@@ -614,7 +614,7 @@ components:
         zonalHa:
           type: object
           description: |-
-            Зональный высокодоступный кластер с несколькими мастерами
+            Зональный высокодоступный кластер с несколькими мастерами в одной зоне доступности
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
@@ -622,17 +622,37 @@ components:
             zone:
               type: string
               description: |-
-                Имя зоны для размещения cluster
+                Имя зоны для размещения кластера
               
                 Неизменяемое поле. Задается только при создании ресурса.
                 При обновлении ресурса можно передать только текущее значение
           required:
             - zone
           nullable: true
+        regional:
+          type: object
+          description: |-
+            Высокодоступный кластер с несколькими мастерами в разных зонах доступности одного региона
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+          properties:
+            zones:
+              type: array
+              description: |-
+                Имена зон для размещения кластера. Должно быть ровно три зоны
+              
+                Неизменяемое поле. Задается только при создании ресурса.
+                При обновлении ресурса можно передать только текущее значение
+              items:
+                type: string
+          required:
+            - zones
+          nullable: true
 
     ClusterPrimaryEndpointSpecOrRefResponse:
       type: object
-      description: Ip-адрес внутри vpc
+      description: Конфигурация primary-эндпоинта кластера — подсеть или идентификатор внутреннего IP-адреса
       properties:
         ref:
           type: string
@@ -665,7 +685,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/ClusterPrimaryEndpointSpecResponse'
           description: |-
-            Описание subnet пользователя, из которого будет выделен ip-адрес
+            Конфигурация подсети, из которой будет выделен IP-адрес
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
@@ -673,7 +693,7 @@ components:
 
     ClusterPrimaryEndpointSpecResponse:
       type: object
-      description: Описание subnet пользователя, из которого будет выделен ip-адрес
+      description: Идентификатор подсети, из которой будет выделен IP-адрес
       properties:
         ipAddress:
           type: string
@@ -719,7 +739,7 @@ components:
 
     ClusterPublicEndpointSpecOrRefResponse:
       type: object
-      description: Внешний ip-адрес
+      description: Конфигурация публичного эндпоинта кластера — подсеть или идентификатор внешнего IP-адреса
       properties:
         ref:
           type: string
@@ -746,16 +766,20 @@ components:
         spec:
           allOf:
             - $ref: '#/components/schemas/ClusterPublicEndpointSpecResponse'
-          description: Ожидаем пустой объект в случае автоматического выделения внешнего ip-адреса
+          description: |-
+            Конфигурация публичного эндпоинта кластера.
+            При автоматическом выделении внешнего IP-адреса ожидается пустой объект
           nullable: true
 
     ClusterPublicEndpointSpecResponse:
       type: object
-      description: Ожидаем пустой объект в случае автоматического выделения внешнего ip-адреса
+      description: |-
+        Конфигурация публичного эндпоинта кластера.
+        При автоматическом выделении внешнего IP-адреса ожидается пустой объект
       properties:
         version:
           type: string
-          description: Версия IP протокола
+          description: Версия протокола IP
           enum:
             - "IPV4"
             - "IPV6"
@@ -766,15 +790,14 @@ components:
       properties:
         releaseChannel:
           type: string
-          description: Cluster обновляется всегда до default версии, поэтому необходимо выбрать релизный канал и настроить окно обслуживания
+          description: Релизный канал кластера
         version:
           type: string
-          description: Минимальная версия Cluster. Автоматически обновляется до версии default в окно обслуживания. При указании версии выше default обновление запускается немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе Cluster
-          nullable: true
+          description: Минимальная версия кластера. Автоматически обновляется до версии default в окно обслуживания. При указании версии выше default обновление запускается немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе Cluster
         maintenanceWindow:
           allOf:
             - $ref: '#/components/schemas/MaintenanceWindowResponse'
-          description: Если окно обслуживания не заполнено, то время проведения работ не ограничено. Duration нельзя указывать, так как обновление мастер нод не прерывается
+          description: Окно обслуживания кластера.  Если окно не задано, то время проведения работ не ограничено. Продолжительность (duration) не указывается, так как обновление master-узлов не прерывается
           nullable: true
       required:
         - releaseChannel
@@ -861,14 +884,14 @@ components:
 
     ClusterStatusResponse:
       type: object
-      description: Описывает статусную модель k8s cluster
+      description: Статусная модель кластера Kubernetes
       allOf:
         - $ref: '#/components/schemas/ResourceStatusResponse'
         - type: object
           properties:
             clusterCaCertificate:
               type: string
-              description: Root сертификат кластера
+              description: Корневой сертификат кластера
               format: byte
               nullable: true
             network:
@@ -932,7 +955,7 @@ components:
                   nullable: true
                 primaryEndpoint:
                   type: object
-                  description: Внутренний ip-адрес
+                  description: Внутренний IP-адрес
                   properties:
                     ref:
                       type: string
@@ -970,7 +993,7 @@ components:
                   nullable: true
                 publicEndpoint:
                   type: object
-                  description: Внешний ip-адрес
+                  description: Внешний IP-адрес
                   properties:
                     ref:
                       type: string
@@ -1013,7 +1036,7 @@ components:
               properties:
                 state:
                   type: string
-                  description: Текущий статус cluster
+                  description: Текущий статус кластера
                   enum:
                     - "INIT"
                     - "PENDING"
@@ -1074,24 +1097,16 @@ components:
       properties:
         releaseChannel:
           type: string
-          description: Cluster обновляется всегда до default версии, поэтому необходимо выбрать релизный канал и настроить окно обслуживания
+          description: Релизный канал кластера
           nullable: true
         version:
           type: string
-          description: Текущая версия Cluster
+          description: Текущая версия кластера
           nullable: true
         maintenanceWindow:
           allOf:
-            - $ref: '#/components/schemas/MaintenanceWindow2Response'
+            - $ref: '#/components/schemas/MaintenanceWindowResponse'
           nullable: true
-
-    MaintenanceWindow2Response:
-      type: object
-      properties:
-        weekly:
-          $ref: '#/components/schemas/WeeklyMaintenanceWindowResponse'
-      required:
-        - weekly
 
     PluginsStatusResponse:
       type: object
@@ -1164,7 +1179,7 @@ components:
             primaryEndpoint:
               $ref: '#/components/schemas/ClusterPrimaryEndpointSpecOrRefRequest'
               description: |-
-                Ip-адрес внутри vpc
+                IP-адрес внутри VPC
               
                 Обязательно для заполнения при создании ресурса
               
@@ -1173,12 +1188,12 @@ components:
             publicEndpoint:
               allOf:
                 - $ref: '#/components/schemas/ClusterPublicEndpointSpecOrRefRequest'
-              description: Внешний ip-адрес
+              description: Внешний IP-адрес
               nullable: true
             podsCidr:
               type: string
               description: |-
-                Необходим ip-range v4
+                CIDR IPv4-адресов
               
                 IPv4 подсеть в CIDR нотации
               
@@ -1192,7 +1207,7 @@ components:
             servicesCidr:
               type: string
               description: |-
-                Необходим ip-range v4
+                CIDR IPv4-адресов
               
                 IPv4 подсеть в CIDR нотации
               
@@ -1230,7 +1245,7 @@ components:
             zone:
               type: string
               description: |-
-                Имя зоны для размещения cluster
+                Имя зоны для размещения кластера
               
                 Обязательно для заполнения при создании ресурса
               
@@ -1240,7 +1255,7 @@ components:
         zonalHa:
           type: object
           description: |-
-            Зональный высокодоступный кластер с несколькими мастерами
+            Зональный высокодоступный кластер с несколькими мастерами в одной зоне доступности
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
@@ -1248,17 +1263,39 @@ components:
             zone:
               type: string
               description: |-
-                Имя зоны для размещения cluster
+                Имя зоны для размещения кластера
               
                 Обязательно для заполнения при создании ресурса
               
                 Неизменяемое поле. Задается только при создании ресурса.
                 При обновлении ресурса можно передать только текущее значение
           nullable: true
+        regional:
+          type: object
+          description: |-
+            Высокодоступный кластер с несколькими мастерами в разных зонах доступности одного региона
+          
+            Неизменяемое поле. Задается только при создании ресурса.
+            При обновлении ресурса можно передать только текущее значение
+          properties:
+            zones:
+              type: array
+              description: |-
+                Имена зон для размещения кластера. Должно быть ровно три зоны
+              
+                Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
+              
+                Обязательно для заполнения при создании ресурса
+              
+                Неизменяемое поле. Задается только при создании ресурса.
+                При обновлении ресурса можно передать только текущее значение
+              items:
+                type: string
+          nullable: true
 
     ClusterPrimaryEndpointSpecOrRefRequest:
       type: object
-      description: Ip-адрес внутри vpc
+      description: Конфигурация primary-эндпоинта кластера — подсеть или идентификатор внутреннего IP-адреса
       properties:
         ref:
           type: string
@@ -1291,7 +1328,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/ClusterPrimaryEndpointSpecRequest'
           description: |-
-            Описание subnet пользователя, из которого будет выделен ip-адрес
+            Конфигурация подсети, из которой будет выделен IP-адрес
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
@@ -1299,7 +1336,7 @@ components:
 
     ClusterPrimaryEndpointSpecRequest:
       type: object
-      description: Описание subnet пользователя, из которого будет выделен ip-адрес
+      description: Идентификатор подсети, из которой будет выделен IP-адрес
       properties:
         ipAddress:
           type: string
@@ -1345,7 +1382,7 @@ components:
 
     ClusterPublicEndpointSpecOrRefRequest:
       type: object
-      description: Внешний ip-адрес
+      description: Конфигурация публичного эндпоинта кластера — подсеть или идентификатор внешнего IP-адреса
       properties:
         ref:
           type: string
@@ -1372,16 +1409,20 @@ components:
         spec:
           allOf:
             - $ref: '#/components/schemas/ClusterPublicEndpointSpecRequest'
-          description: Ожидаем пустой объект в случае автоматического выделения внешнего ip-адреса
+          description: |-
+            Конфигурация публичного эндпоинта кластера.
+            При автоматическом выделении внешнего IP-адреса ожидается пустой объект
           nullable: true
 
     ClusterPublicEndpointSpecRequest:
       type: object
-      description: Ожидаем пустой объект в случае автоматического выделения внешнего ip-адреса
+      description: |-
+        Конфигурация публичного эндпоинта кластера.
+        При автоматическом выделении внешнего IP-адреса ожидается пустой объект
       properties:
         version:
           type: string
-          description: Версия IP протокола
+          description: Версия протокола IP
           enum:
             - "IPV4"
             - "IPV6"
@@ -1393,17 +1434,16 @@ components:
         releaseChannel:
           type: string
           description: |-
-            Cluster обновляется всегда до default версии, поэтому необходимо выбрать релизный канал и настроить окно обслуживания
+            Релизный канал кластера
           
             Обязательно для заполнения при создании ресурса
         version:
           type: string
-          description: Минимальная версия Cluster. Автоматически обновляется до версии default в окно обслуживания. При указании версии выше default обновление запускается немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе Cluster
-          nullable: true
+          description: Минимальная версия кластера. Автоматически обновляется до версии default в окно обслуживания. При указании версии выше default обновление запускается немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе Cluster
         maintenanceWindow:
           allOf:
             - $ref: '#/components/schemas/MaintenanceWindowRequest'
-          description: Если окно обслуживания не заполнено, то время проведения работ не ограничено. Duration нельзя указывать, так как обновление мастер нод не прерывается
+          description: Окно обслуживания кластера.  Если окно не задано, то время проведения работ не ограничено. Продолжительность (duration) не указывается, так как обновление master-узлов не прерывается
           nullable: true
 
     MaintenanceWindowRequest:
@@ -1575,7 +1615,7 @@ components:
             - ref
         vmType:
           type: object
-          description: Тип VM
+          description: Тип ВМ
           properties:
             ref:
               type: string
@@ -1626,9 +1666,12 @@ components:
           items:
             $ref: '#/components/schemas/LocalDiskSpecResponse'
           nullable: true
+        dataCache:
+          type: boolean
+          description: Признак того, что группа узлов предназначена для кэширования данных. При значении true оператор устанавливает метку csi.mws.ru/data-cache=true на узлы группы (дополнительно требуется заполнение поля localDisks)
         scale:
           type: object
-          description: Необходимо заполнить одно из полей — "fixed" или "autoscaling"
+          description: Режим скалирования группы узлов. Необходимо заполнить одно из полей — "fixed" или "autoscaling"
           properties:
             fixed:
               type: integer
@@ -1639,7 +1682,7 @@ components:
               properties:
                 min:
                   type: integer
-                  description: Минимально количество узлов в группе узлов
+                  description: Минимальное количество узлов в группе узлов
                 max:
                   type: integer
                   description: Максимальное количество узлов в группе узлов
@@ -1764,10 +1807,10 @@ components:
             Максимальная длина ключа 63 символа
         value:
           type: string
-          description: Значение taint на node. Если строка пустая, то value нет
+          description: Значение taint на узле
         effect:
           type: string
-          description: Эффект taint на node, влияющий на pod scheduling, которые под него попадают
+          description: Эффект taint на узле, влияющий на планирование подов, которые под него попадают
           enum:
             - "NO_SCHEDULE"
             - "PREFER_NO_SCHEDULE"
@@ -1782,16 +1825,15 @@ components:
       properties:
         version:
           type: string
-          description: Минимальная версия NodeGroup. Не может быть выше версии кластера.  Автоматически обновляется до default-версии в окно обслуживания. Если указанная версия выше текущей, обновление запустится немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе NodeGroup
-          nullable: true
+          description: Минимальная версия группы узлов. Не может быть выше версии кластера.  Автоматически обновляется до default-версии в окно обслуживания. Если указанная версия выше текущей, обновление запустится немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе группы узлов
         autoUpdate:
           type: boolean
-          description: Авто обновление версии нод группы в рамках релизного канала и окна обслуживания
+          description: Автоматическое обновление версии группы узлов в рамках релизного канала и окна обслуживания
           default: true
         maintenanceWindow:
           allOf:
             - $ref: '#/components/schemas/MaintenanceWindowResponse'
-          description: Если окно обслуживания не заполнено, то время проведения работ не ограничено. Duration можно указывать. Если отсутствует, то не ограничено по времени
+          description: Конфигурация окна обслуживания. Если не заполнено, то время проведения работ не ограничено. Можно указать продолжительность (duration). Если продолжительность не указана, то не ограничено по времени
           nullable: true
 
     NodeGroupStatusResponse:
@@ -1873,6 +1915,10 @@ components:
               description: Параметры локальных дисков для каждого узла в группе узлов
               items:
                 $ref: '#/components/schemas/LocalDiskStatusResponse'
+              nullable: true
+            dataCache:
+              type: boolean
+              description: Включено ли кэширование данных для группы узлов. Принимает значение false, если пользователь не задавал значение для кэширования при создании диска в Managed Kubernetes
               nullable: true
             scale:
               type: object
@@ -2008,14 +2054,14 @@ components:
       properties:
         version:
           type: string
-          description: Текущая версия NodeGroup
+          description: Текущая версия группы узлов
           nullable: true
         autoUpdate:
           type: boolean
           nullable: true
         maintenanceWindow:
           allOf:
-            - $ref: '#/components/schemas/MaintenanceWindow2Response'
+            - $ref: '#/components/schemas/MaintenanceWindowResponse'
           nullable: true
 
     NodeGroupRequest:
@@ -2079,7 +2125,7 @@ components:
         vmType:
           type: object
           description: |-
-            Тип VM
+            Тип ВМ
           
             Обязательно для заполнения при создании ресурса
           properties:
@@ -2135,10 +2181,13 @@ components:
           items:
             $ref: '#/components/schemas/LocalDiskSpecRequest'
           nullable: true
+        dataCache:
+          type: boolean
+          description: Признак того, что группа узлов предназначена для кэширования данных. При значении true оператор устанавливает метку csi.mws.ru/data-cache=true на узлы группы (дополнительно требуется заполнение поля localDisks)
         scale:
           type: object
           description: |-
-            Необходимо заполнить одно из полей — "fixed" или "autoscaling"
+            Режим скалирования группы узлов. Необходимо заполнить одно из полей — "fixed" или "autoscaling"
           
             Обязательно для заполнения при создании ресурса
           properties:
@@ -2152,7 +2201,7 @@ components:
                 min:
                   type: integer
                   description: |-
-                    Минимально количество узлов в группе узлов
+                    Минимальное количество узлов в группе узлов
                   
                     Обязательно для заполнения при создании ресурса
                 max:
@@ -2286,13 +2335,13 @@ components:
         value:
           type: string
           description: |-
-            Значение taint на node. Если строка пустая, то value нет
+            Значение taint на узле
           
             Обязательно для заполнения при создании ресурса
         effect:
           type: string
           description: |-
-            Эффект taint на node, влияющий на pod scheduling, которые под него попадают
+            Эффект taint на узле, влияющий на планирование подов, которые под него попадают
           
             Обязательно для заполнения при создании ресурса
           enum:
@@ -2305,16 +2354,15 @@ components:
       properties:
         version:
           type: string
-          description: Минимальная версия NodeGroup. Не может быть выше версии кластера.  Автоматически обновляется до default-версии в окно обслуживания. Если указанная версия выше текущей, обновление запустится немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе NodeGroup
-          nullable: true
+          description: Минимальная версия группы узлов. Не может быть выше версии кластера.  Автоматически обновляется до default-версии в окно обслуживания. Если указанная версия выше текущей, обновление запустится немедленно. Во время автоматического обновления это поле не изменяется, а актуальная версия указывается в статусе группы узлов
         autoUpdate:
           type: boolean
-          description: Авто обновление версии нод группы в рамках релизного канала и окна обслуживания
+          description: Автоматическое обновление версии группы узлов в рамках релизного канала и окна обслуживания
           default: true
         maintenanceWindow:
           allOf:
             - $ref: '#/components/schemas/MaintenanceWindowRequest'
-          description: Если окно обслуживания не заполнено, то время проведения работ не ограничено. Duration можно указывать. Если отсутствует, то не ограничено по времени
+          description: Конфигурация окна обслуживания. Если не заполнено, то время проведения работ не ограничено. Можно указать продолжительность (duration). Если продолжительность не указана, то не ограничено по времени
           nullable: true
 
     ApiError:
@@ -2450,7 +2498,7 @@ components:
       name: clusterName
       in: path
       required: true
-      description: Имя Cluster
+      description: Имя кластера
       style: simple
       schema:
         type: string
@@ -2461,7 +2509,7 @@ components:
       name: nodeGroupName
       in: path
       required: true
-      description: Имя Node-группы
+      description: Имя группы узлов
       style: simple
       schema:
         type: string
@@ -2481,7 +2529,7 @@ components:
       name: releaseChannelName
       in: path
       required: true
-      description: Имя Release Channel
+      description: Имя релизного канала
       style: simple
       schema:
         type: string
@@ -2490,7 +2538,7 @@ components:
     query_clusterName:
       name: clusterName
       in: query
-      description: Имя Cluster
+      description: Имя кластера
       style: form
       explode: true
       schema:
@@ -2522,7 +2570,7 @@ components:
     query_nodeGroupName:
       name: nodeGroupName
       in: query
-      description: Имя Node Group-ы
+      description: Имя группы узлов
       style: form
       explode: true
       schema:
@@ -2564,7 +2612,10 @@ components:
     query_subject:
       name: subject
       in: query
-      description: Объект получения версий, возможные варианты значений cluster или nodeGroup
+      description: |
+        Объект, для которого запрашиваются доступные версии Kubernetes:
+        - `cluster` — версии Control Plane кластера;
+        - `nodeGroup` — версии группы узлов
       style: form
       explode: true
       schema:

@@ -145,10 +145,12 @@ paths:
         Если в момент отправки запроса `ETag` изменился на стороне сервиса, в ответе возвращается ошибка `INVALID_ETAG_KEY`.
       operationId: UpsertServiceAccount
       parameters:
+        - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_serviceAccount"
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -205,8 +207,11 @@ paths:
       summary: Удаление сервисного аккаунта
       operationId: DeleteServiceAccount
       parameters:
+        - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_serviceAccount"
+        - $ref: "#/components/parameters/query_ifExist"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       responses:
@@ -281,6 +286,7 @@ paths:
         - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -341,6 +347,9 @@ paths:
         - $ref: "#/components/parameters/path_serviceAccount"
         - $ref: "#/components/parameters/path_keyName"
         - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/query_ifExist"
+        - $ref: "#/components/parameters/query_validateOnly"
+        - $ref: "#/components/parameters/query_cascade"
       security:
         - BearerAuth: []
       responses:
@@ -415,6 +424,7 @@ paths:
         - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -475,6 +485,8 @@ paths:
         - $ref: "#/components/parameters/path_serviceAccount"
         - $ref: "#/components/parameters/path_authorizedKey"
         - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/query_ifExist"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       responses:
@@ -525,6 +537,7 @@ paths:
         - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -564,7 +577,7 @@ paths:
         - $ref: "#/components/parameters/path_authorizedKey"
         - $ref: "#/components/parameters/path_project"
       security:
-        - BearerAuth: []
+        - {}
       responses:
         "200":
           description: Успешный ответ
@@ -589,6 +602,8 @@ paths:
         - $ref: "#/components/parameters/path_serviceAccount"
         - $ref: "#/components/parameters/path_authorizedKey"
         - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/query_ifExist"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       responses:
@@ -663,6 +678,7 @@ paths:
         - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -723,6 +739,9 @@ paths:
         - $ref: "#/components/parameters/path_serviceAccount_7bd0d9ef"
         - $ref: "#/components/parameters/path_apiKey"
         - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/query_ifExist"
+        - $ref: "#/components/parameters/query_validateOnly"
+        - $ref: "#/components/parameters/query_cascade"
       security:
         - BearerAuth: []
       responses:
@@ -845,7 +864,7 @@ components:
                   description: Обязательное уникальное, глобально или в пределах проекта, имя. Используется в качестве части составного идентификатора объекта
           nullable: true
         spec:
-          type: object
+          $ref: '#/components/schemas/ServiceAccountSpecResponse'
         status:
           allOf:
             - $ref: '#/components/schemas/ServiceAccountStatusResponse'
@@ -894,9 +913,6 @@ components:
         usageType:
           type: string
           description: Тип связи. Помимо стандартных `own` и `use` могут быть добавлены специализированные типы для конкретных сервисов
-        name:
-          type: string
-          description: Имя связи. Требуется для модификации коллекции
         resource:
           type: string
           description: |-
@@ -907,8 +923,10 @@ components:
             Пример: "servicename/foos/myFoo/bars/myBar"
       required:
         - usageType
-        - name
         - resource
+
+    ServiceAccountSpecResponse:
+      type: object
 
     ServiceAccountStatusResponse:
       type: object
@@ -975,7 +993,7 @@ components:
                   description: Обязательное уникальное, глобально или в пределах проекта, имя. Используется в качестве части составного идентификатора объекта
           nullable: true
         spec:
-          type: object
+          $ref: '#/components/schemas/ServiceAccountSpecRequest'
           description: Обязательно для заполнения при создании ресурса
 
     TypedResourceMetadataRequest:
@@ -985,14 +1003,6 @@ components:
         displayName:
           type: string
           description: Отображаемое имя. Необязательное поле, можно свободно задавать и изменять для удобства организации ресурсов
-        usages:
-          type: array
-          description: |-
-            Связи с другими ресурсами. В зависимости от типа связи операции над ресурсом могут быть ограничены
-          
-            Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
-          items:
-            $ref: '#/components/schemas/TypedUsageRequest'
         etag:
           type: string
           description: Идентификатор состояния ресурса, позволяет отслеживать изменение ресурса
@@ -1000,31 +1010,8 @@ components:
           type: string
           description: Описание ресурса
 
-    TypedUsageRequest:
+    ServiceAccountSpecRequest:
       type: object
-      properties:
-        usageType:
-          type: string
-          description: |-
-            Тип связи. Помимо стандартных `own` и `use` могут быть добавлены специализированные типы для конкретных сервисов
-          
-            Обязательно для заполнения при создании ресурса
-        name:
-          type: string
-          description: |-
-            Имя связи. Требуется для модификации коллекции
-          
-            Обязательно для заполнения при создании ресурса
-        resource:
-          type: string
-          description: |-
-            Ссылка на ресурс
-          
-            Строка в формате: "servicename/foos/{foo}/bars/{bar}"
-          
-            Обязательно для заполнения при создании ресурса
-          
-            Пример: "servicename/foos/myFoo/bars/myBar"
 
     HmacKeyListResponse:
       type: object
@@ -1612,6 +1599,15 @@ components:
       schema:
         type: string
 
+    query_cascade:
+      name: cascade
+      in: query
+      description: Удалить зависимые ресурсы, в противном случае при их наличии, будет возвращен ответ `Aborted`
+      style: form
+      explode: true
+      schema:
+        type: boolean
+
     query_createOnly:
       name: createOnly
       in: query
@@ -1632,6 +1628,17 @@ components:
       explode: true
       schema:
         type: string
+
+    query_ifExist:
+      name: ifExist
+      in: query
+      description: |-
+        Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
+        Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+      style: form
+      explode: true
+      schema:
+        type: boolean
 
     query_orderBy:
       name: orderBy
@@ -1687,6 +1694,15 @@ components:
       description: |-
         Обновить ресурс, если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
         Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+      style: form
+      explode: true
+      schema:
+        type: boolean
+
+    query_validateOnly:
+      name: validateOnly
+      in: query
+      description: Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
       style: form
       explode: true
       schema:

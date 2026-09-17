@@ -18,9 +18,9 @@ paths:
     get:
       tags:
         - clickhouseCluster
-      summary: List Clickhouse clusters
+      summary: Получить список кластеров ClickHouse
       description: |-
-        Операция позволяет получить список ресурсов
+        Возвращает постраничный список кластеров ClickHouse в указанном проекте
       
         Поддерживается фильтрация и сортировка с помощью query-параметров `filter` и `orderBy`.
         Информация по использованию этих параметров находится в их описании
@@ -53,7 +53,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Success
+          description: Список кластеров ClickHouse
           content:
             application/json:
               schema:
@@ -69,7 +69,8 @@ paths:
     post:
       tags:
         - clickhouseCluster
-      summary: Request stopping Clickhouse cluster
+      summary: Остановить кластер ClickHouse
+      description: Остановить кластер ClickHouse
       operationId: StopCluster
       parameters:
         - $ref: "#/components/parameters/header_Idempotency-Key"
@@ -79,7 +80,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Success
+          description: Остановка кластера ClickHouse инициирована
           content:
             application/json:
               schema:
@@ -95,7 +96,8 @@ paths:
     post:
       tags:
         - clickhouseCluster
-      summary: Request starting Clickhouse cluster
+      summary: Запустить кластер ClickHouse
+      description: Запустить кластер ClickHouse
       operationId: StartCluster
       parameters:
         - $ref: "#/components/parameters/header_Idempotency-Key"
@@ -105,7 +107,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Success
+          description: Запуск кластера ClickHouse инициирован
           content:
             application/json:
               schema:
@@ -121,8 +123,10 @@ paths:
     post:
       tags:
         - clickhouseCluster
-      summary: Upsert Clickhouse cluster
+      summary: Создать или изменить кластер ClickHouse
       description: |-
+        Создаёт новый кластер ClickHouse или изменяет существующий (upsert)
+      
         Метод создает новый ресурс или обновляет существующий.
         Поддерживается частичное обновление ресурса
       
@@ -152,14 +156,14 @@ paths:
       security:
         - BearerAuth: []
       requestBody:
-        description: Insert or Update Clickhouse cluster
+        description: Данные для создания или изменения кластера ClickHouse
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/ClickhouseClusterRequest'
       responses:
         "200":
-          description: Clickhouse cluster has been updated
+          description: Кластер ClickHouse успешно создан или изменён
           content:
             application/json:
               schema:
@@ -173,8 +177,8 @@ paths:
     get:
       tags:
         - clickhouseCluster
-      summary: Get clickhouse cluster
-      description: Returns info about the specified cluster
+      summary: Получить информацию о кластере ClickHouse
+      description: Возвращает информацию об указанном кластере ClickHouse
       operationId: GetClickhouseCluster
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -183,7 +187,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Success
+          description: Информация о кластере ClickHouse
           content:
             application/json:
               schema:
@@ -197,7 +201,8 @@ paths:
     delete:
       tags:
         - clickhouseCluster
-      summary: Delete Clickhouse cluster
+      summary: Удалить кластер ClickHouse
+      description: Удаляет указанный кластер ClickHouse
       operationId: DeleteClickhouseCluster
       parameters:
         - $ref: "#/components/parameters/header_Idempotency-Key"
@@ -208,7 +213,7 @@ paths:
         - BearerAuth: []
       responses:
         "204":
-          description: No content
+          description: Кластер ClickHouse удалён
         default:
           description: Допустимые HTTP-коды ошибок — 400, 403, 404, 412, 500
           content:
@@ -220,8 +225,8 @@ paths:
     get:
       tags:
         - clickhouseConfig
-      summary: Get ClickHouse available configuration parameters
-      description: Returns info about available configuration parameters
+      summary: Получить доступные параметры конфигурации ClickHouse
+      description: Возвращает список доступных параметров конфигурации ClickHouse для указанной версии
       operationId: GetAvailableConfigParameters
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -230,7 +235,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Success
+          description: Список доступных параметров конфигурации ClickHouse
           content:
             application/json:
               schema:
@@ -246,9 +251,9 @@ paths:
     get:
       tags:
         - clickhouseClusterUser
-      summary: List clickhouse users
+      summary: Получить список пользователей кластера ClickHouse
       description: |-
-        Операция позволяет получить список ресурсов
+        Возвращает постраничный список пользователей указанного кластера ClickHouse
       
         Поддерживается фильтрация и сортировка с помощью query-параметров `filter` и `orderBy`.
         Информация по использованию этих параметров находится в их описании
@@ -275,7 +280,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Success
+          description: Список пользователей кластера ClickHouse
           content:
             application/json:
               schema:
@@ -291,9 +296,9 @@ paths:
     post:
       tags:
         - clickhouseClusterUser
-      summary: Update clickhouse cluster user
+      summary: Создать или изменить пользователя кластера ClickHouse
       description: |-
-        Updates the cluster user
+        Создаёт нового пользователя кластера ClickHouse или изменяет существующего (upsert)
       
         Метод создает новый ресурс или обновляет существующий.
         Поддерживается частичное обновление ресурса
@@ -325,7 +330,7 @@ paths:
       security:
         - BearerAuth: []
       requestBody:
-        description: Update clickhouse cluster user
+        description: Данные для создания или изменения пользователя кластера ClickHouse
         required: true
         content:
           application/json:
@@ -333,7 +338,7 @@ paths:
               $ref: '#/components/schemas/ClickhouseClusterUserRequest'
       responses:
         "200":
-          description: Clickhouse user has been updated
+          description: Пользователь кластера ClickHouse успешно создан или изменён
           content:
             application/json:
               schema:
@@ -349,7 +354,8 @@ paths:
     get:
       tags:
         - clickhouseClusterBackup
-      summary: List Clickhouse cluster backups
+      summary: Получить список резервных копий кластера ClickHouse
+      description: Возвращает постраничный список резервных копий указанного кластера ClickHouse
       operationId: ListClickhouseClusterBackups
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -363,7 +369,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Success
+          description: Список резервных копий кластера ClickHouse
           content:
             application/json:
               schema:
@@ -379,8 +385,10 @@ paths:
     post:
       tags:
         - clickhouseClusterBackup
-      summary: Upsert Clickhouse cluster backup
+      summary: Создать резервную копию кластера ClickHouse
       description: |-
+        Создаёт новую резервную копию кластера ClickHouse
+      
         Метод создает новый ресурс или обновляет существующий.
         Поддерживается частичное обновление ресурса
       
@@ -411,7 +419,7 @@ paths:
       security:
         - BearerAuth: []
       requestBody:
-        description: Create Clickhouse cluster backup
+        description: Данные для создания резервной копии кластера ClickHouse
         required: true
         content:
           application/json:
@@ -419,7 +427,7 @@ paths:
               $ref: '#/components/schemas/ClickhouseBackupRequest'
       responses:
         "200":
-          description: Clickhouse cluster backup has been started
+          description: Создание резервной копии кластера ClickHouse инициировано
           content:
             application/json:
               schema:
@@ -433,8 +441,8 @@ paths:
     get:
       tags:
         - clickhouseClusterBackup
-      summary: Get Clickhouse cluster backup
-      description: Returns info about the specified cluster backup
+      summary: Получить информацию о резервной копии кластера ClickHouse
+      description: Возвращает информацию об указанной резервной копии кластера ClickHouse
       operationId: GetClickhouseClusterBackup
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -444,7 +452,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Success
+          description: Информация о резервной копии кластера ClickHouse
           content:
             application/json:
               schema:
@@ -458,7 +466,8 @@ paths:
     delete:
       tags:
         - clickhouseClusterBackup
-      summary: Delete Clickhouse cluster backup
+      summary: Удалить резервную копию кластера ClickHouse
+      description: Удаляет указанную резервную копию кластера ClickHouse
       operationId: DeleteClickhouseClusterBackup
       parameters:
         - $ref: "#/components/parameters/header_Idempotency-Key"
@@ -470,7 +479,7 @@ paths:
         - BearerAuth: []
       responses:
         "204":
-          description: No content
+          description: Резервная копия кластера ClickHouse удалена
         default:
           description: Допустимые HTTP-коды ошибок — 400, 403, 404, 500
           content:
@@ -482,7 +491,8 @@ paths:
     post:
       tags:
         - clickhouseBackupRestore
-      summary: Restore Clickhouse cluster from backup
+      summary: Восстановить кластер ClickHouse из резервной копии (в новый кластер)
+      description: Запускает восстановление кластера ClickHouse из указанной резервной копии в новый кластер
       operationId: RestoreClickhouseBackup
       parameters:
         - $ref: "#/components/parameters/header_Idempotency-Key"
@@ -492,14 +502,14 @@ paths:
       security:
         - BearerAuth: []
       requestBody:
-        description: Some Clickhouse cluster settings
+        description: Параметры восстановления из резервной копии
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/ClickhouseClusterRestoreRequest'
       responses:
         "200":
-          description: Start new clickhouse cluster restoring from existing backup
+          description: Восстановление из резервной копии инициировано
           content:
             application/json:
               schema:
@@ -515,8 +525,8 @@ paths:
     get:
       tags:
         - vmType
-      summary: Get Clickhouse cluster vm types
-      description: Returns Clickhouse cluster vm types
+      summary: Получить доступные типы ВМ для кластера ClickHouse
+      description: Возвращает список доступных типов виртуальных машин для кластера ClickHouse
       operationId: GetClickhouseClusterVmTypes
       parameters:
         - $ref: "#/components/parameters/path_project"
@@ -525,7 +535,7 @@ paths:
         - BearerAuth: []
       responses:
         "200":
-          description: Listing virtual machines types
+          description: Список доступных типов ВМ для кластера ClickHouse
           content:
             application/json:
               schema:
@@ -687,7 +697,7 @@ components:
             $ref: '#/components/schemas/ClickhouseClusterShardResponse'
         config:
           type: object
-          description: Настройки Clickhouse. Если не указаны, будут использованы настройки по умолчанию
+          description: Настройки ClickHouse. Если не указаны, будут использованы настройки по умолчанию
           additionalProperties:
             description: Значение не может равняться `null`
         storage:
@@ -697,7 +707,7 @@ components:
           nullable: true
         bootstrapAdmin:
           $ref: '#/components/schemas/ClickhouseClusterBootstrapAdminSpecResponse'
-          description: Добавление пользователей при создании кластера Clickhouse
+          description: Добавление пользователей при создании кластера ClickHouse
         backup:
           allOf:
             - $ref: '#/components/schemas/ClickhouseClusterBackupResponse'
@@ -718,7 +728,7 @@ components:
       properties:
         address:
           $ref: '#/components/schemas/ClickhouseEndpointAddressSpecOrRefResponse'
-          description: 'Описание адреса эндпоинта. Если указан `ref`, будет использован существующий внутренний адрес VPC. Если указан `spec`, будут созданы внутренние адреса в указанной подсети: для эндпоинта кластера или шарда — по одному адресу на эндпоинт, для эндпоинтов инстансов — по одному адресу на каждый эндпоинт каждого созданного инстанса'
+          description: 'Описание адреса эндпоинта. Если указан `ref`, будет использован существующий внутренний адрес VPC. Если указан `spec`, будут созданы внутренние адреса в указанной подсети: для эндпоинта кластера или шарда — по одному адресу на эндпоинт, для эндпоинтов узлов — по одному адресу на каждый эндпоинт каждого созданного узла'
         externalAddress:
           allOf:
             - $ref: '#/components/schemas/ClickhouseEndpointExternalAddressSpecOrRefResponse'
@@ -729,7 +739,7 @@ components:
 
     ClickhouseEndpointAddressSpecOrRefResponse:
       type: object
-      description: 'Описание адреса эндпоинта. Если указан `ref`, будет использован существующий внутренний адрес VPC. Если указан `spec`, будут созданы внутренние адреса в указанной подсети: для эндпоинта кластера или шарда — по одному адресу на эндпоинт, для эндпоинтов инстансов — по одному адресу на каждый эндпоинт каждого созданного инстанса'
+      description: 'Описание адреса эндпоинта. Если указан `ref`, будет использован существующий внутренний адрес VPC. Если указан `spec`, будут созданы внутренние адреса в указанной подсети: для эндпоинта кластера или шарда — по одному адресу на эндпоинт, для эндпоинтов узлов — по одному адресу на каждый эндпоинт каждого созданного узла'
       properties:
         ref:
           type: string
@@ -816,9 +826,14 @@ components:
               - "externalAddresses/myExternalAddress"
               - "myExternalAddress"
         spec:
-          type: object
+          allOf:
+            - $ref: '#/components/schemas/ClickhouseEndpointExternalAddressSpecResponse'
           description: Описание шаблона внешнего адреса, который будет использоваться при выделении адресов
           nullable: true
+
+    ClickhouseEndpointExternalAddressSpecResponse:
+      type: object
+      description: Описание шаблона внешнего адреса, который будет использоваться при выделении адресов
 
     ClickhouseClusterCoordinatorResponse:
       type: object
@@ -827,13 +842,13 @@ components:
         type:
           $ref: '#/components/schemas/ClickhouseCoordinatorType'
           description: |-
-            Тип координатора. Если не указано, то при наличии более одного хоста, используется Clickhouse Keeper
+            Тип координатора. Если не указано, то при наличии более одного узла, используется ClickHouse Keeper
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
         resources:
           $ref: '#/components/schemas/ClickhouseCoordinatorHWResourcesResponse'
-          description: Параметры виртуальной машины, где будет работать Clickhouse Keeper/Zookeeper. Необязательный параметр в standalone-конфигурации
+          description: Параметры виртуальной машины, на которой будет работать ClickHouse Keeper. Необязательный параметр в standalone-конфигурации
         instances:
           type: array
           description: |-
@@ -847,7 +862,7 @@ components:
 
     ClickhouseCoordinatorType:
       type: string
-      description: Тип координатора. Если не указано, то при наличии более одного хоста, используется Clickhouse Keeper
+      description: Тип координатора. Если не указано, то при наличии более одного узла, используется ClickHouse Keeper
       enum:
         - "CLICKHOUSE_KEEPER"
         - "ZOOKEEPER"
@@ -855,7 +870,7 @@ components:
 
     ClickhouseCoordinatorHWResourcesResponse:
       type: object
-      description: Параметры виртуальной машины, где будет работать Clickhouse Keeper/Zookeeper. Необязательный параметр в standalone-конфигурации
+      description: Ресурсы одного узла-координатора ClickHouse Keeper
       properties:
         vmType:
           type: string
@@ -931,11 +946,11 @@ components:
 
     ClickhouseClusterCoordinatorInstanceResponse:
       type: object
-      description: Описание инстанса координатора
+      description: Описание узла координатора
       properties:
         count:
           type: integer
-          description: Количество инстансов в зоне доступности
+          description: Количество узлов в зоне доступности
           default: 1
         zone:
           type: string
@@ -966,24 +981,20 @@ components:
         name:
           type: string
           description: |-
-            -> Имя шарда, которому будут принадлежать инстансы. В случае с несколькими шардами имя формируется как `name-{shardIndex}`
+            -> Имя шарда, которому будут принадлежать узлы. В случае с несколькими шардами имя формируется как `name-{shardIndex}`
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
-        count:
-          type: integer
-          description: Количество шардов, которые будут созданы
-          default: 1
         resources:
           $ref: '#/components/schemas/ClickhouseInstanceHWResourcesResponse'
-          description: Ресурсы одной ноды Clickhouse
+          description: Ресурсы одного узла ClickHouse
         weight:
           type: integer
           description: Вес шарда
           default: 1
         endpoints:
           type: array
-          description: Описание эдпойнтов шардов
+          description: Описание эндпоинтов шардов
           items:
             $ref: '#/components/schemas/ClickhouseEndpointResponse'
         instances:
@@ -997,7 +1008,7 @@ components:
 
     ClickhouseInstanceHWResourcesResponse:
       type: object
-      description: Параметры виртуальной машины, где будут работать инстансы Clickhouse данного шарда
+      description: Ресурсы одного узла ClickHouse
       properties:
         vmType:
           type: string
@@ -1027,18 +1038,18 @@ components:
 
     ClickhouseClusterInstanceResponse:
       type: object
-      description: Описание инстанса кластера
+      description: Описание узла кластера
       properties:
         name:
           type: string
           description: |-
-            -> Имя инстанса в шарде. В случае count>1, имя формируется как name{replicaIndex}, где replicaIndex имеет сквозную нумерацию в рамках имени инстанса
+            -> Имя узла или узлов в шарде. В случае count>1, имя формируется как name{replicaIndex}, где replicaIndex имеет сквозную нумерацию в рамках указанного имени
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
         count:
           type: integer
-          description: Количество инстансов в зоне доступности
+          description: Количество узлов в зоне доступности
           default: 1
         zone:
           type: string
@@ -1061,7 +1072,7 @@ components:
               - "myZone"
         endpoints:
           type: array
-          description: Описание эдпойнтов инстансов
+          description: Описание эндпоинтов узлов
           items:
             $ref: '#/components/schemas/ClickhouseEndpointResponse'
       required:
@@ -1117,12 +1128,12 @@ components:
               - "1 B"
               - "1024 kb"
               - "1.5 TB"
-          default: 1Gb
-          example: 1Gb
+          default: 10Gb
+          example: 10Gb
 
     ClickhouseClusterBootstrapAdminSpecResponse:
       type: object
-      description: Добавление пользователей при создании кластера Clickhouse
+      description: Добавление пользователей при создании кластера ClickHouse
       properties:
         username:
           type: string
@@ -1212,7 +1223,7 @@ components:
               description: |-
                 Работоспособность кластера:
                   * `ALIVE`    - Полностью работоспособен;
-                  * `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны);
+                  * `DEGRADED` - Деградирует (некоторые, но не все, узлы неработоспособны);
                   * `FAILED`   - Неработоспособен;
                   * `UNKNOWN`  - Не удаётся определить состояние (на этапе создания)
             state:
@@ -1273,7 +1284,7 @@ components:
       description: |-
         Работоспособность кластера:
           * `ALIVE`    - Полностью работоспособен;
-          * `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны);
+          * `DEGRADED` - Деградирует (некоторые, но не все, узлы неработоспособны);
           * `FAILED`   - Неработоспособен;
           * `UNKNOWN`  - Не удаётся определить состояние (на этапе создания)
       enum:
@@ -1345,7 +1356,7 @@ components:
             $ref: '#/components/schemas/ClickhouseClusterShardResourceResponse'
         config:
           type: object
-          description: Настройки Clickhouse
+          description: Настройки ClickHouse
           additionalProperties:
             description: Значение не может равняться `null`
         storage:
@@ -1503,21 +1514,21 @@ components:
 
     ClickhouseClusterCoordinatorResourceResponse:
       type: object
-      description: Описание координаторов кластера
+      description: Описание координатора кластера
       properties:
         type:
           $ref: '#/components/schemas/ClickhouseCoordinatorType'
           description: |-
-            Тип координатора. Если не указано, то при наличии более одного хоста, используется Clickhouse Keeper
+            Тип координатора. Если не указано, то при наличии более одного узла, используется ClickHouse Keeper
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
         resources:
           $ref: '#/components/schemas/ClickhouseCoordinatorHWResourcesResponse'
-          description: Параметры виртуальной машины, где будет работать Clickhouse Keeper/Zookeeper. Необязательный параметр в standalone-конфигурации
+          description: Параметры виртуальной машины, на которой будет работать ClickHouse Keeper. Необязательный параметр в standalone-конфигурации
         instances:
           type: array
-          description: Описание инстансов координатора
+          description: Описание узлов координатора
           items:
             $ref: '#/components/schemas/ClickhouseClusterCoordinatorInstanceResourceResponse'
       required:
@@ -1526,12 +1537,12 @@ components:
 
     ClickhouseClusterCoordinatorInstanceResourceResponse:
       type: object
-      description: Описание инстанса координатора
+      description: Описание узла координатора
       properties:
         id:
           type: string
           description: |-
-            Идентификатор инстанса координатора
+            Идентификатор узла координатора
           
             Строка в формате: "mclickhouse/projects/{project}/clusters/{cluster}/coordinators/{coordinator}/instances/{instance}"
           
@@ -1582,16 +1593,16 @@ components:
             Пример: "mclickhouse/projects/myProject/clusters/myCluster/shards/myShard"
         name:
           type: string
-          description: Имя шарда, которому будут принадлежать инстансы
+          description: Имя шарда, которому будут принадлежать узлы
         weight:
           type: integer
           description: Вес шарда
         index:
           type: integer
-          description: Индекс шарда в кластере Clickhouse, который будет указан в настройках кластера в макросе `shard`.  Влияет на очередность исполнения распределенных запросов в кластере
+          description: Индекс шарда в кластере ClickHouse, который будет указан в настройках кластера в макросе `shard`. Влияет на очередность исполнения распределенных запросов в кластере
         resources:
           $ref: '#/components/schemas/ClickhouseInstanceHWResourcesResponse'
-          description: Параметры виртуальной машины, где будут работать инстансы Clickhouse данного шарда
+          description: Параметры виртуальной машины, где будут работать узлы ClickHouse данного шарда
         endpoints:
           type: array
           description: Список эндпойнтов для подключения к шарду
@@ -1599,7 +1610,7 @@ components:
             $ref: '#/components/schemas/ClickhouseEndpointResourceResponse'
         instances:
           type: array
-          description: Описание инстансов шарда
+          description: Описание узлов шарда
           items:
             $ref: '#/components/schemas/ClickhouseClusterInstanceResourceResponse'
       required:
@@ -1610,19 +1621,19 @@ components:
 
     ClickhouseClusterInstanceResourceResponse:
       type: object
-      description: Описание инстанса шарда
+      description: Описание узла шарда
       properties:
         id:
           type: string
           description: |-
-            Идентификатор инстанса шарда
+            Идентификатор узла шарда
           
             Строка в формате: "mclickhouse/projects/{project}/clusters/{cluster}/shards/{shard}/instances/{instance}"
           
             Пример: "mclickhouse/projects/myProject/clusters/myCluster/shards/myShard/instances/myInstance"
         index:
           type: integer
-          description: Индекс реплики в шарде в кластере Clickhouse, который будет указан в настройках кластера в макросе `replica`. Влияет на очередность исполнения распределенных запросов в кластере
+          description: Индекс реплики в шарде в кластере ClickHouse, который будет указан в настройках кластера в макросе `replica`. Влияет на очередность исполнения распределенных запросов в кластере
         zone:
           type: string
           description: |-
@@ -1644,7 +1655,7 @@ components:
               - "myZone"
         endpoints:
           type: array
-          description: Список эндпойнтов для подключения к инстансу
+          description: Список эндпойнтов для подключения к узлу
           items:
             $ref: '#/components/schemas/ClickhouseEndpointResourceResponse'
         health:
@@ -1759,7 +1770,7 @@ components:
             $ref: '#/components/schemas/ClickhouseClusterShardRequest'
         config:
           type: object
-          description: Настройки Clickhouse. Если не указаны, будут использованы настройки по умолчанию
+          description: Настройки ClickHouse. Если не указаны, будут использованы настройки по умолчанию
           additionalProperties:
             description: Значение не может равняться `null`
         storage:
@@ -1770,7 +1781,7 @@ components:
         bootstrapAdmin:
           $ref: '#/components/schemas/ClickhouseClusterBootstrapAdminSpecRequest'
           description: |-
-            Добавление пользователей при создании кластера Clickhouse
+            Добавление пользователей при создании кластера ClickHouse
           
             Обязательно для заполнения при создании ресурса
         backup:
@@ -1788,7 +1799,7 @@ components:
         address:
           $ref: '#/components/schemas/ClickhouseEndpointAddressSpecOrRefRequest'
           description: |-
-            Описание адреса эндпоинта. Если указан `ref`, будет использован существующий внутренний адрес VPC. Если указан `spec`, будут созданы внутренние адреса в указанной подсети: для эндпоинта кластера или шарда — по одному адресу на эндпоинт, для эндпоинтов инстансов — по одному адресу на каждый эндпоинт каждого созданного инстанса
+            Описание адреса эндпоинта. Если указан `ref`, будет использован существующий внутренний адрес VPC. Если указан `spec`, будут созданы внутренние адреса в указанной подсети: для эндпоинта кластера или шарда — по одному адресу на эндпоинт, для эндпоинтов узлов — по одному адресу на каждый эндпоинт каждого созданного узла
           
             Обязательно для заполнения при создании ресурса
         externalAddress:
@@ -1799,7 +1810,7 @@ components:
 
     ClickhouseEndpointAddressSpecOrRefRequest:
       type: object
-      description: 'Описание адреса эндпоинта. Если указан `ref`, будет использован существующий внутренний адрес VPC. Если указан `spec`, будут созданы внутренние адреса в указанной подсети: для эндпоинта кластера или шарда — по одному адресу на эндпоинт, для эндпоинтов инстансов — по одному адресу на каждый эндпоинт каждого созданного инстанса'
+      description: 'Описание адреса эндпоинта. Если указан `ref`, будет использован существующий внутренний адрес VPC. Если указан `spec`, будут созданы внутренние адреса в указанной подсети: для эндпоинта кластера или шарда — по одному адресу на эндпоинт, для эндпоинтов узлов — по одному адресу на каждый эндпоинт каждого созданного узла'
       properties:
         ref:
           type: string
@@ -1884,8 +1895,12 @@ components:
               - "externalAddresses/myExternalAddress"
               - "myExternalAddress"
         spec:
-          type: object
+          $ref: '#/components/schemas/ClickhouseEndpointExternalAddressSpecRequest'
           description: Описание шаблона внешнего адреса, который будет использоваться при выделении адресов
+
+    ClickhouseEndpointExternalAddressSpecRequest:
+      type: object
+      description: Описание шаблона внешнего адреса, который будет использоваться при выделении адресов
 
     ClickhouseClusterCoordinatorRequest:
       type: object
@@ -1894,14 +1909,14 @@ components:
         type:
           $ref: '#/components/schemas/ClickhouseCoordinatorType'
           description: |-
-            Тип координатора. Если не указано, то при наличии более одного хоста, используется Clickhouse Keeper
+            Тип координатора. Если не указано, то при наличии более одного узла, используется ClickHouse Keeper
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
         resources:
           $ref: '#/components/schemas/ClickhouseCoordinatorHWResourcesRequest'
           description: |-
-            Параметры виртуальной машины, где будет работать Clickhouse Keeper/Zookeeper. Необязательный параметр в standalone-конфигурации
+            Параметры виртуальной машины, на которой будет работать ClickHouse Keeper. Необязательный параметр в standalone-конфигурации
           
             Обязательно для заполнения при создании ресурса
         instances:
@@ -1918,7 +1933,7 @@ components:
 
     ClickhouseCoordinatorHWResourcesRequest:
       type: object
-      description: Параметры виртуальной машины, где будет работать Clickhouse Keeper/Zookeeper. Необязательный параметр в standalone-конфигурации
+      description: Ресурсы одного узла-координатора ClickHouse Keeper
       properties:
         vmType:
           type: string
@@ -1983,11 +1998,11 @@ components:
 
     ClickhouseClusterCoordinatorInstanceRequest:
       type: object
-      description: Описание инстанса координатора
+      description: Описание узла координатора
       properties:
         count:
           type: integer
-          description: Количество инстансов в зоне доступности
+          description: Количество узлов в зоне доступности
           default: 1
         zone:
           type: string
@@ -2018,20 +2033,16 @@ components:
         name:
           type: string
           description: |-
-            -> Имя шарда, которому будут принадлежать инстансы. В случае с несколькими шардами имя формируется как `name-{shardIndex}`
+            -> Имя шарда, которому будут принадлежать узлы. В случае с несколькими шардами имя формируется как `name-{shardIndex}`
           
             Обязательно для заполнения при создании ресурса
           
             Неизменяемое поле. Задается только при создании ресурса.
             При обновлении ресурса можно передать только текущее значение
-        count:
-          type: integer
-          description: Количество шардов, которые будут созданы
-          default: 1
         resources:
           $ref: '#/components/schemas/ClickhouseInstanceHWResourcesRequest'
           description: |-
-            Ресурсы одной ноды Clickhouse
+            Ресурсы одного узла ClickHouse
           
             Обязательно для заполнения при создании ресурса
         weight:
@@ -2041,7 +2052,7 @@ components:
         endpoints:
           type: array
           description: |-
-            Описание эдпойнтов шардов
+            Описание эндпоинтов шардов
           
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
@@ -2057,7 +2068,7 @@ components:
 
     ClickhouseInstanceHWResourcesRequest:
       type: object
-      description: Параметры виртуальной машины, где будут работать инстансы Clickhouse данного шарда
+      description: Ресурсы одного узла ClickHouse
       properties:
         vmType:
           type: string
@@ -2089,12 +2100,12 @@ components:
 
     ClickhouseClusterInstanceRequest:
       type: object
-      description: Описание инстанса кластера
+      description: Описание узла кластера
       properties:
         name:
           type: string
           description: |-
-            -> Имя инстанса в шарде. В случае count>1, имя формируется как name{replicaIndex}, где replicaIndex имеет сквозную нумерацию в рамках имени инстанса
+            -> Имя узла или узлов в шарде. В случае count>1, имя формируется как name{replicaIndex}, где replicaIndex имеет сквозную нумерацию в рамках указанного имени
           
             Обязательно для заполнения при создании ресурса
           
@@ -2102,7 +2113,7 @@ components:
             При обновлении ресурса можно передать только текущее значение
         count:
           type: integer
-          description: Количество инстансов в зоне доступности
+          description: Количество узлов в зоне доступности
           default: 1
         zone:
           type: string
@@ -2128,7 +2139,7 @@ components:
         endpoints:
           type: array
           description: |-
-            Описание эдпойнтов инстансов
+            Описание эндпоинтов узлов
           
             Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
           items:
@@ -2183,12 +2194,12 @@ components:
               - "1 B"
               - "1024 kb"
               - "1.5 TB"
-          default: 1Gb
-          example: 1Gb
+          default: 10Gb
+          example: 10Gb
 
     ClickhouseClusterBootstrapAdminSpecRequest:
       type: object
-      description: Добавление пользователей при создании кластера Clickhouse
+      description: Добавление пользователей при создании кластера ClickHouse
       properties:
         username:
           type: string
@@ -2270,7 +2281,7 @@ components:
 
     AvailableConfigParametersSchema:
       type: object
-      description: Доступные параметры для Clickhouse (в формате `json-schema`)
+      description: Доступные параметры для ClickHouse (в формате `json-schema`)
       additionalProperties:
         description: Значение не может равняться `null`
 
@@ -2386,7 +2397,7 @@ components:
 
     ClickhouseBackupResponse:
       type: object
-      description: Резервное копирование в Managed Clickhouse позволяет автоматизировать создание резервных копий кластера и его восстановление.  С помощью резервных копий можно восстановить данные в новый кластер в случае повреждения, потери данных или совершения ошибочных операций
+      description: Резервное копирование в Managed ClickHouse позволяет автоматизировать создание резервных копий кластера и его восстановление. С помощью резервных копий можно восстановить данные в новый кластер в случае повреждения, потери данных или совершения ошибочных операций
       properties:
         kind:
           type: string
@@ -2407,12 +2418,16 @@ components:
                     Пример: "mclickhouse/projects/myProject/clusters/myCluster/backups/myBackup"
           nullable: true
         spec:
-          type: object
+          allOf:
+            - $ref: '#/components/schemas/ClickhouseBackupSpecResponse'
           nullable: true
         status:
           allOf:
             - $ref: '#/components/schemas/ClickhouseBackupStatusResponse'
           nullable: true
+
+    ClickhouseBackupSpecResponse:
+      type: object
 
     ClickhouseBackupStatusResponse:
       type: object
@@ -2482,13 +2497,17 @@ components:
 
     ClickhouseBackupRequest:
       type: object
-      description: Резервное копирование в Managed Clickhouse позволяет автоматизировать создание резервных копий кластера и его восстановление.  С помощью резервных копий можно восстановить данные в новый кластер в случае повреждения, потери данных или совершения ошибочных операций
+      description: Резервное копирование в Managed ClickHouse позволяет автоматизировать создание резервных копий кластера и его восстановление. С помощью резервных копий можно восстановить данные в новый кластер в случае повреждения, потери данных или совершения ошибочных операций
       properties:
         metadata:
           $ref: '#/components/schemas/TypedResourceMetadataRequest'
         spec:
-          type: object
+          allOf:
+            - $ref: '#/components/schemas/ClickhouseBackupSpecRequest'
           nullable: true
+
+    ClickhouseBackupSpecRequest:
+      type: object
 
     ClickhouseClusterRestoreRequest:
       type: object
@@ -2505,13 +2524,13 @@ components:
       properties:
         bootstrapAdmin:
           $ref: '#/components/schemas/ClickhouseClusterBootstrapAdminSpecRequest'
-          description: Добавление пользователей при создании кластера Clickhouse
+          description: Добавление пользователей при создании кластера ClickHouse
       required:
         - bootstrapAdmin
 
     ClickhouseClusterVmTypesResponse:
       type: object
-      description: Типы ВМ Clickhouse кластера
+      description: Типы ВМ кластера ClickHouse
       properties:
         items:
           type: array
@@ -2551,7 +2570,7 @@ components:
               properties:
                 instanceTypes:
                   type: array
-                  description: Описание типов инстансов для ВМ данного типа
+                  description: Описание типов узлов для ВМ данного типа
                   items:
                     $ref: '#/components/schemas/VmTypeInstance'
         status:

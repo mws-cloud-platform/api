@@ -302,6 +302,7 @@ paths:
         - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       requestBody:
@@ -361,6 +362,7 @@ paths:
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_name"
         - $ref: "#/components/parameters/header_Idempotency-Key"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       responses:
@@ -1273,7 +1275,6 @@ components:
           description: Данные для прохождения проверки типа dns-01
           nullable: true
       required:
-        - domain
         - createdAt
         - updatedAt
         - status
@@ -1290,7 +1291,6 @@ components:
 
     Http01ChallengeResponse:
       type: object
-      description: Данные для прохождения проверки типа http-01
       properties:
         sourceUrl:
           type: string
@@ -1315,7 +1315,6 @@ components:
 
     Dns01ChallengeResponse:
       type: object
-      description: Данные для прохождения проверки типа dns-01
       properties:
         delegated:
           type: boolean
@@ -1707,6 +1706,15 @@ components:
       description: |-
         Обновить ресурс, если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
         Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+      style: form
+      explode: true
+      schema:
+        type: boolean
+
+    query_validateOnly:
+      name: validateOnly
+      in: query
+      description: Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
       style: form
       explode: true
       schema:

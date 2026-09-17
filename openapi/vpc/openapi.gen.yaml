@@ -1525,6 +1525,7 @@ components:
       type: object
       allOf:
         - $ref: '#/components/schemas/ResourceStatusResponse'
+        - $ref: '#/components/schemas/RegionalStatusResponse'
         - type: object
           properties:
             mtu:
@@ -1567,6 +1568,9 @@ components:
         - "OK"
         - "FAILED"
         - "PROCESSING"
+
+    RegionalStatusResponse:
+      type: object
 
     NextPageToken:
       type: string
@@ -1628,7 +1632,7 @@ components:
 
     NatGatewayResponse:
       type: object
-      description: Описывает Nat шлюз
+      description: Описывает NAT-шлюз
       properties:
         kind:
           type: string
@@ -1636,22 +1640,29 @@ components:
         metadata:
           allOf:
             - $ref: '#/components/schemas/CommonTypedResourceMetadataResponse'
-          description: Метаданные Nat шлюза
+          description: Метаданные NAT-шлюза
           nullable: true
         spec:
-          type: object
-          description: Спецификация Nat шлюза
+          $ref: '#/components/schemas/NatGatewaySpecResponse'
+          description: Спецификация NAT-шлюза
         status:
           allOf:
             - $ref: '#/components/schemas/NatGatewayStatusResponse'
-          description: Статус NAT шлюза
+          description: Статус NAT-шлюза
           nullable: true
       required:
         - spec
 
+    NatGatewaySpecResponse:
+      type: object
+      description: Описывает спецификацию NAT-шлюза
+
     NatGatewayStatusResponse:
-      description: Статус NAT шлюза
-      $ref: '#/components/schemas/ResourceStatusResponse'
+      type: object
+      description: Описывает статус NAT-шлюза
+      allOf:
+        - $ref: '#/components/schemas/ResourceStatusResponse'
+        - $ref: '#/components/schemas/RegionalStatusResponse'
 
     ListExternalAddressesResponseResponse:
       type: object
@@ -1691,7 +1702,7 @@ components:
 
     VpcExternalAddressSpecResponse:
       type: object
-      description: Спецификация внешнего адреса
+      description: Описывает спецификацию внешнего адреса
       properties:
         region:
           type: string
@@ -1742,7 +1753,7 @@ components:
 
     ExternalAddressStatusResponse:
       type: object
-      description: Статус внешнего адреса
+      description: Описывает статус внешнего адреса
       allOf:
         - $ref: '#/components/schemas/ResourceStatusResponse'
         - type: object
@@ -1788,7 +1799,7 @@ components:
 
     VpcExternalAddressSpecRequest:
       type: object
-      description: Спецификация внешнего адреса
+      description: Описывает спецификацию внешнего адреса
       properties:
         region:
           type: string
@@ -2100,7 +2111,6 @@ components:
 
     RouteDestinationResponse:
       type: object
-      description: Назначение
       properties:
         spec:
           type: object
@@ -2123,14 +2133,13 @@ components:
 
     RouteNextHopResponse:
       type: object
-      description: Переход
       properties:
         networkLocal:
           description: Локальная сеть
         natGateway:
           type: string
           description: |-
-            NAT шлюз
+            NAT-шлюз
           
             Строка в форматах:
               Полный формат:
@@ -2184,6 +2193,7 @@ components:
       type: object
       allOf:
         - $ref: '#/components/schemas/ResourceStatusResponse'
+        - $ref: '#/components/schemas/RegionalStatusResponse'
         - type: object
           properties:
             nextHop:
@@ -2203,7 +2213,7 @@ components:
         natGateway:
           type: string
           description: |-
-            NAT шлюз
+            NAT-шлюз
           
             Строка в форматах:
               Полный формат:
@@ -2229,7 +2239,7 @@ components:
 
     ResourceAddressStatusResponse:
       type: object
-      description: Статус IP-адреса внутреннего балансировщика
+      description: Описывает статус внутреннего адреса как дополнительный ресурс
       properties:
         ref:
           type: string
@@ -2315,7 +2325,6 @@ components:
 
     RouteDestinationRequest:
       type: object
-      description: Назначение
       properties:
         spec:
           type: object
@@ -2340,12 +2349,11 @@ components:
 
     RouteNextHopRequest:
       type: object
-      description: Переход
       properties:
         natGateway:
           type: string
           description: |-
-            NAT шлюз
+            NAT-шлюз
           
             Строка в форматах:
               Полный формат:
@@ -2697,7 +2705,7 @@ components:
 
     ResourceExternalAddressStatusResponse:
       type: object
-      description: Статус IP-адреса внешнего балансировщика
+      description: Описывает статус внешнего адреса как дополнительный ресурс
       properties:
         ref:
           type: string
@@ -3018,7 +3026,7 @@ components:
 
     FirewallRuleSpecResponse:
       type: object
-      description: Спецификация правила файрвола
+      description: Описывает спецификацию правила файрвола
       properties:
         direction:
           type: string
@@ -3061,7 +3069,7 @@ components:
 
     FirewallRuleSourceResponse:
       type: object
-      description: Критерий применимости правила, описывает источник отправления пакета
+      description: Спецификация источника траффика, к которому будет применено Firewall правило
       properties:
         spec:
           allOf:
@@ -3071,7 +3079,7 @@ components:
 
     FirewallRuleSourceSpecResponse:
       type: object
-      description: Спецификация группы адресов
+      description: Группа CIDR-ов, выступающая в качестве перечня источников траффика, к которому будет применено Firewall правило
       properties:
         cidrs:
           type: array
@@ -3087,7 +3095,7 @@ components:
 
     FirewallRuleDestinationResponse:
       type: object
-      description: Критерий применимости правила, описывает пункт назначения пакета
+      description: Спецификация назначения траффика, к которому будет применено Firewall правило
       properties:
         spec:
           allOf:
@@ -3097,7 +3105,7 @@ components:
 
     FirewallRuleDestinationSpecResponse:
       type: object
-      description: Спецификация группы адресов
+      description: Группа CIDR-ов, выступающая в качестве перечня получателей траффика, к которому будет применено Firewall правило
       properties:
         cidrs:
           type: array
@@ -3113,9 +3121,9 @@ components:
 
     FirewallRuleStatusResponse:
       type: object
-      description: Статус правила файрвола
       allOf:
         - $ref: '#/components/schemas/ResourceStatusResponse'
+        - $ref: '#/components/schemas/RegionalStatusResponse'
         - type: object
           properties:
             priority:
@@ -3145,7 +3153,7 @@ components:
 
     FirewallRuleSpecRequest:
       type: object
-      description: Спецификация правила файрвола
+      description: Описывает спецификацию правила файрвола
       properties:
         direction:
           type: string
@@ -3198,7 +3206,7 @@ components:
 
     FirewallRuleSourceRequest:
       type: object
-      description: Критерий применимости правила, описывает источник отправления пакета
+      description: Спецификация источника траффика, к которому будет применено Firewall правило
       properties:
         spec:
           allOf:
@@ -3208,7 +3216,7 @@ components:
 
     FirewallRuleSourceSpecRequest:
       type: object
-      description: Спецификация группы адресов
+      description: Группа CIDR-ов, выступающая в качестве перечня источников траффика, к которому будет применено Firewall правило
       properties:
         cidrs:
           type: array
@@ -3227,7 +3235,7 @@ components:
 
     FirewallRuleDestinationRequest:
       type: object
-      description: Критерий применимости правила, описывает пункт назначения пакета
+      description: Спецификация назначения траффика, к которому будет применено Firewall правило
       properties:
         spec:
           allOf:
@@ -3237,7 +3245,7 @@ components:
 
     FirewallRuleDestinationSpecRequest:
       type: object
-      description: Спецификация группы адресов
+      description: Группа CIDR-ов, выступающая в качестве перечня получателей траффика, к которому будет применено Firewall правило
       properties:
         cidrs:
           type: array
@@ -3639,7 +3647,7 @@ components:
 
     VpcAddressSpecResponse:
       type: object
-      description: Спецификация адреса
+      description: Описывает спецификацию внутреннего адреса
       properties:
         subnet:
           type: string
@@ -3691,7 +3699,7 @@ components:
 
     AddressStatusResponse:
       type: object
-      description: Статус адреса
+      description: Описывает статус внутреннего адреса
       allOf:
         - $ref: '#/components/schemas/ResourceStatusResponse'
         - type: object
@@ -3707,13 +3715,14 @@ components:
             ipAddress:
               type: string
               description: |-
-                Присвоенный адрес. Совпадает с запрошенным ipAddress из спецификации, если последний указан при создании адреса
+                Присвоенный адрес. Совпадает с запрошенным IP-адресом из спецификации, если последний указан при создании адреса
               
                 IPv4- или IPv6-адрес
               
                 Примеры:
                   - "192.168.1.1"
                   - "2001:db8:130F::9C0:876A:130B"
+              example: 192.168.1.2
 
     AddressRequest:
       type: object
@@ -3733,7 +3742,7 @@ components:
 
     VpcAddressSpecRequest:
       type: object
-      description: Спецификация адреса
+      description: Описывает спецификацию внутреннего адреса
       properties:
         subnet:
           type: string
@@ -3856,7 +3865,7 @@ components:
 
     VpcAddressGroupStatusResponse:
       type: object
-      description: Статус группы адресов
+      description: Описывает статус группы адресов
       allOf:
         - $ref: '#/components/schemas/ResourceStatusResponse'
         - type: object

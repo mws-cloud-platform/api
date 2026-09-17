@@ -308,7 +308,7 @@ components:
 
     NlbSpecResponse:
       type: object
-      description: Спецификация сетевого балансировщик нагрузки
+      description: Спецификация сетевого балансировщика нагрузки
       properties:
         listener:
           $ref: '#/components/schemas/NlbListenerResponse'
@@ -472,7 +472,7 @@ components:
 
     NlbListenerExternalResponse:
       type: object
-      description: Конфигурация IP-адреса внутреннего балансировщика
+      description: Конфигурация адреса внешнего балансировщика
       properties:
         address:
           $ref: '#/components/schemas/ResourceExternalAddressSpecOrRefResponse'
@@ -704,7 +704,7 @@ components:
 
     NlbHealthCheckProtocolResponse:
       type: object
-      description: Конфигурация протокола проверки работоспособности
+      description: Конфигурация проверки работоспособности виртуальных машин
       properties:
         http:
           allOf:
@@ -855,7 +855,7 @@ components:
 
     NlbStatusListenerInternalResponse:
       type: object
-      description: Статус IP-адреса внутреннего балансировщика
+      description: Описывает статус адреса внутреннего балансировщика
       properties:
         address:
           $ref: '#/components/schemas/ResourceAddressStatusResponse'
@@ -865,7 +865,7 @@ components:
 
     ResourceAddressStatusResponse:
       type: object
-      description: Статус IP-адреса внутреннего балансировщика
+      description: Описывает статус внутреннего адреса как дополнительный ресурс
       properties:
         ref:
           type: string
@@ -907,7 +907,7 @@ components:
 
     NlbStatusListenerExternalResponse:
       type: object
-      description: Статус IP-адреса внешнего балансировщика
+      description: Описывает статус адреса внешнего балансировщика
       properties:
         address:
           $ref: '#/components/schemas/ResourceExternalAddressStatusResponse'
@@ -917,7 +917,7 @@ components:
 
     ResourceExternalAddressStatusResponse:
       type: object
-      description: Статус IP-адреса внешнего балансировщика
+      description: Описывает статус внешнего адреса как дополнительный ресурс
       properties:
         ref:
           type: string
@@ -1081,7 +1081,7 @@ components:
 
     NlbStatusHealthCheckResponse:
       type: object
-      description: Настройка проверки работоспособности виртуальных машин
+      description: Конфигурация проверки работоспособности виртуальных машин
       properties:
         protocol:
           $ref: '#/components/schemas/NlbStatusHealthCheckProtocolResponse'
@@ -1147,7 +1147,7 @@ components:
 
     NlbStatusHealthCheckProtocolResponse:
       type: object
-      description: Конфигурация протокола проверки работоспособности
+      description: Конфигурация проверки работоспособности виртуальных машин
       properties:
         http:
           allOf:
@@ -1251,7 +1251,7 @@ components:
 
     NlbSpecRequest:
       type: object
-      description: Спецификация сетевого балансировщик нагрузки
+      description: Спецификация сетевого балансировщика нагрузки
       properties:
         listener:
           $ref: '#/components/schemas/NlbListenerRequest'
@@ -1427,7 +1427,7 @@ components:
 
     NlbListenerExternalRequest:
       type: object
-      description: Конфигурация IP-адреса внутреннего балансировщика
+      description: Конфигурация адреса внешнего балансировщика
       properties:
         address:
           $ref: '#/components/schemas/ResourceExternalAddressSpecOrRefRequest'
@@ -1670,7 +1670,7 @@ components:
 
     NlbHealthCheckProtocolRequest:
       type: object
-      description: Конфигурация протокола проверки работоспособности
+      description: Конфигурация проверки работоспособности виртуальных машин
       properties:
         http:
           allOf:

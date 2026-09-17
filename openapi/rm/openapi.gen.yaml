@@ -198,6 +198,7 @@ paths:
       operationId: BatchEnableServicesV2
       parameters:
         - $ref: "#/components/parameters/header_Idempotency-Key"
+        - $ref: "#/components/parameters/query_validateOnly"
         - $ref: "#/components/parameters/path_project"
       security:
         - BearerAuth: []
@@ -266,6 +267,7 @@ paths:
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_service"
         - $ref: "#/components/parameters/header_Idempotency-Key"
+        - $ref: "#/components/parameters/query_validateOnly"
       security:
         - BearerAuth: []
       responses:
@@ -642,6 +644,7 @@ components:
                       - "myRegion"
           nullable: true
         spec:
+          $ref: '#/components/schemas/RegionSpec'
           description: Спецификация региона
         status:
           allOf:
@@ -650,6 +653,9 @@ components:
           nullable: true
       required:
         - spec
+
+    RegionSpec:
+      description: Спецификация региона
 
     BatchEnabledServicesRequest:
       type: object
@@ -981,4 +987,13 @@ components:
       explode: true
       schema:
         type: string
+
+    query_validateOnly:
+      name: validateOnly
+      in: query
+      description: Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
+      style: form
+      explode: true
+      schema:
+        type: boolean
 

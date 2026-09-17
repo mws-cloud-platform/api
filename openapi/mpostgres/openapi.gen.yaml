@@ -966,7 +966,7 @@ components:
 
     PostgresNetworkAddressSpecResponse:
       type: object
-      description: Описание подсети пользователя, используемой для подключения к узлам
+      description: Идентификатор ресурса subnet пользователя, в который будет трансляция адресов из service-vpc
       properties:
         subnet:
           type: string
@@ -1105,8 +1105,8 @@ components:
           $ref: '#/components/schemas/DataDiskType'
           description: |-
             Тип используемого диска:
-            * `NETWORK_STANDARD_SSD` — сетевой SSD;
-            * `LOCAL` — локальный диск
+            * `NETWORK_STANDARD_SSD` — сетевой SSD
+            * `LOCAL` — локальный SSD
         iops:
           $ref: '#/components/schemas/Iops'
           description: IOPS
@@ -1116,7 +1116,10 @@ components:
 
     DataDiskType:
       type: string
-      description: Тип диска
+      description: |-
+        Тип используемого диска:
+        * `NETWORK_STANDARD_SSD` — сетевой SSD
+        * `LOCAL` — локальный SSD
       enum:
         - "NETWORK_STANDARD_SSD"
         - "LOCAL"
@@ -1247,7 +1250,7 @@ components:
                   * `ALIVE`    - Полностью работоспособен;
                   * `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны);
                   * `FAILED`   - Неработоспособен;
-                  * `UNKNOWN`  - Не удается определить состояние (на этапе создания)
+                  * `UNKNOWN`  - Не удаётся определить состояние (на этапе создания)
             message:
               type: string
             region:
@@ -1269,7 +1272,7 @@ components:
                 $ref: '#/components/schemas/PostgresStatusInstanceResponse'
             maintenanceWindow:
               allOf:
-                - $ref: '#/components/schemas/MaintenanceWindow2Response'
+                - $ref: '#/components/schemas/MaintenanceWindowResponse'
               nullable: true
             backup:
               allOf:
@@ -1350,7 +1353,7 @@ components:
           * `ALIVE`    - Полностью работоспособен;
           * `DEGRADED` - Деградирует (некоторые, но не все, экземпляры неработоспособны);
           * `FAILED`   - Неработоспособен;
-          * `UNKNOWN`  - Не удается определить состояние (на этапе создания)
+          * `UNKNOWN`  - Не удаётся определить состояние (на этапе создания)
       enum:
         - "ALIVE"
         - "DEGRADED"
@@ -1522,7 +1525,11 @@ components:
 
     PostgresInstanceRole:
       type: string
-      description: Роль экземпляра PostgreSQL
+      description: |-
+        Роль экземпляра PostgreSQL
+          * `PRIMARY`
+          * `STANDBY`
+          * `UNKNOWN`
       enum:
         - "PRIMARY"
         - "STANDBY"
@@ -1530,7 +1537,14 @@ components:
 
     PostgresInstanceHealth:
       type: string
-      description: Исправность экземпляра PostgreSQL
+      description: |-
+        Исправность экземпляра PostgreSQL
+          * `ALIVE`   - Инстанс может обрабатывать запросы
+          * `PROCESSING` - Инстанс в состоянии starting/stopping/restarting. Не может обрабатывать запросы
+          * `INACTIVE` - Инстанс остановлен
+          * `FAILED`  - Инстанс в состоянии crashed или failed
+          * `UNAVAILABLE` - Продукт недоступен при сборе health
+          * `UNKNOWN` - В неизвестном состоянии
       enum:
         - "ALIVE"
         - "PROCESSING"
@@ -1538,14 +1552,6 @@ components:
         - "FAILED"
         - "UNAVAILABLE"
         - "UNKNOWN"
-
-    MaintenanceWindow2Response:
-      type: object
-      properties:
-        weekly:
-          $ref: '#/components/schemas/WeeklyMaintenanceWindowResponse'
-      required:
-        - weekly
 
     PostgresClusterStatusBackupResponse:
       type: object
@@ -1845,7 +1851,7 @@ components:
 
     PostgresNetworkAddressSpecRequest:
       type: object
-      description: Описание подсети пользователя, используемой для подключения к узлам
+      description: Идентификатор ресурса subnet пользователя, в который будет трансляция адресов из service-vpc
       properties:
         subnet:
           type: string
@@ -1989,8 +1995,8 @@ components:
           $ref: '#/components/schemas/DataDiskType'
           description: |-
             Тип используемого диска:
-            * `NETWORK_STANDARD_SSD` — сетевой SSD;
-            * `LOCAL` — локальный диск
+            * `NETWORK_STANDARD_SSD` — сетевой SSD
+            * `LOCAL` — локальный SSD
           
             Обязательно для заполнения при создании ресурса
         iops:
@@ -2143,8 +2149,7 @@ components:
             - $ref: '#/components/schemas/PostgresUserRole'
           description: |-
             Пользовательские роли (они же роли приложений):
-            - `DB_OWNER_USER`: Пользователь с правами владельца базы данных. Это не суперпользователь,
-              не имеет права создавать бд или роли, наследует разрешения db_owner.
+            - `DB_OWNER_USER` (deprecated): Пользовательская роль, наследует разрешения групповой роли db_writer, db_reader.
             - `DB_WRITER_USER`: Пользовательская роль, наследует разрешения групповой роли db_writer, db_reader.
             - `DB_READER_USER`: Пользовательская роль, наследует разрешения групповой роли db_reader
           nullable: true
@@ -2165,8 +2170,7 @@ components:
       type: string
       description: |-
         Пользовательские роли (они же роли приложений):
-        - `DB_OWNER_USER`: Пользователь с правами владельца базы данных. Это не суперпользователь,
-          не имеет права создавать бд или роли, наследует разрешения db_owner.
+        - `DB_OWNER_USER` (deprecated): Пользовательская роль, наследует разрешения групповой роли db_writer, db_reader.
         - `DB_WRITER_USER`: Пользовательская роль, наследует разрешения групповой роли db_writer, db_reader.
         - `DB_READER_USER`: Пользовательская роль, наследует разрешения групповой роли db_reader
       enum:
@@ -2314,8 +2318,7 @@ components:
             - $ref: '#/components/schemas/PostgresUserRole'
           description: |-
             Пользовательские роли (они же роли приложений):
-            - `DB_OWNER_USER`: Пользователь с правами владельца базы данных. Это не суперпользователь,
-              не имеет права создавать бд или роли, наследует разрешения db_owner.
+            - `DB_OWNER_USER` (deprecated): Пользовательская роль, наследует разрешения групповой роли db_writer, db_reader.
             - `DB_WRITER_USER`: Пользовательская роль, наследует разрешения групповой роли db_writer, db_reader.
             - `DB_READER_USER`: Пользовательская роль, наследует разрешения групповой роли db_reader
           nullable: true
@@ -2619,12 +2622,16 @@ components:
                     Пример: "mpostgres/projects/myProject/clusters/myCluster/backups/myBackup"
           nullable: true
         spec:
-          type: object
+          allOf:
+            - $ref: '#/components/schemas/PostgresBackupSpecResponse'
           nullable: true
         status:
           allOf:
             - $ref: '#/components/schemas/PostgresBackupStatusResponse'
           nullable: true
+
+    PostgresBackupSpecResponse:
+      type: object
 
     PostgresBackupStatusResponse:
       type: object
@@ -2667,9 +2674,9 @@ components:
                   - "1024 kb"
                   - "1.5 TB"
             backupTrigger:
-              $ref: '#/components/schemas/backupTrigger'
+              $ref: '#/components/schemas/BackupTrigger'
 
-    backupTrigger:
+    BackupTrigger:
       type: string
       enum:
         - "AUTOMATIC"
@@ -2682,8 +2689,12 @@ components:
         metadata:
           $ref: '#/components/schemas/TypedResourceMetadataRequest'
         spec:
-          type: object
+          allOf:
+            - $ref: '#/components/schemas/PostgresBackupSpecRequest'
           nullable: true
+
+    PostgresBackupSpecRequest:
+      type: object
 
     ApiError:
       type: object

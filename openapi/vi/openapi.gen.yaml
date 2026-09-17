@@ -28,7 +28,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VDCRequest'
+              $ref: '#/components/schemas/VdcRequest'
       responses:
         "200":
           description: Ресурсы биллинга
@@ -71,6 +71,66 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
 
+  /vi/v1/projects/{project}/vdcs/{vdcName}:enableDfw:
+    post:
+      tags:
+        - vDC
+      summary: Включение Distributed Firewall для VDC
+      operationId: EnableVDCDFW
+      parameters:
+        - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/path_vdcName"
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Начата процедура включения Distributed Firewall
+          headers:
+            Reconciliation-Job-ID:
+              description: Reconciliation Job ID
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VdcResponse'
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 409, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /vi/v1/projects/{project}/vdcs/{vdcName}:disableDfw:
+    post:
+      tags:
+        - vDC
+      summary: Выключение Distributed Firewall для VDC
+      operationId: DisableVDCDFW
+      parameters:
+        - $ref: "#/components/parameters/path_project"
+        - $ref: "#/components/parameters/path_vdcName"
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Начата процедура выключения Distributed Firewall
+          headers:
+            Reconciliation-Job-ID:
+              description: Reconciliation Job ID
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VdcResponse'
+        default:
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 409, 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
   /vi/v1/projects/{project}/vdcs/{vdcName}:
     post:
       tags:
@@ -88,14 +148,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VDCRequest'
+              $ref: '#/components/schemas/VdcRequest'
       responses:
         "201":
           description: VDC создан
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VDCResponse'
+                $ref: '#/components/schemas/VdcResponse'
         default:
           description: Допустимые HTTP-коды ошибок — 400, 403, 404, 409, 412, 500
           content:
@@ -119,7 +179,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VDCResponse'
+                $ref: '#/components/schemas/VdcResponse'
         "304":
           description: Not modified
         default:
@@ -136,6 +196,9 @@ paths:
       parameters:
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_vdcName"
+        - $ref: "#/components/parameters/query_ifExist"
+        - $ref: "#/components/parameters/query_cascade"
+        - $ref: "#/components/parameters/query_validateOnly"
         - $ref: "#/components/parameters/query_purge"
       security:
         - BearerAuth: []
@@ -145,7 +208,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VDCResponse'
+                $ref: '#/components/schemas/VdcResponse'
         "204":
           description: VDC удален
         default:
@@ -277,6 +340,9 @@ paths:
       parameters:
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_backupPolicyName"
+        - $ref: "#/components/parameters/query_ifExist"
+        - $ref: "#/components/parameters/query_cascade"
+        - $ref: "#/components/parameters/query_validateOnly"
         - $ref: "#/components/parameters/query_purge"
       security:
         - BearerAuth: []
@@ -501,7 +567,7 @@ paths:
 
 components:
   schemas:
-    VDCRequest:
+    VdcRequest:
       type: object
       properties:
         kind:
@@ -721,12 +787,12 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/VDCResponse'
+            $ref: '#/components/schemas/VdcResponse'
         nextPageToken:
           $ref: '#/components/schemas/NextPageToken'
           description: Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
 
-    VDCResponse:
+    VdcResponse:
       type: object
       properties:
         kind:
@@ -894,6 +960,9 @@ components:
           description: Диски VDC
           items:
             $ref: '#/components/schemas/VIStorageSpecResponse'
+        dfwEnabled:
+          type: boolean
+          description: Статус распределенного межсетевого экрана (Distributed Firewall) для виртуальных машин — включен или выключен
       required:
         - zone
         - edgeRouter
@@ -1120,6 +1189,10 @@ components:
     BackupPolicySpecResponse:
       type: object
       properties:
+        href:
+          type: string
+          description: Ссылка на ресурс
+          example: https://example.com/data/123
         dataCenter:
           type: string
           description: |-
@@ -1600,6 +1673,15 @@ components:
         type: string
         example: my-resource
 
+    query_cascade:
+      name: cascade
+      in: query
+      description: Удалить зависимые ресурсы, в противном случае при их наличии, будет возвращен ответ `Aborted`
+      style: form
+      explode: true
+      schema:
+        type: boolean
+
     query_filter:
       name: filter
       in: query
@@ -1611,6 +1693,17 @@ components:
       explode: true
       schema:
         type: string
+
+    query_ifExist:
+      name: ifExist
+      in: query
+      description: |-
+        Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
+        Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+      style: form
+      explode: true
+      schema:
+        type: boolean
 
     query_orderBy:
       name: orderBy
@@ -1647,6 +1740,15 @@ components:
       name: purge
       in: query
       description: Удалить ресурс без возможности восстановления
+      style: form
+      explode: true
+      schema:
+        type: boolean
+
+    query_validateOnly:
+      name: validateOnly
+      in: query
+      description: Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
       style: form
       explode: true
       schema:

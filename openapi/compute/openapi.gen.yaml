@@ -48,7 +48,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/VmTypesListResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 408, 412, 499, 500
           content:
             application/json:
               schema:
@@ -72,7 +72,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/VmTypeResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 408, 412, 499, 500
           content:
             application/json:
               schema:
@@ -196,7 +196,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/VirtualMachinesListResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 408, 412, 499, 500
           content:
             application/json:
               schema:
@@ -231,6 +231,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
         - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/path_virtualMachine"
@@ -251,7 +252,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/VirtualMachineResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 409, 412, 422, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 408, 409, 412, 422, 499, 500
           content:
             application/json:
               schema:
@@ -274,7 +275,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/VirtualMachineResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 408, 412, 499, 500
           content:
             application/json:
               schema:
@@ -296,7 +297,7 @@ paths:
         "204":
           description: Виртуальная машина удалена
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 422, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 403, 404, 408, 412, 422, 499, 500
           content:
             application/json:
               schema:
@@ -343,6 +344,7 @@ paths:
           - `metadata.displayName`
           - `spec.family`
           - `status.activity`
+          - `status.encryption.keyActivity`
       
         Поля, по которым можно сортировать (`orderBy`):
           - `metadata.createTime`
@@ -350,6 +352,7 @@ paths:
           - `spec.family`
           - `status.ready.state`
           - `status.storageSize`
+          - `status.encryption.keyActivity`
       operationId: ListImages
       parameters:
         - $ref: "#/components/parameters/path_project_1758db71"
@@ -505,6 +508,7 @@ paths:
           - `status.storageSize`
           - `status.diskType`
           - `status.blockSize`
+          - `status.encryption.keyActivity`
       
         Поля, по которым можно сортировать (`orderBy`):
           - `metadata.createTime`
@@ -517,6 +521,7 @@ paths:
           - `status.diskType`
           - `status.blockSize`
           - `status.iops.total`
+          - `status.encryption.keyActivity`
       operationId: ListDisks
       parameters:
         - $ref: "#/components/parameters/path_project_1758db71"
@@ -668,6 +673,7 @@ paths:
           - `metadata.displayName`
           - `status.ready.state`
           - `status.storageSize`
+          - `status.encryption.keyActivity`
       
         Поля, по которым можно сортировать (`orderBy`):
           - `metadata.id.name`
@@ -675,6 +681,7 @@ paths:
           - `metadata.displayName`
           - `status.ready.state`
           - `status.storageSize`
+          - `status.encryption.keyActivity`
       operationId: ListDiskBackups
       parameters:
         - $ref: "#/components/parameters/path_project_1758db71"
@@ -966,7 +973,8 @@ components:
           description: Спецификация локальных дисков, которые доступны для ВМ указанного типа
           nullable: true
         network:
-          type: object
+          allOf:
+            - $ref: '#/components/schemas/VmTypeNetworkSpecResponse'
           description: Спецификация сети, которая доступна для ВМ указанного типа
           nullable: true
 
@@ -1152,6 +1160,10 @@ components:
               - "1.5 TB"
           example: 3 TB
 
+    VmTypeNetworkSpecResponse:
+      type: object
+      description: Спецификация сети, которая доступна для ВМ указанного типа
+
     VmTypeStatusResponse:
       description: Статус типа ВМ
       $ref: '#/components/schemas/ResourceStatusResponse'
@@ -1274,7 +1286,7 @@ components:
 
     DiskTypeSpecResponse:
       type: object
-      description: Спецификация типа глобального диска
+      description: Спецификация типа диска
       properties:
         zones:
           type: array
@@ -1948,7 +1960,6 @@ components:
 
     ComputeOneToOneNatSpecResponse:
       type: object
-      description: NAT-правило для связи внутреннего адреса с внешним адресом
       properties:
         external:
           type: object
@@ -1986,9 +1997,14 @@ components:
               - "externalAddresses/myExternalAddress"
               - "myExternalAddress"
         spec:
-          type: object
+          allOf:
+            - $ref: '#/components/schemas/OneToOneNatAddressSpecResponse'
           description: NAT правило для связи внутреннего адреса с внешним адресом
           nullable: true
+
+    OneToOneNatAddressSpecResponse:
+      type: object
+      description: NAT правило для связи внутреннего адреса с внешним адресом
 
     VirtualMachineStatusResponse:
       type: object
@@ -2351,7 +2367,6 @@ components:
 
     OneToOneNatExternalAddressStatusResponse:
       type: object
-      description: Статус внешнего (публичного) Адреса
       properties:
         ref:
           type: string
@@ -2969,7 +2984,6 @@ components:
 
     ComputeOneToOneNatSpecRequest:
       type: object
-      description: NAT-правило для связи внутреннего адреса с внешним адресом
       properties:
         external:
           type: object
@@ -3007,8 +3021,12 @@ components:
               - "externalAddresses/myExternalAddress"
               - "myExternalAddress"
         spec:
-          type: object
+          $ref: '#/components/schemas/OneToOneNatAddressSpecRequest'
           description: NAT правило для связи внутреннего адреса с внешним адресом
+
+    OneToOneNatAddressSpecRequest:
+      type: object
+      description: NAT правило для связи внутреннего адреса с внешним адресом
 
     ImageResponse:
       type: object
@@ -3042,6 +3060,28 @@ components:
           type: string
           description: Семейство образа
           example: ubuntu-2204-lts-oslogin
+        regions:
+          type: array
+          description: Список регионов, в которых будет создана физическая копия образа
+          items:
+            type: string
+            description: |-
+              Ссылка на ресурс
+            
+              Строка в форматах:
+                Полный формат:
+                  - "rm/regions/{region}"
+                Сокращенные форматы:
+                  - "regions/{region}"
+                  - "{region}"
+            
+              Полный формат всегда корректен.
+              Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+            
+              Примеры:
+                - "rm/regions/myRegion"
+                - "regions/myRegion"
+                - "myRegion"
         source:
           type: object
           description: |-
@@ -3148,7 +3188,6 @@ components:
       enum:
         - "LINUX"
         - "WINDOWS"
-      default: LINUX
 
     EncryptionSpecResponse:
       type: object
@@ -3186,6 +3225,11 @@ components:
         - $ref: '#/components/schemas/ResourceStatusResponse'
         - type: object
           properties:
+            regionalImageStatuses:
+              type: array
+              description: Список статусов готовности образов по каждому региону
+              items:
+                $ref: '#/components/schemas/RegionalImageStatusResponse'
             storageSize:
               type: string
               description: |-
@@ -3235,7 +3279,7 @@ components:
               
                 Пример: "compute/projects/myProject/images/myImage"
             osType:
-              $ref: '#/components/schemas/OsType2'
+              $ref: '#/components/schemas/OsType'
               description: Тип операционной системы
             encryption:
               allOf:
@@ -3243,12 +3287,34 @@ components:
               description: Способ шифрования ресурса
               nullable: true
 
-    OsType2:
-      type: string
-      description: Тип операционной системы
-      enum:
-        - "LINUX"
-        - "WINDOWS"
+    RegionalImageStatusResponse:
+      type: object
+      description: Статус готовности копии образа в конкретном регионе
+      allOf:
+        - $ref: '#/components/schemas/ResourceStatusResponse'
+        - type: object
+          properties:
+            regionId:
+              type: string
+              description: |-
+                Идентификатор региона
+              
+                Строка в форматах:
+                  Полный формат:
+                    - "rm/regions/{region}"
+                  Сокращенные форматы:
+                    - "regions/{region}"
+                    - "{region}"
+              
+                Полный формат всегда корректен.
+                Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+              
+                Примеры:
+                  - "rm/regions/myRegion"
+                  - "regions/myRegion"
+                  - "myRegion"
+          required:
+            - regionId
 
     EncryptionStatusResponse:
       type: object
@@ -3291,9 +3357,15 @@ components:
           description: Состояние ключа
           enum:
             - "DISABLED"
+            - "SCHEDULED_FOR_DESTRUCTION"
             - "DESTROYED"
             - "ACTIVE"
           default: ACTIVE
+        scheduledDestructionTime:
+          type: string
+          description: Время запланированного уничтожения пользовательского ключа
+          format: date-time
+          example: 2025-08-01T12:00:00Z
 
     ImageRequest:
       type: object
@@ -3333,6 +3405,31 @@ components:
           type: string
           description: Семейство образа
           example: ubuntu-2204-lts-oslogin
+        regions:
+          type: array
+          description: |-
+            Список регионов, в которых будет создана физическая копия образа
+          
+            Простая коллекция. При обновлении ресурса простая коллекция, переданная в запросе, полностью заменяет существующую. Подробнее см. в описании метода `Upsert`
+          items:
+            type: string
+            description: |-
+              Ссылка на ресурс
+            
+              Строка в форматах:
+                Полный формат:
+                  - "rm/regions/{region}"
+                Сокращенные форматы:
+                  - "regions/{region}"
+                  - "{region}"
+            
+              Полный формат всегда корректен.
+              Допускается сокращенный формат: элементы, которые уже есть в пути запроса, в ссылке можно опустить
+            
+              Примеры:
+                - "rm/regions/myRegion"
+                - "regions/myRegion"
+                - "myRegion"
         source:
           type: object
           description: |-
@@ -3480,7 +3577,7 @@ components:
 
     DiskSpecResponse:
       type: object
-      description: Спецификация глобального диска
+      description: Спецификация диска
       properties:
         zone:
           type: string
@@ -3605,7 +3702,7 @@ components:
               - "diskTypes/myDiskType"
               - "myDiskType"
         iops:
-          $ref: '#/components/schemas/Iops2'
+          $ref: '#/components/schemas/Iops'
           description: Запрашиваемое пользователем количество операций ввода-вывода в секунду (IOPS)
         blockSize:
           type: string
@@ -3642,15 +3739,9 @@ components:
       required:
         - zone
 
-    Iops2:
-      type: integer
-      description: Общее количество операций ввода-вывода в секунду (IOPS)
-      format: int64
-      example: 1000
-
     DiskStatusResponse:
       type: object
-      description: Статус глобального диска
+      description: Статус диска
       allOf:
         - $ref: '#/components/schemas/ResourceStatusResponse'
         - type: object
@@ -3737,7 +3828,7 @@ components:
               
                 Пример: "compute/projects/myProject/images/myImage"
             osType:
-              $ref: '#/components/schemas/OsType2'
+              $ref: '#/components/schemas/OsType'
               description: Тип операционной системы
             encryption:
               allOf:
@@ -3752,13 +3843,13 @@ components:
       description: Запрашиваемое базовое и дополнительное количество операций ввода-вывода в секунду (IOPS)
       properties:
         base:
-          $ref: '#/components/schemas/Iops2'
+          $ref: '#/components/schemas/Iops'
           description: Базовое количество операций ввода-вывода в секунду (IOPS)
         extra:
           $ref: '#/components/schemas/PossiblyZeroIops'
           description: Дополнительное количество операций ввода-вывода в секунду (IOPS)
         total:
-          $ref: '#/components/schemas/Iops2'
+          $ref: '#/components/schemas/Iops'
           description: Общее количество операций ввода-вывода в секунду (IOPS)
       required:
         - base
@@ -3767,13 +3858,13 @@ components:
 
     PossiblyZeroIops:
       type: integer
-      description: Дополнительное количество операций ввода-вывода в секунду (IOPS)
+      description: Количество операций ввода-вывода в секунду (IOPS). Может быть 0
       format: int64
 
     Throughput:
       type: string
       description: |-
-        Пропускная способность диска
+        Пропускная способность, кратно 1 MB
       
         Пропускная способность. Формат: <число> [единица измерения].
         Допустимые единицы измерения: `Bps`, `KBps`, `MBps`, `GBps`, `TBps`, `PBps`, `EBps`, `ZBps`, `YBps`, `RBps`, `QBps`. По умолчанию: `Bps`.
@@ -3786,7 +3877,6 @@ components:
           - "1 Bps"
           - "1024 kbps"
           - "2.5 GBps"
-      example: 1000 Bps
 
     LinkedVmInfoResponse:
       type: object
@@ -3845,7 +3935,7 @@ components:
 
     DiskSpecRequest:
       type: object
-      description: Спецификация глобального диска
+      description: Спецификация диска
       properties:
         zone:
           type: string
@@ -3972,7 +4062,7 @@ components:
               - "diskTypes/myDiskType"
               - "myDiskType"
         iops:
-          $ref: '#/components/schemas/Iops2'
+          $ref: '#/components/schemas/Iops'
           description: Запрашиваемое пользователем количество операций ввода-вывода в секунду (IOPS)
         blockSize:
           type: string
@@ -4033,7 +4123,7 @@ components:
 
     DiskBackupSpecResponse:
       type: object
-      description: Спецификация глобальной резервной копии диска
+      description: Спецификация резервной копии диска
       properties:
         source:
           $ref: '#/components/schemas/DiskBackupSourceResponse'
@@ -4050,7 +4140,6 @@ components:
 
     DiskBackupSourceResponse:
       type: object
-      description: Источник для создания резервной копии диска (На текущий момент поддерживается только диск, но в будущем будут и другие источники)
       properties:
         disk:
           type: object
@@ -4083,7 +4172,7 @@ components:
 
     DiskBackupStatusResponse:
       type: object
-      description: Статус глобальной резервной копии диска
+      description: Статус резервной копии диска
       allOf:
         - $ref: '#/components/schemas/ResourceStatusResponse'
         - type: object
@@ -4138,7 +4227,7 @@ components:
               
                 Пример: "compute/projects/myProject/images/myImage"
             osType:
-              $ref: '#/components/schemas/OsType2'
+              $ref: '#/components/schemas/OsType'
               description: Тип операционной системы
             encryption:
               allOf:
@@ -4164,7 +4253,7 @@ components:
 
     DiskBackupSpecRequest:
       type: object
-      description: Спецификация глобальной резервной копии диска
+      description: Спецификация резервной копии диска
       properties:
         source:
           $ref: '#/components/schemas/DiskBackupSourceRequest'
@@ -4181,7 +4270,6 @@ components:
 
     DiskBackupSourceRequest:
       type: object
-      description: Источник для создания резервной копии диска (На текущий момент поддерживается только диск, но в будущем будут и другие источники)
       properties:
         disk:
           type: object

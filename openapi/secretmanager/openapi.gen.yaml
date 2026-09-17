@@ -51,7 +51,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SecretListResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 500
           content:
             application/json:
               schema:
@@ -82,7 +82,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SecretResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 409, 412, 422, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 409, 412, 500
           content:
             application/json:
               schema:
@@ -119,6 +119,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/path_name_10462e60"
@@ -144,7 +145,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SecretResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 409, 412, 422, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 409, 412, 500
           content:
             application/json:
               schema:
@@ -167,7 +168,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SecretResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 500
           content:
             application/json:
               schema:
@@ -178,6 +179,9 @@ paths:
       summary: Удалить указанный секрет
       operationId: DeleteSecret
       parameters:
+        - $ref: "#/components/parameters/query_ifExist"
+        - $ref: "#/components/parameters/query_validateOnly"
+        - $ref: "#/components/parameters/query_cascade"
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/path_name_10462e60"
@@ -187,7 +191,7 @@ paths:
         "204":
           description: No Content
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 412, 500
           content:
             application/json:
               schema:
@@ -218,7 +222,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SecretVersionResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 409, 412, 422, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 412, 500
           content:
             application/json:
               schema:
@@ -262,7 +266,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SecretVersionListResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 500
           content:
             application/json:
               schema:
@@ -286,9 +290,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SecretVersionDataSpec2'
+                $ref: '#/components/schemas/SecretVersionDataSpec'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 412, 500
           content:
             application/json:
               schema:
@@ -325,6 +329,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/query_createOnly"
         - $ref: "#/components/parameters/query_updateOnly"
+        - $ref: "#/components/parameters/query_validateOnly"
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/path_name_10462e60"
@@ -345,7 +350,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SecretVersionResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 409, 412, 422, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 409, 500
           content:
             application/json:
               schema:
@@ -369,7 +374,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SecretVersionResponse'
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 500
           content:
             application/json:
               schema:
@@ -380,6 +385,8 @@ paths:
       summary: Удалить указанную версию секрета
       operationId: DeleteSecretVersion
       parameters:
+        - $ref: "#/components/parameters/query_ifExist"
+        - $ref: "#/components/parameters/query_validateOnly"
         - $ref: "#/components/parameters/path_project"
         - $ref: "#/components/parameters/header_Idempotency-Key"
         - $ref: "#/components/parameters/path_name_10462e60"
@@ -390,7 +397,7 @@ paths:
         "204":
           description: No Content
         default:
-          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 408, 412, 499, 500
+          description: Допустимые HTTP-коды ошибок — 400, 401, 403, 404, 500
           content:
             application/json:
               schema:
@@ -818,10 +825,7 @@ components:
 
     SecretVersionDataSpec:
       type: object
-      description: |-
-        Содержимое секрета
-      
-        Значения в объекте содержат чувствительные данные. Ограничьте доступ к ним
+      description: Значения в объекте содержат чувствительные данные. Ограничьте доступ к ним
       additionalProperties:
         type: string
 
@@ -985,12 +989,6 @@ components:
           description: Строка, которую нужно передать в следующем запросе, чтобы получить следующую страницу. Для последней страницы не задан
       required:
         - items
-
-    SecretVersionDataSpec2:
-      type: object
-      description: Значения в объекте содержат чувствительные данные. Ограничьте доступ к ним
-      additionalProperties:
-        type: string
 
     SecretVersionRequest:
       type: object
@@ -1684,6 +1682,15 @@ components:
         type: string
         pattern: ^(current|\d+)$
 
+    query_cascade:
+      name: cascade
+      in: query
+      description: Удалить зависимые ресурсы, в противном случае при их наличии, будет возвращен ответ `Aborted`
+      style: form
+      explode: true
+      schema:
+        type: boolean
+
     query_createOnly:
       name: createOnly
       in: query
@@ -1704,6 +1711,17 @@ components:
       explode: true
       schema:
         type: string
+
+    query_ifExist:
+      name: ifExist
+      in: query
+      description: |-
+        Удалить ресурс если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
+        Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+      style: form
+      explode: true
+      schema:
+        type: boolean
 
     query_orderBy:
       name: orderBy
@@ -1742,6 +1760,15 @@ components:
       description: |-
         Обновить ресурс, если он существует. Если ресурс не существует, будет возвращен ответ `Not Found`.
         Если прав на выполнение операции недостаточно, будет возвращен ответ `PermissionDenied`
+      style: form
+      explode: true
+      schema:
+        type: boolean
+
+    query_validateOnly:
+      name: validateOnly
+      in: query
+      description: Dry run позволяет выполнить все проверки для выполнения операции, но не выполнять саму операцию.
       style: form
       explode: true
       schema:

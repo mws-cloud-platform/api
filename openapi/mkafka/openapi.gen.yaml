@@ -988,7 +988,7 @@ components:
 
     KafkaEndpointExternalAccessesResponse:
       type: object
-      description: Настройка внешнего доступа к кластеру Kafka
+      description: Настройка внешнего доступа к кластеру Apache Kafka
       properties:
         allowed:
           type: boolean
@@ -1027,13 +1027,18 @@ components:
               - "externalAddresses/myExternalAddress"
               - "myExternalAddress"
         spec:
-          type: object
+          allOf:
+            - $ref: '#/components/schemas/KafkaEndpointExternalAddressSpecResponse'
           description: Спецификация нового внешнего адреса. Адрес будет выделен в ходе реконсиляции кластера
           nullable: true
 
+    KafkaEndpointExternalAddressSpecResponse:
+      type: object
+      description: Спецификация нового внешнего адреса. Адрес будет выделен в ходе реконсиляции кластера
+
     KafkaInstanceResponse:
       type: object
-      description: Описание ресурсов хостов брокеров и контроллеров
+      description: Описание ресурсов хостов брокеров и контроллера
       properties:
         broker:
           $ref: '#/components/schemas/KafkaInstanceSpecResponse'
@@ -1047,7 +1052,7 @@ components:
 
     KafkaInstanceSpecResponse:
       type: object
-      description: Параметры виртуальной машины, где будет работать брокер Кафки
+      description: Параметры ноды брокера
       properties:
         vmType:
           type: string
@@ -1159,7 +1164,7 @@ components:
 
     KafkaControllerInstanceSpecResponse:
       type: object
-      description: Параметры виртуальной машины, где будет работать KRaft контроллер Кафки
+      description: Параметры узлов контроллеров
       properties:
         combinedWithBroker:
           type: boolean
@@ -1266,7 +1271,7 @@ components:
 
     KafkaBalancerSpecResponse:
       type: object
-      description: Настройка балансировщика кластера
+      description: Конфигурация балансировщика
       properties:
         enabled:
           type: boolean
@@ -1316,7 +1321,7 @@ components:
                 Пример: "rm/regions/myRegion"
             effectiveKafkaConfig:
               type: object
-              description: Конфигурация параметров кластера после валидации и преобразования из пользователского ввода
+              description: Конфигурация параметров кластера после валидации и преобразования из пользовательского ввода
               additionalProperties:
                 type: string
             instances:
@@ -1331,7 +1336,7 @@ components:
                 $ref: '#/components/schemas/KafkaEndpointStatusResponse'
             maintenanceWindow:
               allOf:
-                - $ref: '#/components/schemas/MaintenanceWindow2Response'
+                - $ref: '#/components/schemas/MaintenanceWindowResponse'
               nullable: true
             schemaRegistry:
               allOf:
@@ -1420,7 +1425,7 @@ components:
 
     KafkaInstancesStatusResponse:
       type: object
-      description: Описание ресурсов хостов брокеров и контроллеров
+      description: Описание ресурсов хостов брокеров и контроллера
       properties:
         broker:
           $ref: '#/components/schemas/KafkaInstanceStatusResponse'
@@ -1434,7 +1439,7 @@ components:
 
     KafkaInstanceStatusResponse:
       type: object
-      description: Параметры виртуальной машины, где работает брокер Кафки
+      description: Параметры узла-брокера кластера Managed Kafka
       properties:
         disk:
           allOf:
@@ -1452,7 +1457,7 @@ components:
 
     KafkaControllerInstanceStatusResponse:
       type: object
-      description: Параметры виртуальной машины, где работает контроллер
+      description: Параметры узла-контроллера кластера Managed Kafka
       properties:
         combinedWithBroker:
           type: boolean
@@ -1508,7 +1513,7 @@ components:
 
     KafkaSchemaRegistryUrlsResponse:
       type: object
-      description: Внешние HTTPS-адреса Schema Registry
+      description: Адреса эндпоинтов Schema Registry
       properties:
         urls:
           type: array
@@ -1565,7 +1570,7 @@ components:
 
     KafkaEndpointExternalAccessesStatusResponse:
       type: object
-      description: Настройка внешнего доступа к кластеру Kafka
+      description: Описание внешнего доступа к кластеру Apache Kafka
       properties:
         allowed:
           type: boolean
@@ -1615,14 +1620,6 @@ components:
         managed:
           type: boolean
           description: False если ссылка на внешний адрес был указана в спецификации, true если адрес был создан
-
-    MaintenanceWindow2Response:
-      type: object
-      properties:
-        weekly:
-          $ref: '#/components/schemas/WeeklyMaintenanceWindowResponse'
-      required:
-        - weekly
 
     NextPageToken:
       type: string
@@ -1843,7 +1840,7 @@ components:
 
     KafkaEndpointExternalAccessesRequest:
       type: object
-      description: Настройка внешнего доступа к кластеру Kafka
+      description: Настройка внешнего доступа к кластеру Apache Kafka
       properties:
         allowed:
           type: boolean
@@ -1886,13 +1883,18 @@ components:
               - "externalAddresses/myExternalAddress"
               - "myExternalAddress"
         spec:
-          type: object
+          allOf:
+            - $ref: '#/components/schemas/KafkaEndpointExternalAddressSpecRequest'
           description: Спецификация нового внешнего адреса. Адрес будет выделен в ходе реконсиляции кластера
           nullable: true
 
+    KafkaEndpointExternalAddressSpecRequest:
+      type: object
+      description: Спецификация нового внешнего адреса. Адрес будет выделен в ходе реконсиляции кластера
+
     KafkaInstanceRequest:
       type: object
-      description: Описание ресурсов хостов брокеров и контроллеров
+      description: Описание ресурсов хостов брокеров и контроллера
       properties:
         broker:
           $ref: '#/components/schemas/KafkaInstanceSpecRequest'
@@ -1909,7 +1911,7 @@ components:
 
     KafkaInstanceSpecRequest:
       type: object
-      description: Параметры виртуальной машины, где будет работать брокер Кафки
+      description: Параметры ноды брокера
       properties:
         vmType:
           type: string
@@ -2013,7 +2015,7 @@ components:
 
     KafkaControllerInstanceSpecRequest:
       type: object
-      description: Параметры виртуальной машины, где будет работать KRaft контроллер Кафки
+      description: Параметры узлов контроллеров
       properties:
         combinedWithBroker:
           type: boolean
@@ -2115,7 +2117,7 @@ components:
 
     KafkaBalancerSpecRequest:
       type: object
-      description: Настройка балансировщика кластера
+      description: Конфигурация балансировщика
       properties:
         enabled:
           type: boolean
